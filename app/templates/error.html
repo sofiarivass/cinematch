@@ -1,0 +1,8 @@
+{% extends "base.html" %} {% block title %}Error — CineApp{% endblock %} {% block content %}
+<div class="error-page">
+    <h1 class="error-page__code">⚠️</h1>
+    <h2 class="error-page__title">Ocurrió un error</h2>
+    <p class="error-page__msg">{{ mensaje }}</p>
+    <a href="{{ url_for('peliculas.index') }}" class="btn">← Volver al inicio</a>
+</div>
+{% endblock %}
