@@ -28,13 +28,13 @@
                 <div class="collapse navbar-collapse" id="navbarCinematch">
                     <ul class="navbar-nav mx-auto">
                         <li class="nav-item">
-                            <a href="{{ url_for('peliculas.index') }}" class="nav-link active">Inicio</a>
+                            <a href="{{ url_for('peliculas.index') }}" class="nav-link {% if request.endpoint == 'peliculas.index' %}active{% endif %}">Inicio</a>
                         </li>
                         <li class="nav-item">
-                            <a href="#" class="nav-link">Explorar</a>
+                            <a href="{{ url_for('peliculas.explorar') }}" class="nav-link {% if request.endpoint in ['peliculas.explorar', 'peliculas.buscar'] %}active{% endif %}">Explorar</a>
                         </li>
                         <li class="nav-item">
-                            <a href="#" class="nav-link">¿Cómo funciona?</a>
+                            <a href="{{ url_for('peliculas.como_funciona') }}" class="nav-link {% if request.endpoint == 'peliculas.como_funciona' %}active{% endif %}">¿Cómo funciona?</a>
                         </li>
                     </ul>
                     <div class="d-flex gap-3">
@@ -51,10 +51,6 @@
     </header>
 
     <main>
-        <form class="navbar__search" action="{{ url_for('peliculas.buscar') }}" method="get">
-            <input type="text" name="q" placeholder="Buscar película..." value="{{ query if query else '' }}" class="navbar__input" />
-            <button type="submit" class="navbar__btn">Buscar</button>
-        </form>
         {% block content %}{% endblock %}
     </main>
 

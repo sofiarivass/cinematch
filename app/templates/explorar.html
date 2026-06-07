@@ -1,6 +1,11 @@
-{% extends "base.html" %} {% block title %}{{ titulo_seccion }} — CineApp{% endblock %} {% block content %}
+{% extends "base.html" %} {% block title %}{{ titulo_seccion }} — CineMatch{% endblock %} {% block content %}
 <h1 class="section-title">{{ titulo_seccion }}</h1>
 
+<!-- BUSCADOR -->
+<form class="navbar__search" action="{{ url_for('peliculas.buscar') }}" method="get">
+    <input type="text" name="q" placeholder="Buscar película..." value="{{ query if query else '' }}" class="navbar__input" />
+    <button type="submit" class="navbar__btn">Buscar</button>
+</form>
 {% if peliculas %}
 <!-- GRILLA DE PELÍCULAS -->
 <div class="grid">

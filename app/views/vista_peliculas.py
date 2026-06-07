@@ -15,7 +15,13 @@ from flask import render_template
 class PeliculaView:
     """Encapsula el renderizado de todas las vistas de películas."""
 
-    def render_lista(
+    def render_index(self) -> str:
+        return render_template("index.html")
+
+    def render_como_funciona(self) -> str:
+        return render_template("como_funciona.html")
+
+    def render_explorar(
         self,
         peliculas: list,
         pagina_actual: int,
@@ -37,15 +43,22 @@ class PeliculaView:
             HTML renderizado como string
         """
         return render_template(
-            "lista.html",
-            peliculas      = peliculas,
-            pagina_actual  = pagina_actual,
-            total_paginas  = total_paginas,
-            titulo_seccion = titulo_seccion,
-            query          = query,
+            "explorar.html",
+            peliculas=peliculas,
+            pagina_actual=pagina_actual,
+            total_paginas=total_paginas,
+            titulo_seccion=titulo_seccion,
+            query=query,
         )
 
-    def render_detalle(self, pelicula: dict, credits: dict, keywords: list, providers: dict, clasificacion: str) -> str:
+    def render_detalle(
+        self,
+        pelicula: dict,
+        credits: dict,
+        keywords: list,
+        providers: dict,
+        clasificacion: str,
+    ) -> str:
         """
         Renderiza la vista de detalle de una película.
 
@@ -55,7 +68,14 @@ class PeliculaView:
         Returns:
             HTML renderizado como string
         """
-        return render_template("detalle.html", pelicula=pelicula, credits=credits, keywords=keywords, providers=providers, clasificacion=clasificacion)
+        return render_template(
+            "detalle.html",
+            pelicula=pelicula,
+            credits=credits,
+            keywords=keywords,
+            providers=providers,
+            clasificacion=clasificacion,
+        )
 
     def render_error(self, mensaje: str) -> tuple[str, int]:
         """

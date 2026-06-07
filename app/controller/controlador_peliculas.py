@@ -19,46 +19,59 @@ peliculas_bp = Blueprint("peliculas", __name__)
 
 # Instancias del modelo y la vista
 modelo = PeliculaModel()
-vista  = PeliculaView()
+vista = PeliculaView()
 
 
-# ── Ruta: Inicio — películas populares ────────────────────────────────────
-
+# RUTA INICIO
 @peliculas_bp.route("/")
 def index():
-    """Muestra la página principal con las películas populares."""
+    return vista.render_index()
+
+
+# @peliculas_bp.route("/")
+# def index():
+#     """Muestra la página principal."""
+#     pagina = request.args.get("page", 1, type=int)
+
+#     try:
+#         datos = modelo.obtener_populares(pagina=pagina)
+#         return vista.render_explorar(
+#             peliculas=datos["peliculas"],
+#             pagina_actual=datos["pagina_actual"],
+#             total_paginas=datos["total_paginas"],
+#             titulo_seccion="Películas Populares",
+#         )
+#     except Exception as e:
+#         return vista.render_error(str(e))
+
+
+# RUTA EXPLORAR
+@peliculas_bp.route("/explorar")
+def explorar():
+    """Muestra el listado de películas con búsqueda."""
+    query = request.args.get("q", "").strip()
     pagina = request.args.get("page", 1, type=int)
 
     try:
-        datos = modelo.obtener_populares(pagina=pagina)
-        return vista.render_lista(
-            peliculas    = datos["peliculas"],
-            pagina_actual= datos["pagina_actual"],
-            total_paginas= datos["total_paginas"],
-            titulo_seccion= "Películas Populares",
+        if query:
+            datos = modelo.buscar(query=query, pagina=pagina)
+            titulo_seccion = f'Resultados para "{query}"'
+        else:
+            datos = modelo.obtener_populares(pagina=pagina)
+            titulo_seccion = "Explorar películas"
+
+        return vista.render_explorar(
+            peliculas=datos["peliculas"],
+            pagina_actual=datos["pagina_actual"],
+            total_paginas=datos["total_paginas"],
+            titulo_seccion=titulo_seccion,
+            query=query,
         )
     except Exception as e:
         return vista.render_error(str(e))
 
 
-# ── Ruta: Detalle de una película ─────────────────────────────────────────
-
-@peliculas_bp.route("/pelicula/<int:pelicula_id>")
-def detalle(pelicula_id: int):
-    """Muestra el detalle completo de una película."""
-    try:
-        pelicula = modelo.obtener_detalle(pelicula_id)
-        credits  = modelo.obtener_credits(pelicula_id)   # ← agregás esta línea
-        keywords = modelo.obtener_keywords(pelicula_id)
-        providers = modelo.obtener_providers(pelicula_id)
-        clasificacion = modelo.obtener_clasificacion(pelicula_id)
-        return vista.render_detalle(pelicula, credits, keywords, providers, clasificacion)
-    except Exception as e:
-        return vista.render_error(str(e))
-
-
-# ── Ruta: Búsqueda ────────────────────────────────────────────────────────
-
+# RUTA BUSCAR
 @peliculas_bp.route("/buscar")
 def buscar():
     """Busca películas por título y muestra los resultados."""
@@ -66,16 +79,40 @@ def buscar():
     pagina = request.args.get("page", 1, type=int)
 
     if not query:
-        return redirect(url_for("peliculas.index"))
+        return redirect(url_for("peliculas.explorar"))
 
     try:
         datos = modelo.buscar(query=query, pagina=pagina)
-        return vista.render_lista(
-            peliculas     = datos["peliculas"],
-            pagina_actual = datos["pagina_actual"],
-            total_paginas = datos["total_paginas"],
-            titulo_seccion= f'Resultados para "{query}"',
-            query         = query,
+        return vista.render_explorar(
+            peliculas=datos["peliculas"],
+            pagina_actual=datos["pagina_actual"],
+            total_paginas=datos["total_paginas"],
+            titulo_seccion=f'Resultados para "{query}"',
+            query=query,
+        )
+    except Exception as e:
+        return vista.render_error(str(e))
+
+
+# RUTA COMO FUNCIONA
+@peliculas_bp.route("/como-funciona")
+def como_funciona():
+    """Muestra la página de información."""
+    return vista.render_como_funciona()
+
+
+# RUTA DETALLE DE PELÍCULA
+@peliculas_bp.route("/pelicula/<int:pelicula_id>")
+def detalle(pelicula_id: int):
+    """Muestra el detalle completo de una película."""
+    try:
+        pelicula = modelo.obtener_detalle(pelicula_id)
+        credits = modelo.obtener_credits(pelicula_id)  # ← agregás esta línea
+        keywords = modelo.obtener_keywords(pelicula_id)
+        providers = modelo.obtener_providers(pelicula_id)
+        clasificacion = modelo.obtener_clasificacion(pelicula_id)
+        return vista.render_detalle(
+            pelicula, credits, keywords, providers, clasificacion
         )
     except Exception as e:
         return vista.render_error(str(e))
