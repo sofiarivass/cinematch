@@ -1,0 +1,46 @@
+{% extends "base.html" %} {% block title %}{{ titulo_seccion }} — CineMatch{% endblock %} {% block content %}
+<h1 class="section-title">{{ titulo_seccion }}</h1>
+
+<!-- BUSCADOR -->
+<form class="navbar__search" action="{{ url_for('series.buscar') }}" method="get">
+    <input type="text" name="q" placeholder="Buscar serie..." value="{{ query if query else '' }}" class="navbar__input" />
+    <button type="submit" class="navbar__btn">Buscar</button>
+</form>
+{% if series %}
+<!-- GRILLA DE SERIES -->
+<div class="grid">
+    {% for serie in series %}
+    <a href="{{ url_for('series.detalle', serie_id=serie.id) }}" class="card">
+        <div class="card__img-wrapper">
+            {% if serie.poster %}
+            <img src="{{ serie.poster }}" alt="{{ serie.titulo }}" class="card__img" loading="lazy" /> {% else %}
+            <div class="card__no-img">Sin imagen</div>
+            {% endif %}
+            <span class="card__score">⭐ {{ "%.1f"|format(serie.puntuacion) }}</span>
+        </div>
+        <div class="card__body">
+            <h2 class="card__title">{{ serie.titulo }}</h2>
+            <p class="card__date">📅 {{ serie.fecha if serie.fecha else "Fecha desconocida" }}</p>
+            <p class="card__desc">{{ serie.descripcion[:120] }}{% if serie.descripcion|length > 120 %}...{% endif %}</p>
+        </div>
+    </a>
+    {% endfor %}
+</div>
+
+<!-- PAGINACIÓN -->
+{% if total_paginas > 1 %}
+<nav class="pagination">
+    {% if pagina_actual > 1 %}
+    <a href="?{% if query %}q={{ query }}&{% endif %}page={{ pagina_actual - 1 }}" class="pagination__btn">← Anterior</a> {% endif %}
+
+    <span class="pagination__info">Página {{ pagina_actual }} de {{ total_paginas }}</span> {% if pagina_actual
+    < total_paginas %} <a href="?{% if query %}q={{ query }}&{% endif %}page={{ pagina_actual + 1 }}" class="pagination__btn">Siguiente →</a>
+        {% endif %}
+</nav>
+{% endif %} {% else %}
+<div class="empty">
+    <p class="empty__text">😕 No se encontraron resultados para "<strong>{{ query }}</strong>".</p>
+    <a href="{{ url_for('series.explorar') }}" class="btn">Volver a series</a>
+</div>
+{% endif %} {% endblock %}
+

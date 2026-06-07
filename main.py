@@ -10,6 +10,7 @@ Uso:
 from flask import Flask
 from config.config import Config
 from app.controller.controlador_peliculas import peliculas_bp
+from app.controller.controlador_series import series_bp
 
 
 def create_app() -> Flask:
@@ -28,8 +29,9 @@ def create_app() -> Flask:
     # Cargar configuración desde config/config.py
     app.config.from_object(Config)
 
-    # Registrar blueprint del controlador
+    # Registrar blueprints del controlador
     app.register_blueprint(peliculas_bp)
+    app.register_blueprint(series_bp)
 
     return app
 
