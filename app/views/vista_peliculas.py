@@ -21,6 +21,30 @@ class PeliculaView:
     def render_como_funciona(self) -> str:
         return render_template("como_funciona.html")
 
+    def render_recomendaciones(
+        self,
+        pelicula: dict,
+        credits: dict,
+        providers: dict,
+        clasificacion: str,
+    ) -> str:
+        """
+        Renderiza la vista de recomendaciones de películas.
+
+        Args:
+            pelicula: Dict con todos los datos de la película
+
+        Returns:
+            HTML renderizado como string
+        """
+        return render_template(
+            "recomendaciones.html",
+            pelicula=pelicula,
+            credits=credits,
+            providers=providers,
+            clasificacion=clasificacion,
+        )
+
     def render_explorar(
         self,
         peliculas: list,

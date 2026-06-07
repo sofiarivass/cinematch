@@ -112,19 +112,18 @@ class PeliculaModel:
         """
         data = self._get(f"/movie/{pelicula_id}/credits")
 
-        # Director: busca en crew el primer miembro con job == "Director"
-        director_data = next(
-            (p for p in data.get("crew", []) if p.get("job") == "Director"), None
-        )
-
-        director = {
-            "nombre": director_data["name"] if director_data else "Desconocido",
-            "foto": (
-                self.construir_url_imagen(director_data.get("profile_path"))
-                if director_data
-                else None
-            ),
-        }
+        # Directores: todos los miembros con job == "Director"
+        directores = [
+            {
+                "nombre": p.get("name", "").split(" ", 1),
+                "foto": (
+                    self.construir_url_imagen(p.get("profile_path"))
+                    if p.get("profile_path")
+                    else None
+                ),
+            }
+            for p in data.get("crew", []) if p.get("job") == "Director"
+        ]
 
         # Cast: toma los primeros 10 actores ordenados por order
         cast = [
@@ -140,7 +139,7 @@ class PeliculaModel:
             for p in sorted(data.get("cast", []), key=lambda x: x.get("order", 99))[:10]
         ]
 
-        return {"director": director, "cast": cast}
+        return {"directores": directores, "cast": cast}
 
     def obtener_keywords(self, pelicula_id: int) -> list:
         """
@@ -187,7 +186,7 @@ class PeliculaModel:
         """Devuelve un dict {codigo: nombre_en_español} desde la API de TMDB."""
         data = self._get("/configuration/countries", {"language": "es-AR"})
         return {p["iso_3166_1"]: p["native_name"] for p in data}
-
+    
     def obtener_clasificacion(self, pelicula_id: int) -> str:
         """
         Obtiene la clasificación de edad para Argentina (AR).
@@ -203,12 +202,8 @@ class PeliculaModel:
             if not region:
                 return ""
             return next(
-                (
-                    r["certification"]
-                    for r in region.get("release_dates", [])
-                    if r.get("certification")
-                ),
-                "",
+                (r["certification"] for r in region.get("release_dates", []) if r.get("certification")),
+                ""
             )
 
         return extraer_cert("AR") or extraer_cert("US") or ""
@@ -227,12 +222,8 @@ class PeliculaModel:
         paises = self._obtener_nombres_paises()
         idioma_code = data.get("original_language", "")
         idioma_original = next(
-            (
-                l["name"]
-                for l in data.get("spoken_languages", [])
-                if l["iso_639_1"] == idioma_code
-            ),
-            idioma_code,
+            (l["name"] for l in data.get("spoken_languages", []) if l["iso_639_1"] == idioma_code),
+            idioma_code
         )
 
         return {
@@ -240,15 +231,11 @@ class PeliculaModel:
             "titulo": data.get("title", "Sin título"),
             "titulo_original": data.get("original_title", "Sin título original"),
             "pais": [paises.get(c, c) for c in data.get("origin_country", [])],
-            "idioma_original": idioma_original,
+            "idioma_original" : idioma_original,
             "descripcion": data.get("overview", "Sin descripción disponible."),
             "puntuacion": round(data.get("vote_average", 0), 2),
-            # "votos": data.get("vote_count", 0),
-            "votos": (
-                f"{data.get('vote_count', 0) / 1000:.1f}k"
-                if data.get("vote_count", 0) >= 1000
-                else str(data.get("vote_count", 0))
-            ),
+            #"votos": data.get("vote_count", 0),
+            "votos": f"{data.get('vote_count', 0) / 1000:.1f}k" if data.get('vote_count', 0) >= 1000 else str(data.get('vote_count', 0)),
             "poster": self.construir_url_imagen(data.get("poster_path")),
             "backdrop": self.construir_url_imagen(data.get("backdrop_path")),
             "fecha": data.get("release_date", "-"),

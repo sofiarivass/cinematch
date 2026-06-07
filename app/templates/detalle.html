@@ -1,7 +1,7 @@
 {% extends "base.html" %} {% block title %}{{ pelicula.titulo }} — CineMatch{% endblock %} {% block content %}
 
 <div class="container">
-    <div class="card">
+    <div class="card card-detalle">
         <div class="card-body">
             <div class="row">
                 <div class="col-4 poster-detalle-container">
@@ -34,7 +34,7 @@
                     <a role="button" class="boton-web btn btn-outline" href="{{ pelicula.web }}" target="_blank"><i class="bi bi-box-arrow-up-right"></i>  Web oficial</a>
                 </div>
             </div>
-            <hr>
+            <hr class="separador-detalle">
             <div class="row">
                 <div class="col-12">
                     <h2 class="h2-detalle">Sinopsis</h2>
@@ -43,17 +43,19 @@
             </div>
             <div class="row">
                 <div class="col-3">
-                    <h2 class="h2-detalle">Director</h2>
+                    <h2 class="h2-detalle">{% if credits.directores|length > 1 %}Directores{% else %}Director{% endif %}</h2>
                     <div class="crew-scroll">
+                        {% for director in credits.directores %}
                         <div class="crew-item">
-                            {% if credits.director.foto %}
-                            <img class="img-detalle rounded-circle" src="{{ credits.director.foto }}" alt="{{ credits.director.nombre }}"> {% else %}
+                            {% if director.foto %}
+                            <img class="img-detalle rounded-circle" src="{{ director.foto }}" alt="{{ director.nombre }}"> {% else %}
                             <div class="img-detalle rounded-circle img-placeholder">
                                 <img src="{{ url_for('static', filename='img/director.svg') }}" class="placeholder-svg">
                             </div>
                             {% endif %}
-                            <p class="crew-nombre">{{ credits.director.nombre }}</p>
+                            <p class="crew-nombre">{{ director.nombre[0] }}<br>{{ director.nombre[1] if director.nombre|length > 1 else '' }}</p>
                         </div>
+                        {% endfor %}
                     </div>
                 </div>
                 <div class="col-9">

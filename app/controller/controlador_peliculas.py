@@ -94,6 +94,22 @@ def buscar():
         return vista.render_error(str(e))
 
 
+# RUTA RECOMENDACIONES
+@peliculas_bp.route("/recomendacion/<int:pelicula_id>")
+def recomendacion(pelicula_id: int):
+    """Recomendacion de una película."""
+    try:
+        pelicula = modelo.obtener_detalle(pelicula_id)
+        credits = modelo.obtener_credits(pelicula_id)  # ← agregás esta línea
+        providers = modelo.obtener_providers(pelicula_id)
+        clasificacion = modelo.obtener_clasificacion(pelicula_id)
+        return vista.render_recomendaciones(
+            pelicula, credits, providers, clasificacion
+        )
+    except Exception as e:
+        return vista.render_error(str(e))
+
+
 # RUTA COMO FUNCIONA
 @peliculas_bp.route("/como-funciona")
 def como_funciona():
