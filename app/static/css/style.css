@@ -681,9 +681,22 @@ footer .text-body-secondary {
     opacity: 1;
 }
 
-.info-recomendacion {
+
+/* .info-recomendacion {
     margin-top: 0.75em;
     text-align: center;
+} */
+
+.info-recomendacion {
+    margin-top: 0.5em;
+    text-align: center;
+    flex: 1;
+    overflow: hidden;
+}
+
+.row.info-recomendacion {
+    flex: 1;
+    overflow: hidden;
 }
 
 .h3-recomendaciones {
