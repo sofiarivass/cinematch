@@ -11,6 +11,7 @@ from flask import Flask
 from config.config import Config
 from app.controller.controlador_peliculas import peliculas_bp
 from app.controller.controlador_series import series_bp
+from app.controller.controlador_usuarios import usuarios_bp
 
 
 def create_app() -> Flask:
@@ -32,6 +33,7 @@ def create_app() -> Flask:
     # Registrar blueprints del controlador
     app.register_blueprint(peliculas_bp)
     app.register_blueprint(series_bp)
+    app.register_blueprint(usuarios_bp)
 
     return app
 

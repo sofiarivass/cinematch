@@ -1,0 +1,232 @@
+/* ────────────────────────────────────────────────────────────────
+   css_registro.css
+   Estilos exclusivos para el formulario de registro
+   ──────────────────────────────────────────────────────────────── */
+
+.fondo {
+    background: url('../img/fondo_registro.png') no-repeat center center fixed;
+    background-size: cover;
+    
+}
+
+.registro-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 2rem 1rem;
+    margin-top: 5rem;
+}
+
+.registro-card {
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    padding: 3rem 2rem;
+    max-width: 450px;
+    width: 100%;
+}
+
+.registro-titulo {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin-bottom: 0.5rem;
+    text-align: center;
+}
+
+.registro-subtitulo {
+    font-size: 0.95rem;
+    color: #666666;
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.registro-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.form-group .form-label {
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: #1a1a1a;
+}
+
+.form-group .form-control {
+    padding: 0.75rem 1rem;
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+}
+
+.form-group .form-control:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+    outline: none;
+}
+
+.form-group .form-control.is-invalid {
+    border-color: #dc3545;
+    box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.1);
+}
+
+.form-group .form-text {
+    font-size: 0.85rem;
+    color: #999999;
+}
+
+.error-message {
+    font-size: 0.85rem;
+    color: #dc3545;
+    margin-top: -0.25rem;
+    display: none;
+}
+
+.error-message:not(:empty) {
+    display: block;
+}
+
+.form-check {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.form-check-input {
+    width: 1.25rem;
+    height: 1.25rem;
+    cursor: pointer;
+    accent-color: #007bff;
+}
+
+.form-check-label {
+    font-size: 0.95rem;
+    color: #1a1a1a;
+    cursor: pointer;
+    margin-bottom: 0;
+}
+
+.registro-botones {
+    display: flex;
+    gap: 1rem;
+    margin-top: 0.5rem;
+}
+
+.btn-registro {
+    flex: 1;
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-registro:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
+}
+
+.btn-volver {
+    flex: 1;
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-volver:hover {
+    background-color: #f8f9fa;
+    border-color: #6c757d;
+}
+
+.registro-link {
+    text-align: center;
+    font-size: 0.95rem;
+    color: #666666;
+    margin-top: 1rem;
+}
+
+.registro-link a {
+    color: #007bff;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.registro-link a:hover {
+    text-decoration: underline;
+}
+
+/* ────────────────────────────────────────────────────────────────
+   Responsive Design
+   ──────────────────────────────────────────────────────────────── */
+
+@media (max-width: 767.98px) {
+    .registro-container {
+        margin-top: 4rem;
+        padding: 1rem 1rem;
+    }
+
+    .registro-card {
+        padding: 2rem 1.5rem;
+    }
+
+    .registro-titulo {
+        font-size: 1.75rem;
+    }
+
+    .registro-subtitulo {
+        font-size: 0.9rem;
+    }
+
+    .registro-botones {
+        flex-direction: column;
+    }
+
+    .btn-registro,
+    .btn-volver {
+        width: 100%;
+    }
+}
+
+@media (max-width: 479.98px) {
+    .registro-container {
+        margin-top: 3.5rem;
+        padding: 0.75rem 0.75rem;
+    }
+
+    .registro-card {
+        padding: 1.5rem 1rem;
+        border-radius: 8px;
+    }
+
+    .registro-titulo {
+        font-size: 1.5rem;
+    }
+
+    .registro-form {
+        gap: 1rem;
+    }
+
+    .form-group .form-control {
+        padding: 0.65rem 0.85rem;
+        font-size: 0.9rem;
+    }
+
+    .form-check-input {
+        width: 1.1rem;
+        height: 1.1rem;
+    }
+}
