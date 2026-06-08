@@ -100,11 +100,12 @@ def recomendacion(pelicula_id: int):
     """Recomendacion de una película."""
     try:
         pelicula = modelo.obtener_detalle(pelicula_id)
-        credits = modelo.obtener_credits(pelicula_id)  # ← agregás esta línea
+        credits = modelo.obtener_credits(pelicula_id)
+        keywords = modelo.obtener_keywords(pelicula_id)
         providers = modelo.obtener_providers(pelicula_id)
         clasificacion = modelo.obtener_clasificacion(pelicula_id)
         return vista.render_recomendaciones(
-            pelicula, credits, providers, clasificacion
+            pelicula, credits, keywords, providers, clasificacion
         )
     except Exception as e:
         return vista.render_error(str(e))
@@ -123,7 +124,7 @@ def detalle(pelicula_id: int):
     """Muestra el detalle completo de una película."""
     try:
         pelicula = modelo.obtener_detalle(pelicula_id)
-        credits = modelo.obtener_credits(pelicula_id)  # ← agregás esta línea
+        credits = modelo.obtener_credits(pelicula_id)
         keywords = modelo.obtener_keywords(pelicula_id)
         providers = modelo.obtener_providers(pelicula_id)
         clasificacion = modelo.obtener_clasificacion(pelicula_id)

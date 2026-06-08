@@ -25,6 +25,7 @@ class PeliculaView:
         self,
         pelicula: dict,
         credits: dict,
+        keywords: list,
         providers: dict,
         clasificacion: str,
     ) -> str:
@@ -41,6 +42,7 @@ class PeliculaView:
             "recomendaciones.html",
             pelicula=pelicula,
             credits=credits,
+            keywords=keywords,
             providers=providers,
             clasificacion=clasificacion,
         )
