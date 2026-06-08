@@ -8,22 +8,27 @@
 </form>
 {% if series %}
 <!-- GRILLA DE SERIES -->
-<div class="grid">
+<div class="row">
     {% for serie in series %}
-    <a href="{{ url_for('series.detalle', serie_id=serie.id) }}" class="card">
-        <div class="card__img-wrapper">
-            {% if serie.poster %}
-            <img src="{{ serie.poster }}" alt="{{ serie.titulo }}" class="card__img" loading="lazy" /> {% else %}
-            <div class="card__no-img">Sin imagen</div>
-            {% endif %}
-            <span class="card__score">⭐ {{ "%.1f"|format(serie.puntuacion) }}</span>
+    <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 gap-2 mb-3 mx-auto">
+      <a href="{{ url_for('series.detalle', serie_id=serie.id) }}" class="card text-decoration-none h-100 w-100 d-flex" title="{{ serie.titulo }}">
+        <div>
+          {% if serie.poster %}
+          <img src="{{ serie.poster }}" alt="{{ serie.titulo }}" class="img-fluid rounded" loading="lazy" /> 
+          {% else %}
+          <div class="img-fluid rounded">Sin imagen</div>
+          {% endif %}
         </div>
-        <div class="card__body">
-            <h2 class="card__title">{{ serie.titulo }}</h2>
-            <p class="card__date">📅 {{ serie.fecha if serie.fecha else "Fecha desconocida" }}</p>
-            <p class="card__desc">{{ serie.descripcion[:120] }}{% if serie.descripcion|length > 120 %}...{% endif %}</p>
+        <div class="card-body">
+          <span>⭐ {{ "%.1f"|format(serie.puntuacion) }}</span>
+          <div class="fs-3">
+            <h2 class="text-truncate" title="{{ serie.titulo }}">{{ serie.titulo }}</h2>
+            <p class="fs-4">📅 {{ serie.fecha if serie.fecha else "Fecha desconocida" }}</p>
+            <p class="text-body-secondary fs-5">{{ serie.descripcion[:120] }}{% if serie.descripcion|length > 120 %}...{% else %}"Esta Pelicula no tiene una descripción"{% endif %}</p>
+          </div>
         </div>
-    </a>
+      </a>
+    </div>
     {% endfor %}
 </div>
 
