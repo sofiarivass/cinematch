@@ -1,16 +1,16 @@
 {% extends "base.html" %} {% block title %}{{ pelicula.titulo }} — CineMatch{% endblock %} {% block content %}
 
-<div class="container">
+<div class="container-fluid px-0 px-lg-3">
     <div class="card card-detalle">
         <div class="card-body">
             <div class="row">
-                <div class="col-4 poster-detalle-container">
+                <div class="col-12 col-sm-4 poster-detalle-container">
                     {% if pelicula.poster %}
                     <img src="{{ pelicula.poster }}" alt="{{ pelicula.titulo }}" class="poster-detalle" /> {% else %}
                     <div>Sin imagen</div>
                     {% endif %}
                 </div>
-                <div class="col-8 info-detalle-container">
+                <div class="col-12 col-sm-8 info-detalle-container">
                     <p class="generos-detalle">
                         {% for genero in pelicula.generos %}
                         <span class="generos-detalle badge rounded-pill bg-secondary">{{ genero }}</span> {% endfor %}
@@ -25,8 +25,9 @@
                     {% endif %}
                     <p class="meta-detalle">
                         <span class="rating-detalle"><i class="bi bi-star-fill"></i>  {{ pelicula.puntuacion }}</span>
-                        <span class="separador-detalle">/</span>
+                        <span class="barra-detalle">/</span>
                         <span class="votos-detalle"><i class="bi bi-person-fill"></i>  {{ pelicula.votos }}</span>
+                        <br class="d-sm-none" />
                         <span class="anio-detalle"><i class="bi bi-calendar-event"></i>  {{ pelicula.fecha[:4] }}</span>
                         <span class="duracion-detalle"><i class="bi bi-clock"></i>  {{ pelicula.duracion }}</span>
                     </p>
@@ -41,8 +42,8 @@
                     <p class="sinopsis-detalle">{{ pelicula.descripcion }}</p>
                 </div>
             </div>
-            <div class="row">
-                <div class="col-3">
+            <div class="row mt-3">
+                <div class="col-5 col-sm-3">
                     <h2 class="h2-detalle">{% if credits.directores|length > 1 %}Directores{% else %}Director{% endif %}</h2>
                     <div class="crew-scroll">
                         {% for director in credits.directores %}
@@ -58,8 +59,8 @@
                         {% endfor %}
                     </div>
                 </div>
-                <div class="col-9">
-                    <h2 class="h2-detalle">Elenco principal</h2>
+                <div class="col-7 col-sm-9 elenco-detalle">
+                    <h2 class="h2-detalle">Elenco</h2>
                     <div class="crew-scroll">
                         {% for actor in credits.cast %}
                         <div class="crew-item">
@@ -76,17 +77,16 @@
                     </div>
                 </div>
             </div>
-            <div class="row">
-                <div class="col-8">
+            <div class="row fila-keywords-providers mt-2">
+                <div class="col-keywords">
                     <h2 class="h2-detalle">Palabras clave</h2>
                     <div class="keywords-scroll">
                         {% for keyword in keywords %}
                         <span class="keywords-detalle badge bg-secondary keyword-badge">{{ keyword }}</span> {% endfor %}
                     </div>
                 </div>
-                <div class="col-4">
+                <div class="col-providers">
                     <h2 class="h2-detalle">Dónde ver</h2>
-
                     {% if providers.flatrate or providers.rent or providers.buy %} {% if providers.flatrate %}
                     <div class="provider-row">
                         <span class="provider-label">Incluida</span>
@@ -115,12 +115,11 @@
                     <span class="atribucion">Datos provistos por <a class="link-atribucion" href="https://www.justwatch.com/ar" target="_blank">JustWatch</a></span> {% else %}
                     <p class="no-disponible text-muted">Aún no disponible en streaming en Argentina</p>
                     {% endif %}
-
                 </div>
             </div>
-            <div class="row">
-                <h2 class="h2-detalle mt-4">Más detalles</h2>
-                <div class="col-3">
+            <div class="row mt-3">
+                <h2 class="h2-detalle h2-otros-detalles">Más detalles</h2>
+                <div class="col-5 col-sm-3">
                     <ul class="otros-detalles-clave">
                         <li>Título original</li>
                         <li>País de origen</li>
@@ -128,7 +127,7 @@
                         <li>Productora</li>
                     </ul>
                 </div>
-                <div class="col-9">
+                <div class="col-7 col-sm-9">
                     <ul class="otros-detalles-valor">
                         <li>{{ pelicula.titulo_original }}</li>
                         <li>{{ pelicula.pais | join(', ') }}</li>
@@ -136,6 +135,7 @@
                         <li>{{ pelicula.productora | join(', ') }}</li>
                     </ul>
                 </div>
+
             </div>
         </div>
     </div>

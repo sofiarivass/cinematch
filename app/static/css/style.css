@@ -164,7 +164,7 @@ footer .text-body-secondary {
     font-size: 0.875rem;
 }
 
-@media (max-width: 767.98px) {
+@media (max-width: 900px) {
     footer {
         text-align: center;
         padding: 2em 1.5em;
@@ -198,8 +198,15 @@ footer .text-body-secondary {
     padding: 2em 2.5em;
 }
 
+.poster-detalle-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 .poster-detalle {
     width: 100%;
+    max-width: 220px;
     border-radius: 18px;
 }
 
@@ -263,10 +270,13 @@ footer .text-body-secondary {
     color: #D6BF3A;
 }
 
-.separador-detalle {
+.barra-detalle {
     font-weight: 800;
     font-size: 1.2rem;
     color: #212C3D;
+}
+
+.separador-detalle {
     border-top: 2px solid #232D3E;
     margin-top: 2.5em;
     opacity: 1;
@@ -321,6 +331,7 @@ footer .text-body-secondary {
     font-weight: 300;
     font-size: 1rem;
     color: #CCCCCC;
+    margin-bottom: 0;
 }
 
 .img-detalle {
@@ -390,6 +401,16 @@ footer .text-body-secondary {
     margin: 0;
 }
 
+.fila-keywords-providers {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.col-keywords {
+    flex: 2;
+    min-width: 200px;
+}
+
 .keywords-detalle {
     font-weight: 500;
     font-size: 0.8rem;
@@ -422,6 +443,11 @@ footer .text-body-secondary {
 .keyword-badge {
     white-space: nowrap;
     flex-shrink: 0;
+}
+
+.col-providers {
+    flex: 1;
+    min-width: 160px;
 }
 
 .provider-row {
@@ -502,6 +528,126 @@ footer .text-body-secondary {
     font-size: 1rem;
     color: #ccccccaf !important;
     font-style: italic;
+}
+
+
+/* RESPONSIVE DETALLE */
+
+@media (max-width: 767.98px) {
+    .card-detalle {
+        width: 100%;
+        padding: 1.5em;
+        border-radius: 0;
+        border-left: none;
+        border-right: none;
+    }
+}
+
+@media (max-width: 691.99px) {
+    .info-detalle-container {
+        padding-left: 1.5em;
+    }
+    .titulo-detalle {
+        font-size: 1.6rem;
+    }
+    .anio-detalle,
+    .duracion-detalle {
+        margin-left: 1em;
+        font-size: 0.95rem;
+    }
+    .rating-detalle,
+    .votos-detalle {
+        font-size: 0.95rem;
+    }
+    .btn-outline {
+        font-size: 1rem;
+        padding: 0.5em 1em;
+    }
+    .clasificacion-detalle {
+        font-size: 1rem;
+    }
+    .tagline-detalle {
+        font-size: 1rem;
+    }
+    .col-keywords {
+        display: none;
+    }
+    .col-providers {
+        flex: unset;
+        width: 100%;
+    }
+    .otros-detalles-clave,
+    .otros-detalles-valor {
+        font-size: 0.93rem;
+    }
+    .modal .btn-cerrar-modal {
+        width: 0.7em;
+        height: 0.7em;
+        font-size: 2.7rem;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .card-detalle {
+        padding: 1em;
+    }
+    .info-detalle-container {
+        text-align: center;
+        padding-left: 0;
+        margin-top: 1em;
+    }
+    .titulo-detalle {
+        font-size: 1.5rem;
+    }
+    .meta-detalle {
+        font-size: 0.85rem;
+    }
+    .anio-detalle,
+    .duracion-detalle {
+        margin-left: 0.5em;
+        font-size: 0.85rem;
+    }
+    .sinopsis-detalle {
+        font-size: 0.9rem;
+    }
+    .h2-detalle {
+        font-size: 1.3rem;
+    }
+    .img-detalle {
+        width: 75px;
+        height: 75px;
+    }
+    .crew-item {
+        min-width: 75px;
+    }
+    .crew-nombre {
+        font-size: 0.7rem;
+    }
+    .crew-personaje {
+        font-size: 0.65rem;
+    }
+    .otros-detalles-clave,
+    .otros-detalles-valor {
+        font-size: 0.85rem;
+    }
+    .otros-detalles-clave li,
+    .otros-detalles-valor li {
+        margin-bottom: 0.5em;
+    }
+    .provider-logo {
+        width: 32px;
+        height: 32px;
+    }
+    .provider-label {
+        font-size: 0.75rem;
+        width: 4em;
+    }
+    .boton-trailer {
+        margin-bottom: 0.5em;
+    }
+    .boton-web {
+        margin-left: 0;
+    }
 }
 
 
@@ -771,7 +917,7 @@ footer .text-body-secondary {
 }
 
 .img-btn-info-recomendacion {
-    width: clamp(2.5em, 6vh, 3.5em);
+    width: clamp(3em, 6.5vh, 4em);
 }
 
 .txt-si {
@@ -797,7 +943,7 @@ footer .text-body-secondary {
         width: clamp(3em, 7.5vh, 4.5em);
     }
     .img-btn-info-recomendacion {
-        width: clamp(2em, 5.5vh, 3em);
+        width: clamp(2.5em, 6vh, 3.5em);
     }
     .txt-si,
     .txt-no {
@@ -862,4 +1008,10 @@ footer .text-body-secondary {
 
 .btn-cerrar-modal:hover {
     color: #303949;
+}
+
+@media (min-width: 992px) {
+    .btn-cerrar-modal {
+        right: 0.6em;
+    }
 }
