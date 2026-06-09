@@ -4,117 +4,117 @@
 
 {% block content %}
 <div class="fondo">
-    <div class="container registro-container">
-        <div class="registro-card">
-          <h1 class="registro-titulo">Crear Cuenta</h1>
-          <p class="registro-subtitulo">Únete a CineMatch y descubre películas que te encantarán</p>
-  
-          <form id="formulario-registro" class="registro-form" method="POST">
-              <!-- Nombre de usuario -->
-              <div class="form-group">
-                  <label for="nombre_usuario" class="form-label">Nombre de usuario</label>
-                  <input 
-                      type="text" 
-                      id="nombre_usuario" 
-                      name="nombre_usuario" 
-                      class="form-control" 
-                      placeholder="Tu nombre de usuario"
-                      minlength="3"
-                      required
-                  >
-                  <small class="form-text text-muted">Mínimo 3 caracteres</small>
-                  <div class="error-message" id="error-nombre_usuario"></div>
-              </div>
-  
-              <!-- Correo electrónico -->
-              <div class="form-group">
-                  <label for="email" class="form-label">Correo Electrónico</label>
-                  <input 
-                      type="email" 
-                      id="email" 
-                      name="email" 
-                      class="form-control" 
-                      placeholder="tu@correo.com"
-                      required
-                  >
-                  <div class="error-message" id="error-email"></div>
-              </div>
-  
-              <!-- Fecha de nacimiento -->
-              <div class="form-group">
-                  <label for="fecha_nacimiento" class="form-label">Fecha de Nacimiento</label>
-                  <input 
-                      type="date" 
-                      id="fecha_nacimiento" 
-                      name="fecha_nacimiento" 
-                      class="form-control"
-                      required
-                  >
-                  <small class="form-text text-muted">Debes ser mayor de edad</small>
-              </div>
-  
-              <!-- Contraseña -->
-              <div class="form-group">
-                  <label for="contraseña" class="form-label">Contraseña</label>
-                  <input 
-                      type="password" 
-                      id="contraseña" 
-                      name="contraseña" 
-                      class="form-control" 
-                      placeholder="Contraseña segura"
-                      minlength="6"
-                      required
-                  >
-                  <small class="form-text text-muted">Mínimo 6 caracteres</small>
-                  <div class="error-message" id="error-contraseña"></div>
-              </div>
-  
-              <!-- Repetir contraseña -->
-              <div class="form-group">
-                  <label for="repetir_contraseña" class="form-label">Repetir Contraseña</label>
-                  <input 
-                      type="password" 
-                      id="repetir_contraseña" 
-                      name="repetir_contraseña" 
-                      class="form-control" 
-                      placeholder="Repite tu contraseña"
-                      minlength="6"
-                      required
-                  >
-                  <div class="error-message" id="error-repetir_contraseña"></div>
-              </div>
-  
-              <!-- Términos -->
-              <div class="form-check form-group">
-                  <input 
-                      type="checkbox" 
-                      id="terminos" 
-                      name="terminos" 
-                      class="form-check-input" 
-                      required
-                  >
-                  <label class="form-check-label" for="terminos">
-                      Acepto los términos y condiciones
-                  </label>
-              </div>
-  
-              <!-- Botones -->
-                <div class="registro-botones">
-                  <button type="submit" class="btn btn-primary btn-registro">Crear Cuenta</button>
-                  <a href="{{ url_for('peliculas.index') }}" class="btn btn-outline-secondary btn-volver">Volver</a>
-                </div>
-  
-              <!-- Link a iniciar sesión -->
-              <p class="registro-link">
-                  ¿Ya tienes cuenta? <a href="#">Inicia sesión aquí</a>
-              </p>
-            </form>
-      </div>
+  <div class="container registro-container">
+    <div class="registro-card">
+      <h1 class="registro-titulo text-start">REGISTRATE</h1>
+      <p class="registro-subtitulo text-start">Unite a cinematch y personalizá tu experiencia</p>
+
+      <form id="formulario-registro" class="registro-form" method="POST">
+        <!-- Nombre de usuario -->
+        <div class="form-group">
+          <!-- <label for="nombre_usuario" class="form-label"><i class="bi bi-person"></i></label> -->
+          <div class="field-wrap">
+            <i class="bi bi-person icon-left"></i>
+            <input 
+              type="text" 
+              id="nombre_usuario" 
+              name="nombre_usuario" 
+              class="form-control" 
+              placeholder="Tu nombre de usuario"
+              minlength="3"
+              required
+            >
+          </div>
+          <small class="form-text text-muted">Mínimo 3 caracteres</small>
+          <div class="error-message" id="error-nombre_usuario"></div>
+        </div>
+
+        <!-- Correo electrónico -->
+        <div class="form-group field-wrap">
+          <i class="bi bi-envelope icon-left"></i>
+          <!-- <label for="email" class="form-label">Correo Electrónico</label> -->
+          <input 
+            type="email" 
+            id="email" 
+            name="email" 
+            class="form-control" 
+            placeholder="tu@correo.com"
+            required
+          >
+          <div class="error-message" id="error-email"></div>
+        </div>
+
+        <!-- Fecha de nacimiento -->
+        <div class="form-group">
+          <!-- <label for="fecha_nacimiento" class="form-label">Fecha de Nacimiento</label> -->
+          <input 
+            type="date" 
+            id="fecha_nacimiento" 
+            name="fecha_nacimiento" 
+            class="form-control"
+            required
+          >
+          <small class="form-text text-muted">Debes ser mayor de edad</small>
+        </div>
+
+        <!-- Contraseña -->
+        <div class="form-group">
+          <!-- <label for="contraseña" class="form-label">Contraseña</label> -->
+          <input 
+            type="password" 
+            id="contraseña" 
+            name="contraseña" 
+            class="form-control" 
+            placeholder="Contraseña segura"
+            minlength="6"
+            required
+          >
+          <small class="form-text text-muted">Mínimo 6 caracteres</small>
+          <div class="error-message" id="error-contraseña"></div>
+        </div>
+
+        <!-- Repetir contraseña -->
+        <div class="form-group">
+          <!-- <label for="repetir_contraseña" class="form-label">Repetir Contraseña</label> -->
+          <input 
+            type="password" 
+            id="repetir_contraseña" 
+            name="repetir_contraseña" 
+            class="form-control" 
+            placeholder="Repite tu contraseña"
+            minlength="6"
+            required
+          >
+          <div class="error-message" id="error-repetir_contraseña"></div>
+        </div>
+
+        <!-- Términos -->
+        <div class="form-check form-group">
+          <input 
+            type="checkbox" 
+            id="terminos" 
+            name="terminos" 
+            class="form-check-input" 
+            required
+          >
+          <!-- <label class="form-check-label" for="terminos">Acepto los términos y condiciones</label> -->
+        </div>
+
+        <!-- Botones -->
+        <div class="registro-botones">
+          <a href="{{ url_for('peliculas.encuesta_perfil') }}" class="btn btn-primary btn-registro">Continuar</a>
+          <a href="{{ url_for('peliculas.index') }}" class="btn btn-outline-secondary btn-volver">Volver</a>
+        </div>
+
+        <!-- Link a iniciar sesión -->
+        <p class="registro-link">¿Ya tienes cuenta? <a href="#">Inicia sesión aquí</a></p>
+      </form>
+    </div>
   </div>
 </div>
 
 <script>
-document.getElementById('formulario-registro').addEventListener('submit', async function(e) {
+  document.getElementById('formulario-registro').addEventListener('submit', async function(e) {
     e.preventDefault();
     
     // Limpiar errores previos
@@ -124,54 +124,54 @@ document.getElementById('formulario-registro').addEventListener('submit', async 
     const formData = new FormData(this);
     
     try {
-        const response = await fetch("{{ url_for('usuarios.registro') }}", {
-            method: 'POST',
-            body: formData
+      const response = await fetch("{{ url_for('usuarios.registro') }}", {
+        method: 'POST',
+        body: formData
+      });
+      
+      const resultado = await response.json();
+      
+      if (resultado.exito) {
+        Swal.fire({ 
+          icon: 'success',
+          title: '¡Bienvenido!',
+          text: resultado.mensaje,
+          confirmButtonText: 'Continuar'
+        }).then(() => {
+          if (resultado.redirigir) {
+              window.location.href = resultado.redirigir;
+          }
         });
-        
-        const resultado = await response.json();
-        
-        if (resultado.exito) {
-            Swal.fire({ 
-                icon: 'success',
-                title: '¡Bienvenido!',
-                text: resultado.mensaje,
-                confirmButtonText: 'Continuar'
-            }).then(() => {
-                if (resultado.redirigir) {
-                    window.location.href = resultado.redirigir;
-                }
-            });
-        } else {
-            // Mostrar error general
-            Swal.fire({
-                icon: 'error',
-                title: 'Error en el registro',
-                text: resultado.mensaje
-            });
-        }
-    } catch (error) {
-        console.error('Error:', error);
+      } else {
+        // Mostrar error general
         Swal.fire({
-            icon: 'error',
-            title: 'Error',
-            text: 'Ocurrió un error al procesar tu solicitud'
+          icon: 'error',
+          title: 'Error en el registro',
+          text: resultado.mensaje
         });
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Ocurrió un error al procesar tu solicitud'
+      });
     }
-});
+  });
 
-// Validar coincidencia de contraseñas en tiempo real
-document.getElementById('repetir_contraseña').addEventListener('change', function() {
+  // Validar coincidencia de contraseñas en tiempo real
+  document.getElementById('repetir_contraseña').addEventListener('change', function() {
     const contraseña = document.getElementById('contraseña').value;
     const repetir = this.value;
     
     if (contraseña && repetir && contraseña !== repetir) {
-        document.getElementById('error-repetir_contraseña').textContent = 'Las contraseñas no coinciden';
-        this.classList.add('is-invalid');
+      document.getElementById('error-repetir_contraseña').textContent = 'Las contraseñas no coinciden';
+      this.classList.add('is-invalid');
     } else {
-        document.getElementById('error-repetir_contraseña').textContent = '';
-        this.classList.remove('is-invalid');
+      document.getElementById('error-repetir_contraseña').textContent = '';
+      this.classList.remove('is-invalid');
     }
-});
+  });
 </script>
 {% endblock %}

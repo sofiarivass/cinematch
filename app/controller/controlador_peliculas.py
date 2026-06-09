@@ -56,30 +56,6 @@ def encuesta_perfil():
 
     return vista.render_encuesta_perfil(paso=siguiente_paso, providers=providers, todos_providers=todos_providers)
 
-
-# # RUTA ENCUESTA PERFIL
-# @peliculas_bp.route("/encuesta-perfil")
-# def encuesta_perfil():
-#     return vista.render_encuesta_perfil(paso=0)
-
-
-# @peliculas_bp.route("/")
-# def index():
-#     """Muestra la página principal."""
-#     pagina = request.args.get("page", 1, type=int)
-
-#     try:
-#         datos = modelo.obtener_populares(pagina=pagina)
-#         return vista.render_explorar(
-#             peliculas=datos["peliculas"],
-#             pagina_actual=datos["pagina_actual"],
-#             total_paginas=datos["total_paginas"],
-#             titulo_seccion="Películas Populares",
-#         )
-#     except Exception as e:
-#         return vista.render_error(str(e))
-
-
 # RUTA EXPLORAR
 @peliculas_bp.route("/explorar")
 def explorar():
