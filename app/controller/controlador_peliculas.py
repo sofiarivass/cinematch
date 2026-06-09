@@ -52,8 +52,9 @@ def encuesta_perfil():
 
     # Solo hace la llamada a la API cuando es necesario
     providers = modelo.obtener_providers_ar() if siguiente_paso == 1 else []
+    todos_providers = modelo.obtener_todos_providers_ar() if siguiente_paso == 1 else []
 
-    return vista.render_encuesta_perfil(paso=siguiente_paso, providers=providers)
+    return vista.render_encuesta_perfil(paso=siguiente_paso, providers=providers, todos_providers=todos_providers)
 
 
 # # RUTA ENCUESTA PERFIL

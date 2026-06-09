@@ -19,10 +19,12 @@
             <input type="hidden" name="paso" value="0">
             <h1 class="encuesta-titulo">Personalizemos<br>tu experiencia</h1>
             <p class="encuesta-desc">
-                Antes de comenzar, queremos conocerte un poco mejor para personalizar tu experiencia dentro de <strong><span class="texto-blanco">Cine</span><span class="texto-color">Match</span></strong>.
+                Antes de comenzar, queremos conocerte un poco mejor para personalizar tu experiencia dentro de
+                <strong><span class="texto-blanco">Cine</span><span class="texto-color">Match</span></strong>.
             </p>
             <p class="encuesta-desc">
-                Te haremos una breve encuesta sobre tus plataformas de streaming, idiomas y preferencias de visualización. Esta información nos permitirá ofrecerte recomendaciones más precisas y adaptadas a vos.
+                Te haremos una breve encuesta sobre tus plataformas de streaming, idiomas y preferencias de
+                visualización. Esta información nos permitirá ofrecerte recomendaciones más precisas y adaptadas a vos.
             </p>
             <p class="encuesta-nota"><em>Podrás modificar estas preferencias más adelante desde tu perfil.</em></p>
             <div class="encuesta-btn-container">
@@ -35,18 +37,35 @@
         <form method="POST" action="{{ url_for('peliculas.encuesta_perfil') }}">
             <input type="hidden" name="paso" value="1">
             <h1 class="encuesta-titulo">Selecciona tus<br>plataformas de streaming</h1>
-            <p class="encuesta-desc">Personalizaremos tus recomendaciones basándonos en los servicios que ya tenés contratados</p>
+            <p class="encuesta-desc">Personalizaremos tus recomendaciones basándonos en los servicios que ya tenés
+                contratados</p>
             <div class="encuesta-grid-plataformas">
                 {% for p in providers %}
                 <label class="encuesta-opcion-logo">
-            <input type="checkbox" name="plataformas" value="{{ p.id }}" class="encuesta-check-hidden">
-            <img src="{{ url_for('static', filename=p.logo) }}" alt="{{ p.nombre }}" title="{{ p.nombre }}" class="encuesta-logo-img">
-        </label> {% endfor %}
+                    <input type="checkbox" name="plataformas" value="{{ p.id }}" class="encuesta-check-hidden">
+                    <img src="{{ url_for('static', filename=p.logo) }}" alt="{{ p.nombre }}" title="{{ p.nombre }}"
+                        class="encuesta-logo-img">
+                </label> {% endfor %}
             </div>
-            <!-- <div class="encuesta-otro">
+            <div class="encuesta-tags-container" id="tags-container">
+                <!-- badges que se agregan dinámicamente -->
+            </div>
+            <input type="hidden" name="plataformas_otras" id="plataformas-otras-hidden">
+
+            <div class="encuesta-otro">
                 <label class="encuesta-otro-label">Otra:</label>
-                <input type="text" name="plataforma_otra" placeholder="Ej: Claro Video, Star+, Crunchyroll..." class="encuesta-otro-input">
-            </div> -->
+                <div class="encuesta-otro-wrapper">
+                    <input type="text" id="input-otra-plataforma" placeholder="Ej: Claro Video, Star+..."
+                        class="encuesta-otro-input" autocomplete="off">
+                    <ul class="encuesta-sugerencias" id="sugerencias-lista"></ul>
+                </div>
+            </div>
+
+            <!-- Lista de providers para JS -->
+            <script>
+                const todosProviders = JSON.parse('{{ todos_providers | tojson | safe }}');
+                console.log(todosProviders);
+            </script>
             <div class="encuesta-btn-container">
                 <button type="submit" class="btn-encuesta">Siguiente</button>
             </div>
@@ -58,8 +77,11 @@
             <input type="hidden" name="paso" value="2">
             <a href="{{ url_for('peliculas.encuesta_perfil') }}" class="encuesta-volver">↩</a>
             <h1 class="encuesta-titulo">Disponibilidad del<br>contenido</h1>
-            <p class="encuesta-desc">Podemos recomendarte contenido incluido en tus suscripciones o también opciones disponibles para alquilar o comprar digitalmente</p>
-            {% for opcion in [ {"value": "flatrate", "icono": "bi-play-circle", "texto": "Solo contenido incluido en mis plataformas"}, {"value": "rent_buy", "icono": "bi-currency-dollar","texto": "Opciones disponibles para alquilar o comprar"}, {"value": "any",
+            <p class="encuesta-desc">Podemos recomendarte contenido incluido en tus suscripciones o también opciones
+                disponibles para alquilar o comprar digitalmente</p>
+            {% for opcion in [ {"value": "flatrate", "icono": "bi-play-circle", "texto": "Solo contenido incluido en mis
+            plataformas"}, {"value": "rent_buy", "icono": "bi-currency-dollar","texto": "Opciones disponibles para
+            alquilar o comprar"}, {"value": "any",
             "icono": "bi-collection-play","texto": "Indistinto"} ] %}
             <label class="encuesta-opcion-fila">
                 <input type="radio" name="disponibilidad" value="{{ opcion.value }}" class="encuesta-radio-hidden">
@@ -79,8 +101,11 @@
             <h1 class="encuesta-titulo">¿En qué idiomas preferís<br>ver contenido?</h1>
             <p class="encuesta-desc">Esto nos ayuda a priorizar títulos disponibles en tus idiomas de preferencia</p>
             <div class="encuesta-grid-idiomas">
-                {% for idioma in [ {"value": "es", "emoji": "🇪🇸", "texto": "Español"}, {"value": "en", "emoji": "🇺🇸", "texto": "Inglés"}, {"value": "pt", "emoji": "🇧🇷", "texto": "Portugués"}, {"value": "fr", "emoji": "🇫🇷", "texto": "Francés"}, {"value": "ko",
-                "emoji": "🇰🇷", "texto": "Coreano"}, {"value": "ja", "emoji": "🇯🇵", "texto": "Japonés"}, {"value": "it", "emoji": "🇮🇹", "texto": "Italiano"}, {"value": "any","emoji": "🌐", "texto": "Indistinto"} ] %}
+                {% for idioma in [ {"value": "es", "emoji": "🇪🇸", "texto": "Español"}, {"value": "en", "emoji":
+                "🇺🇸", "texto": "Inglés"}, {"value": "pt", "emoji": "🇧🇷", "texto": "Portugués"}, {"value": "fr",
+                "emoji": "🇫🇷", "texto": "Francés"}, {"value": "ko",
+                "emoji": "🇰🇷", "texto": "Coreano"}, {"value": "ja", "emoji": "🇯🇵", "texto": "Japonés"}, {"value":
+                "it", "emoji": "🇮🇹", "texto": "Italiano"}, {"value": "any","emoji": "🌐", "texto": "Indistinto"} ] %}
                 <label class="encuesta-opcion-idioma">
                     <input type="checkbox" name="idiomas" value="{{ idioma.value }}" class="encuesta-check-hidden">
                     <span class="encuesta-idioma-emoji">{{ idioma.emoji }}</span>
@@ -89,7 +114,8 @@
             </div>
             <div class="encuesta-otro">
                 <label class="encuesta-otro-label">Otro:</label>
-                <input type="text" name="idioma_otro" placeholder="Busca tus idiomas de preferencia" class="encuesta-otro-input">
+                <input type="text" name="idioma_otro" placeholder="Busca tus idiomas de preferencia"
+                    class="encuesta-otro-input">
             </div>
             <div class="encuesta-btn-container">
                 <button type="submit" class="btn-encuesta">Siguiente</button>
@@ -103,7 +129,9 @@
             <a href="{{ url_for('peliculas.encuesta_perfil') }}" class="encuesta-volver">↩</a>
             <h1 class="encuesta-titulo">¿Cómo preferís mirar<br>contenido?</h1>
             <p class="encuesta-desc">Priorizaremos contenido disponible en el formato que más te resulte cómodo</p>
-            {% for opcion in [ {"value": "doblado", "icono": "bi-mic", "texto": "Doblado"}, {"value": "subtitulado", "icono": "bi-badge-cc", "texto": "Subtitulado"}, {"value": "any", "icono": "bi-badge-cc-fill", "texto": "Indistinto"} ] %}
+            {% for opcion in [ {"value": "doblado", "icono": "bi-mic", "texto": "Doblado"}, {"value": "subtitulado",
+            "icono": "bi-badge-cc", "texto": "Subtitulado"}, {"value": "any", "icono": "bi-badge-cc-fill", "texto":
+            "Indistinto"} ] %}
             <label class="encuesta-opcion-fila">
                 <input type="radio" name="formato" value="{{ opcion.value }}" class="encuesta-radio-hidden">
                 <i class="bi {{ opcion.icono }} encuesta-opcion-icono"></i>

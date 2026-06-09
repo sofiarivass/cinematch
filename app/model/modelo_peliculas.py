@@ -112,19 +112,28 @@ class PeliculaModel:
         531: "img/paramount.svg",
     }
 
-    def obtener_providers_ar(self) -> list:
-        data = self._get(
-            "/watch/providers/movie",
+    def obtener_todos_providers_ar(self) -> list:
+        data = self._get("/watch/providers/movie", {
+            "watch_region": "AR",
+            "language": "es-AR",
+        })
+        principales_ids = set(self.PROVIDERS_PRINCIPALES_AR)
+        return [
             {
-                "watch_region": "AR",
-                "language": "es-AR",
-            },
-        )
+                "id":     p.get("provider_id"),
+                "nombre": p.get("provider_name", ""),
+            }
+            for p in data.get("results", [])
+            if p.get("provider_id") not in principales_ids
+        ]
 
-        # TEMPORAL: imprime todos los providers para identificar IDs
-        for p in data.get("results", []):
-            print(f"{p.get('provider_id')} — {p.get('provider_name')}")
-
+    # NUEVO MÉTODO: Este es el que te falta y llama el controlador
+    def obtener_providers_ar(self) -> list:
+        data = self._get("/watch/providers/movie", {
+            "watch_region": "AR",
+            "language": "es-AR",
+        })
+        
         principales = [
             {
                 "id": p.get("provider_id"),
@@ -140,6 +149,7 @@ class PeliculaModel:
         principales.sort(key=lambda x: orden.index(x["id"]) if x["id"] in orden else 99)
 
         return principales
+
 
     def obtener_credits(self, pelicula_id: int) -> dict:
         """
@@ -196,33 +206,6 @@ class PeliculaModel:
         data = self._get(f"/movie/{pelicula_id}/keywords")
 
         return [k["name"] for k in data.get("keywords", [])]
-
-    def obtener_providers(self, pelicula_id: int) -> dict:
-        """
-        Obtiene los proveedores de streaming para Argentina.
-
-        Returns:
-            dict con 'flatrate', 'rent' y 'buy' (listas de dicts con nombre y logo)
-            Cualquiera de las listas puede ser vacía si no hay datos.
-        """
-        data = self._get(f"/movie/{pelicula_id}/watch/providers")
-
-        ar_data = data.get("results", {}).get("AR", {})
-
-        def parsear(lista: list) -> list:
-            return [
-                {
-                    "nombre": p.get("provider_name", ""),
-                    "logo": self.construir_url_imagen(p.get("logo_path")),
-                }
-                for p in lista
-            ]
-
-        return {
-            "flatrate": parsear(ar_data.get("flatrate", [])),  # Streaming incluido
-            "rent": parsear(ar_data.get("rent", [])),  # Alquiler
-            "buy": parsear(ar_data.get("buy", [])),  # Compra
-        }
 
     def _obtener_nombres_paises(self) -> dict:
         """Devuelve un dict {codigo: nombre_en_español} desde la API de TMDB."""
