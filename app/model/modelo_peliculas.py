@@ -100,6 +100,47 @@ class PeliculaModel:
             "pagina_actual": pagina,
         }
 
+    PROVIDERS_PRINCIPALES_AR = {8, 1899, 119, 337, 350, 531}
+    # Netflix, HBO Max, Amazon Prime, Disney+, Apple TV+, Paramount+
+
+    PROVIDERS_LOGOS_LOCALES = {
+        8: "img/netflix.svg",
+        1899: "img/hbo-max.svg",
+        119: "img/prime-video.svg",
+        337: "img/disney.svg",
+        350: "img/apple-tv.svg",
+        531: "img/paramount.svg",
+    }
+
+    def obtener_providers_ar(self) -> list:
+        data = self._get(
+            "/watch/providers/movie",
+            {
+                "watch_region": "AR",
+                "language": "es-AR",
+            },
+        )
+
+        # TEMPORAL: imprime todos los providers para identificar IDs
+        for p in data.get("results", []):
+            print(f"{p.get('provider_id')} — {p.get('provider_name')}")
+
+        principales = [
+            {
+                "id": p.get("provider_id"),
+                "nombre": p.get("provider_name", ""),
+                "logo": self.PROVIDERS_LOGOS_LOCALES.get(p.get("provider_id")),
+            }
+            for p in data.get("results", [])
+            if p.get("provider_id") in self.PROVIDERS_PRINCIPALES_AR
+        ]
+
+        # Ordenar según el orden definido en el set
+        orden = [8, 1899, 119, 337, 350, 531]
+        principales.sort(key=lambda x: orden.index(x["id"]) if x["id"] in orden else 99)
+
+        return principales
+
     def obtener_credits(self, pelicula_id: int) -> dict:
         """
         Obtiene el director y casting principal de una película.
@@ -122,7 +163,8 @@ class PeliculaModel:
                     else None
                 ),
             }
-            for p in data.get("crew", []) if p.get("job") == "Director"
+            for p in data.get("crew", [])
+            if p.get("job") == "Director"
         ]
 
         # Cast: toma los primeros 10 actores ordenados por order
@@ -186,7 +228,7 @@ class PeliculaModel:
         """Devuelve un dict {codigo: nombre_en_español} desde la API de TMDB."""
         data = self._get("/configuration/countries", {"language": "es-AR"})
         return {p["iso_3166_1"]: p["native_name"] for p in data}
-    
+
     def obtener_clasificacion(self, pelicula_id: int) -> str:
         """
         Obtiene la clasificación de edad para Argentina (AR).
@@ -202,8 +244,12 @@ class PeliculaModel:
             if not region:
                 return ""
             return next(
-                (r["certification"] for r in region.get("release_dates", []) if r.get("certification")),
-                ""
+                (
+                    r["certification"]
+                    for r in region.get("release_dates", [])
+                    if r.get("certification")
+                ),
+                "",
             )
 
         return extraer_cert("AR") or extraer_cert("US") or ""
@@ -222,8 +268,12 @@ class PeliculaModel:
         paises = self._obtener_nombres_paises()
         idioma_code = data.get("original_language", "")
         idioma_original = next(
-            (l["name"] for l in data.get("spoken_languages", []) if l["iso_639_1"] == idioma_code),
-            idioma_code
+            (
+                l["name"]
+                for l in data.get("spoken_languages", [])
+                if l["iso_639_1"] == idioma_code
+            ),
+            idioma_code,
         )
 
         return {
@@ -231,11 +281,15 @@ class PeliculaModel:
             "titulo": data.get("title", "Sin título"),
             "titulo_original": data.get("original_title", "Sin título original"),
             "pais": [paises.get(c, c) for c in data.get("origin_country", [])],
-            "idioma_original" : idioma_original,
+            "idioma_original": idioma_original,
             "descripcion": data.get("overview", "Sin descripción disponible."),
             "puntuacion": round(data.get("vote_average", 0), 2),
-            #"votos": data.get("vote_count", 0),
-            "votos": f"{data.get('vote_count', 0) / 1000:.1f}k" if data.get('vote_count', 0) >= 1000 else str(data.get('vote_count', 0)),
+            # "votos": data.get("vote_count", 0),
+            "votos": (
+                f"{data.get('vote_count', 0) / 1000:.1f}k"
+                if data.get("vote_count", 0) >= 1000
+                else str(data.get("vote_count", 0))
+            ),
             "poster": self.construir_url_imagen(data.get("poster_path")),
             "backdrop": self.construir_url_imagen(data.get("backdrop_path")),
             "fecha": data.get("release_date", "-"),

@@ -10,7 +10,7 @@ Responsabilidades:
   - Pasar los datos a la Vista para renderizar.
 """
 
-from flask import Blueprint, request, redirect, url_for
+from flask import Blueprint, request, redirect, url_for, session
 from app.model.modelo_peliculas import PeliculaModel
 from app.views.vista_peliculas import PeliculaView
 
@@ -26,6 +26,40 @@ vista = PeliculaView()
 @peliculas_bp.route("/")
 def index():
     return vista.render_index()
+
+
+# SESIÓN DE USUARIO Y RUTA DE ENCUESTA
+@peliculas_bp.route("/encuesta-perfil", methods=["GET", "POST"])
+def encuesta_perfil():
+    if request.method == "POST":
+        paso = int(request.form.get("paso", 0))
+
+        # Guardar respuesta del paso actual en session
+        if paso == 1:
+            session["plataformas"] = request.form.getlist("plataformas")
+        elif paso == 2:
+            session["disponibilidad"] = request.form.get("disponibilidad")
+        elif paso == 3:
+            session["idiomas"] = request.form.getlist("idiomas")
+        elif paso == 4:
+            session["formato"] = request.form.get("formato")
+            return redirect(url_for("peliculas.index"))  # Encuesta finalizada
+
+        siguiente_paso = paso + 1
+    else:
+        siguiente_paso = 0
+        session.clear()
+
+    # Solo hace la llamada a la API cuando es necesario
+    providers = modelo.obtener_providers_ar() if siguiente_paso == 1 else []
+
+    return vista.render_encuesta_perfil(paso=siguiente_paso, providers=providers)
+
+
+# # RUTA ENCUESTA PERFIL
+# @peliculas_bp.route("/encuesta-perfil")
+# def encuesta_perfil():
+#     return vista.render_encuesta_perfil(paso=0)
 
 
 # @peliculas_bp.route("/")
