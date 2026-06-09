@@ -6,15 +6,16 @@
 <div class="fondo">
   <div class="container registro-container">
     <div class="registro-card">
-      <h1 class="registro-titulo text-start">REGISTRATE</h1>
-      <p class="registro-subtitulo text-start">Unite a cinematch y personalizá tu experiencia</p>
+      <div>
+        <h1 class="registro-titulo text-start">REGISTRATE</h1>
+        <p class="registro-subtitulo text-start">Unite a cinematch y personalizá tu experiencia</p>
+      </div>
 
       <form id="formulario-registro" class="registro-form" method="POST">
         <!-- Nombre de usuario -->
-        <div class="form-group">
-          <!-- <label for="nombre_usuario" class="form-label"><i class="bi bi-person"></i></label> -->
-          <div class="field-wrap">
-            <i class="bi bi-person icon-left"></i>
+        <div class="form-group field-wrap">
+          <i class="bi bi-person icon-left"></i>
+          <div>
             <input 
               type="text" 
               id="nombre_usuario" 
@@ -24,43 +25,31 @@
               minlength="3"
               required
             >
+            <div class="error-message" id="error-nombre_usuario"></div>
           </div>
-          <small class="form-text text-muted">Mínimo 3 caracteres</small>
-          <div class="error-message" id="error-nombre_usuario"></div>
         </div>
 
         <!-- Correo electrónico -->
         <div class="form-group field-wrap">
           <i class="bi bi-envelope icon-left"></i>
-          <!-- <label for="email" class="form-label">Correo Electrónico</label> -->
-          <input 
-            type="email" 
-            id="email" 
-            name="email" 
-            class="form-control" 
-            placeholder="tu@correo.com"
-            required
-          >
-          <div class="error-message" id="error-email"></div>
-        </div>
-
-        <!-- Fecha de nacimiento -->
-        <div class="form-group">
-          <!-- <label for="fecha_nacimiento" class="form-label">Fecha de Nacimiento</label> -->
-          <input 
-            type="date" 
-            id="fecha_nacimiento" 
-            name="fecha_nacimiento" 
-            class="form-control"
-            required
-          >
-          <small class="form-text text-muted">Debes ser mayor de edad</small>
+          <div>
+            <input 
+              type="email" 
+              id="email" 
+              name="email" 
+              class="form-control" 
+              placeholder="tu correo electrónico"
+              required
+            >
+            <div class="error-message" id="error-email"></div>
+          </div>
         </div>
 
         <!-- Contraseña -->
-        <div class="form-group">
-          <!-- <label for="contraseña" class="form-label">Contraseña</label> -->
-          <input 
+        <div class="form-group field-wrap">
+          <i class="bi bi-lock icon-left"></i>
+          <div>
+            <input 
             type="password" 
             id="contraseña" 
             name="contraseña" 
@@ -68,15 +57,17 @@
             placeholder="Contraseña segura"
             minlength="6"
             required
-          >
-          <small class="form-text text-muted">Mínimo 6 caracteres</small>
-          <div class="error-message" id="error-contraseña"></div>
+            >
+            <div class="error-message" id="error-contraseña"></div>
+          </div>
+          <i class="bi bi-eye icon-right" id="togglePassword"></i>
         </div>
-
+        
         <!-- Repetir contraseña -->
-        <div class="form-group">
-          <!-- <label for="repetir_contraseña" class="form-label">Repetir Contraseña</label> -->
-          <input 
+        <div class="form-group field-wrap">
+          <i class="bi bi-lock icon-left"></i>
+          <div>
+            <input 
             type="password" 
             id="repetir_contraseña" 
             name="repetir_contraseña" 
@@ -84,8 +75,25 @@
             placeholder="Repite tu contraseña"
             minlength="6"
             required
-          >
-          <div class="error-message" id="error-repetir_contraseña"></div>
+            >
+            <div class="error-message" id="error-repetir_contraseña"></div>
+          </div>
+          <i class="bi bi-eye icon-right" id="togglePasswordRepeat"></i>
+        </div>
+
+        <!-- Fecha de nacimiento -->
+        <div class="form-group field-wrap">
+          <i class="bi bi-calendar3 icon-left"></i>
+          <div>
+            <input 
+              type="date" 
+              id="fecha_nacimiento" 
+              name="fecha_nacimiento" 
+              class="form-control"
+              required
+            >
+            <div class="error-message" id="error-menor_edad"></div>
+          </div>
         </div>
 
         <!-- Términos -->
@@ -97,7 +105,7 @@
             class="form-check-input" 
             required
           >
-          <!-- <label class="form-check-label" for="terminos">Acepto los términos y condiciones</label> -->
+          <label class="form-check-label" for="terminos">Acepto los términos y condiciones</label>
         </div>
 
         <!-- Botones -->
@@ -113,6 +121,26 @@
   </div>
 </div>
 
+
+<script>
+  // Toggle show/hide password
+  const toggleBtn = document.getElementById('togglePassword');
+  const passwordInput = document.getElementById('contraseña');
+  const toggleBtnRepeat = document.getElementById('togglePasswordRepeat');
+  const passwordInputRepeat = document.getElementById('repetir_contraseña');
+
+  toggleBtn.addEventListener('click', () => {
+    const isHidden = passwordInput.type === 'password';
+    passwordInput.type = isHidden ? 'text' : 'password';
+    toggleBtn.className = isHidden ? 'bi bi-eye-slash icon-right' : 'bi bi-eye icon-right';
+  });
+  
+  toggleBtnRepeat.addEventListener('click', () => {
+    const isHiddenRepeat = passwordInputRepeat.type === 'password';
+    passwordInputRepeat.type = isHiddenRepeat ? 'text' : 'password';
+    toggleBtn.className = isHiddenRepeat ? 'bi bi-eye-slash icon-right' : 'bi bi-eye icon-right';
+  });
+</script>
 <script>
   document.getElementById('formulario-registro').addEventListener('submit', async function(e) {
     e.preventDefault();

@@ -62,16 +62,27 @@
 
 .form-group .form-control {
     padding: 0.75rem 1rem;
-    border: 1px solid #e0e0e0;
-    border-radius: 6px;
+    border: 1px solid #c2bfbf;
+    border-radius: 10px;
     font-size: 0.95rem;
     transition: all 0.3s ease;
 }
 
 .form-group .form-control:focus {
-    border-color: #007bff;
+    border-color: #3A52D6;
     box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
     outline: none;
+}
+
+/* Date input – remove calendar icon on webkit */
+input[type="date"]::-webkit-calendar-picker-indicator {
+    opacity: 0;
+    width: 100%;
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    cursor: pointer;
 }
 
 .form-group .form-control.is-invalid {
@@ -84,6 +95,7 @@
     color: #999999;
 }
 
+/* estilos para los iconos del formulario */
 .field-wrap {
     position: relative;
     margin-bottom: 0.85rem;
@@ -115,7 +127,7 @@
     border: 1.5px solid #c5cdd8;
     border-radius: 10px;
     background: #f0f3f8;
-    padding: 0 2.4rem 0 2.6rem;
+    padding: 0 2.4rem 0 2.6rem !important;
     font-size: 0.88rem;
     color: #333;
     outline: none;
