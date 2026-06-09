@@ -132,14 +132,35 @@ def buscar():
 # RUTA RECOMENDACIONES
 @peliculas_bp.route("/recomendacion/<int:pelicula_id>")
 def recomendacion(pelicula_id: int):
-    """Recomendacion de una película."""
     try:
         pelicula = modelo.obtener_detalle(pelicula_id)
         credits = modelo.obtener_credits(pelicula_id)
         keywords = modelo.obtener_keywords(pelicula_id)
-        providers = modelo.obtener_providers(pelicula_id)
+        
+        # 🟢 CAMBIADO: usar obtener_providers para la película individual
+        providers = modelo.obtener_providers(pelicula_id) 
+        
         clasificacion = modelo.obtener_clasificacion(pelicula_id)
         return vista.render_recomendaciones(
+            pelicula, credits, keywords, providers, clasificacion
+        )
+    except Exception as e:
+        return vista.render_error(str(e))
+
+
+# RUTA DETALLE DE PELÍCULA
+@peliculas_bp.route("/pelicula/<int:pelicula_id>")
+def detalle(pelicula_id: int):
+    try:
+        pelicula = modelo.obtener_detalle(pelicula_id)
+        credits = modelo.obtener_credits(pelicula_id)
+        keywords = modelo.obtener_keywords(pelicula_id)
+        
+        # 🟢 CAMBIADO: usar obtener_providers para la película individual
+        providers = modelo.obtener_providers(pelicula_id)
+        
+        clasificacion = modelo.obtener_clasificacion(pelicula_id)
+        return vista.render_detalle(
             pelicula, credits, keywords, providers, clasificacion
         )
     except Exception as e:
@@ -151,20 +172,3 @@ def recomendacion(pelicula_id: int):
 def como_funciona():
     """Muestra la página de información."""
     return vista.render_como_funciona()
-
-
-# RUTA DETALLE DE PELÍCULA
-@peliculas_bp.route("/pelicula/<int:pelicula_id>")
-def detalle(pelicula_id: int):
-    """Muestra el detalle completo de una película."""
-    try:
-        pelicula = modelo.obtener_detalle(pelicula_id)
-        credits = modelo.obtener_credits(pelicula_id)
-        keywords = modelo.obtener_keywords(pelicula_id)
-        providers = modelo.obtener_providers(pelicula_id)
-        clasificacion = modelo.obtener_clasificacion(pelicula_id)
-        return vista.render_detalle(
-            pelicula, credits, keywords, providers, clasificacion
-        )
-    except Exception as e:
-        return vista.render_error(str(e))
