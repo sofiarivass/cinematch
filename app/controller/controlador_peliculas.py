@@ -13,12 +13,14 @@ Responsabilidades:
 from flask import Blueprint, request, redirect, url_for, session
 from app.model.modelo_peliculas import PeliculaModel
 from app.views.vista_peliculas import PeliculaView
+from app.model.modelo_usuarios import UsuarioModel
 
 # Blueprint principal — todas las rutas quedan agrupadas aquí
 peliculas_bp = Blueprint("peliculas", __name__)
 
 # Instancias del modelo y la vista
 modelo = PeliculaModel()
+modelo_usuario = UsuarioModel()
 vista = PeliculaView()
 
 
@@ -43,42 +45,34 @@ def encuesta_perfil():
             session["idiomas"] = request.form.getlist("idiomas")
         elif paso == 4:
             session["formato"] = request.form.get("formato")
-            return redirect(url_for("peliculas.index"))  # Encuesta finalizada
+            
+            # 🟢 ENCUESTA FINALIZADA: Armamos el objeto JSON estructurado
+            preferencias_finales = {
+                "plataformas": session.get("plataformas", []),
+                "disponibilidad": session.get("disponibilidad", "any"),
+                "idiomas": session.get("idiomas", []),
+                "formato": session.get("formato", "any")
+            }
+            
+            # Recuperamos el usuario actual de la sesión (ej: session.get("usuario"))
+            # Si no manejás sesión con ese nombre, cambialo por la variable correspondiente
+            usuario_actual = session.get("usuario")
+            
+            if usuario_actual:
+                # Guardamos en MongoDB vía Pymongo
+                modelo_usuario.guardar_preferencias(usuario_actual, preferencias_finales)
+
+            return redirect(url_for("peliculas.index"))  
 
         siguiente_paso = paso + 1
     else:
-        siguiente_paso = 0
-        session.clear()
+        siguiente_paso = request.args.get("paso", 0, type=int)
 
     # Solo hace la llamada a la API cuando es necesario
     providers = modelo.obtener_providers_ar() if siguiente_paso == 1 else []
     todos_providers = modelo.obtener_todos_providers_ar() if siguiente_paso == 1 else []
 
     return vista.render_encuesta_perfil(paso=siguiente_paso, providers=providers, todos_providers=todos_providers)
-
-
-# # RUTA ENCUESTA PERFIL
-# @peliculas_bp.route("/encuesta-perfil")
-# def encuesta_perfil():
-#     return vista.render_encuesta_perfil(paso=0)
-
-
-# @peliculas_bp.route("/")
-# def index():
-#     """Muestra la página principal."""
-#     pagina = request.args.get("page", 1, type=int)
-
-#     try:
-#         datos = modelo.obtener_populares(pagina=pagina)
-#         return vista.render_explorar(
-#             peliculas=datos["peliculas"],
-#             pagina_actual=datos["pagina_actual"],
-#             total_paginas=datos["total_paginas"],
-#             titulo_seccion="Películas Populares",
-#         )
-#     except Exception as e:
-#         return vista.render_error(str(e))
-
 
 # RUTA EXPLORAR
 @peliculas_bp.route("/explorar")

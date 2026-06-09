@@ -224,3 +224,10 @@ class UsuarioModel:
         except Exception as e:
             print(f"Error obteniendo usuarios: {e}")
             return []
+        
+    def guardar_preferencias(self, nombre_usuario, preferencias_dict):
+        """
+        Guarda el objeto/diccionario de preferencias consolidado dentro del usuario.
+        """
+        # Usamos el método actualizar que ya tenías programado
+        return self.actualizar(nombre_usuario, {"preferencias": preferencias_dict})
