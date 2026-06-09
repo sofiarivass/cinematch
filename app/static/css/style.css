@@ -7,7 +7,10 @@ body {
 
 main {
     flex: 1;
-    margin-top: 7em;
+}
+
+.margen-nav {
+    margin-top: 8em;
 }
 
 
@@ -146,11 +149,14 @@ main {
 
 /* FOOTER */
 
+.margen-footer {
+    margin-bottom: 3em;
+}
+
 footer {
     border-top: 0.05em solid #3F4A5C !important;
     font-family: "M PLUS Rounded 1c", sans-serif;
     padding: 1.25em 3em;
-    margin-top: 3em;
 }
 
 footer .text-body-secondary {
@@ -1109,6 +1115,7 @@ footer .text-body-secondary {
     padding: 2.5em 3em;
     text-align: center;
     box-shadow: 0 0 25px 3px #0000002d;
+    margin-top: 5em;
 }
 
 .encuesta-volver {
@@ -1258,6 +1265,7 @@ footer .text-body-secondary {
 .encuesta-otro-wrapper {
     position: relative;
     flex: 1;
+    text-align: left;
 }
 
 .encuesta-sugerencias {
@@ -1358,7 +1366,6 @@ footer .text-body-secondary {
 
 .encuesta-otro {
     display: flex;
-    align-items: center;
     gap: 0.75em;
     border-bottom: 1px solid #232D3E;
     padding-bottom: 0.5em;

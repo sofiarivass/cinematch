@@ -1,5 +1,5 @@
 {% extends "base.html" %} {% block title %}{{ titulo_seccion }} — CineMatch{% endblock %} {% block content %}
-<h1 class="section-title">{{ titulo_seccion }}</h1>
+<h1 class="section-titlev margen-nav">{{ titulo_seccion }}</h1>
 
 <!-- BUSCADOR -->
 <form class="navbar__search" action="{{ url_for('peliculas.buscar') }}" method="get">
@@ -29,7 +29,7 @@
 
 <!-- PAGINACIÓN -->
 {% if total_paginas > 1 %}
-<nav class="pagination">
+<nav class="pagination margen-footer">
     {% if pagina_actual > 1 %}
     <a href="?{% if query %}q={{ query }}&{% endif %}page={{ pagina_actual - 1 }}" class="pagination__btn">← Anterior</a> {% endif %}
 
