@@ -8,9 +8,12 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@100;300;400;500;700;800;900&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@100;300;400;500;700;800;900&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
+        rel="stylesheet">
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style_dos.css') }}" />
@@ -21,21 +24,27 @@
         <nav class="navbar navbar-expand-xl bg-body-tertiary fixed-top">
             <div class="container-fluid">
                 <a class="navbar-brand" href="{{ url_for('peliculas.index') }}">
-                    <img id="logo" src="{{ url_for('static', filename='img/logo.svg') }}" alt="Logo CineMatch" height="38">
+                    <img id="logo" src="{{ url_for('static', filename='img/logo.svg') }}" alt="Logo CineMatch"
+                        height="38">
                 </a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCinematch" aria-controls="navbarCinematch" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCinematch"
+                    aria-controls="navbarCinematch" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
                 <div class="collapse navbar-collapse" id="navbarCinematch">
                     <ul class="navbar-nav mx-auto">
                         <li class="nav-item">
-                            <a href="{{ url_for('peliculas.index') }}" class="nav-link {% if request.endpoint == 'peliculas.index' %}active{% endif %}">Inicio</a>
+                            <a href="{{ url_for('peliculas.index') }}"
+                                class="nav-link {% if request.endpoint == 'peliculas.index' %}active{% endif %}">Inicio</a>
                         </li>
                         <li class="nav-item">
-                            <a href="{{ url_for('peliculas.explorar') }}" class="nav-link {% if request.endpoint in ['peliculas.explorar', 'peliculas.buscar'] %}active{% endif %}">Explorar</a>
+                            <a href="{{ url_for('peliculas.explorar') }}"
+                                class="nav-link {% if request.endpoint in ['peliculas.explorar', 'peliculas.buscar'] %}active{% endif %}">Explorar</a>
                         </li>
                         <li class="nav-item">
-                            <a href="{{ url_for('peliculas.como_funciona') }}" class="nav-link {% if request.endpoint == 'peliculas.como_funciona' %}active{% endif %}">¿Cómo funciona?</a>
+                            <a href="{{ url_for('peliculas.como_funciona') }}"
+                                class="nav-link {% if request.endpoint == 'peliculas.como_funciona' %}active{% endif %}">¿Cómo
+                                funciona?</a>
                         </li>
                     </ul>
                     <div class="d-flex gap-3">
@@ -60,14 +69,19 @@
             <strong class="cinematch">CineMatch</strong>
             <small class="copyright">© 2026 Aldeir Aponte y Sofía Rivas</small>
         </p>
-        <span class="atribucion">Datos provistos por <a class="link-atribucion" href="https://www.themoviedb.org" target="_blank">TMDB</a></span>
+        <span class="atribucion">Datos provistos por <a class="link-atribucion" href="https://www.themoviedb.org"
+                target="_blank">TMDB</a></span>
         <ul class="nav justify-content-end">
             <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">Inicio</a></li>
             <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">Explorar</a></li>
             <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">¿Cómo funciona?</a></li>
         </ul>
     </footer>
+    <script src="{{ url_for('static', filename='js/encuesta.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+        crossorigin="anonymous"></script>
 </body>
+
 </html>
