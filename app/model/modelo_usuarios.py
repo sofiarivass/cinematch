@@ -58,7 +58,7 @@ class UsuarioModel:
         patron = r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
         return re.match(patron, email) is not None
 
-    def crear(self, nombre_usuario, email, contraseña, fecha_nacimiento):
+    def crear(self, nombre_usuario, email, contraseña, fecha_nacimiento, preferencias=[]):
         """
         Crea un nuevo usuario.
 
@@ -89,6 +89,7 @@ class UsuarioModel:
                 "email": email,
                 "contraseña": self._hash_password(contraseña),
                 "fecha_nacimiento": fecha_nacimiento,
+                "preferencias": preferencias,
                 "fecha_registro": datetime.now(),
             }
 
