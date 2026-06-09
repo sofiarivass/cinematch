@@ -23,4 +23,4 @@ class Config:
     TMDB_LANGUAGE       = "es-MX"
 
     # ── MongoDB ──────────────────────────────────────────────────────────
-    MONGO_URI = os.getenv("MONGO_URI", "mongodb://localhost:27017")
+    MONGO_URI = os.getenv("MONGO_URI")
