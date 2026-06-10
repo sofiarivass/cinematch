@@ -110,7 +110,7 @@
 
         <!-- Botones -->
         <div class="registro-botones">
-          <a href="{{ url_for('peliculas.encuesta_perfil') }}" class="btn btn-primary btn-registro">Continuar</a>
+          <button type="submit" class="btn btn-primary btn-registro">Continuar</button>
           <a href="{{ url_for('peliculas.index') }}" class="btn btn-outline-secondary btn-volver">Volver</a>
         </div>
 
@@ -138,7 +138,7 @@
   toggleBtnRepeat.addEventListener('click', () => {
     const isHiddenRepeat = passwordInputRepeat.type === 'password';
     passwordInputRepeat.type = isHiddenRepeat ? 'text' : 'password';
-    toggleBtn.className = isHiddenRepeat ? 'bi bi-eye-slash icon-right' : 'bi bi-eye icon-right';
+    toggleBtnRepeat.className = isHiddenRepeat ? 'bi bi-eye-slash icon-right' : 'bi bi-eye icon-right';
   });
 </script>
 <script>
@@ -189,11 +189,11 @@
   });
 
   // Validar coincidencia de contraseñas en tiempo real
-  document.getElementById('repetir_contraseña').addEventListener('change', function() {
+  document.getElementById('repetir_contraseña').addEventListener('input', function() {
     const contraseña = document.getElementById('contraseña').value;
     const repetir = this.value;
     
-    if (contraseña && repetir && contraseña !== repetir) {
+    if (contraseña !== repetir) {
       document.getElementById('error-repetir_contraseña').textContent = 'Las contraseñas no coinciden';
       this.classList.add('is-invalid');
     } else {

@@ -1,0 +1,146 @@
+{% extends "base.html" %}
+
+{% block title %}Iniciar Sesión - CineMatch{% endblock %}
+
+{% block content %}
+<div class="fondo">
+  <div class="container registro-container">
+    <div class="registro-card">
+      <div>
+        <h1 class="registro-titulo text-start">INICIÁ SESIÓN</h1>
+        <p class="registro-subtitulo text-start">Bienvenido de vuelta a CineMatch</p>
+      </div>
+
+      <form id="formulario-login" class="registro-form" method="POST">
+
+        <!-- Correo electrónico -->
+        <div class="form-group field-wrap">
+          <i class="bi bi-envelope icon-left"></i>
+          <div>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              class="form-control"
+              placeholder="Tu correo electrónico"
+              required
+            >
+            <div class="error-message" id="error-email"></div>
+          </div>
+        </div>
+
+        <!-- Contraseña -->
+        <div class="form-group field-wrap">
+          <i class="bi bi-lock icon-left"></i>
+          <div>
+            <input
+              type="password"
+              id="contraseña"
+              name="contraseña"
+              class="form-control"
+              placeholder="Tu contraseña"
+              minlength="6"
+              required
+            >
+            <div class="error-message" id="error-contraseña"></div>
+          </div>
+          <i class="bi bi-eye icon-right" id="togglePassword"></i>
+        </div>
+
+        <!-- Recordarme + Olvidé contraseña -->
+        <div class="d-flex justify-content-between align-items-center form-group">
+          <div class="form-check">
+            <input
+              type="checkbox"
+              id="recordarme"
+              name="recordarme"
+              class="form-check-input"
+            >
+            <label class="form-check-label" for="recordarme">Recordarme</label>
+          </div>
+          <a href="#" class="registro-link" style="margin: 0;">¿Olvidaste tu contraseña?</a>
+        </div>
+
+        <!-- Botones -->
+        <div class="registro-botones">
+          <button type="submit" class="btn btn-primary btn-registro">Ingresar</button>
+          <a href="{{ url_for('peliculas.index') }}" class="btn btn-outline-secondary btn-volver">Volver</a>
+        </div>
+
+        <!-- Link a registro -->
+        <p class="registro-link">¿No tenés cuenta? <a href="{{ url_for('usuarios.registro') }}">Registrate aquí</a></p>
+      </form>
+    </div>
+  </div>
+</div>
+
+
+<script>
+  // Toggle show/hide password
+  const toggleBtn = document.getElementById('togglePassword');
+  const passwordInput = document.getElementById('contraseña');
+
+  toggleBtn.addEventListener('click', () => {
+    const isHidden = passwordInput.type === 'password';
+    passwordInput.type = isHidden ? 'text' : 'password';
+    toggleBtn.className = isHidden ? 'bi bi-eye-slash icon-right' : 'bi bi-eye icon-right';
+  });
+</script>
+
+<script>
+  document.getElementById('formulario-login').addEventListener('submit', async function(e) {
+    e.preventDefault();
+
+    // Limpiar errores previos
+    document.querySelectorAll('.error-message').forEach(el => el.textContent = '');
+    document.querySelectorAll('.form-control').forEach(el => el.classList.remove('is-invalid'));
+
+    const formData = new FormData(this);
+
+    try {
+      const response = await fetch("{{ url_for('usuarios.login') }}", {
+        method: 'POST',
+        body: formData
+      });
+
+      const resultado = await response.json();
+
+      if (resultado.exito) {
+        Swal.fire({
+          icon: 'success',
+          title: '¡Bienvenido!',
+          text: resultado.mensaje,
+          confirmButtonText: 'Continuar'
+        }).then(() => {
+          if (resultado.redirigir) {
+            window.location.href = resultado.redirigir;
+          }
+        });
+      } else {
+        // Marcar campo con error si el backend lo indica
+        if (resultado.campo) {
+          const campo = document.getElementById(resultado.campo);
+          if (campo) {
+            campo.classList.add('is-invalid');
+            const errorEl = document.getElementById('error-' + resultado.campo);
+            if (errorEl) errorEl.textContent = resultado.mensaje;
+          }
+        }
+
+        Swal.fire({
+          icon: 'error',
+          title: 'Error al iniciar sesión',
+          text: resultado.mensaje
+        });
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Ocurrió un error al procesar tu solicitud'
+      });
+    }
+  });
+</script>
+{% endblock %}

@@ -30,3 +30,13 @@ class UsuarioView:
             str: HTML de error.
         """
         return render_template("error.html"), codigo
+
+    # Agregado método para renderizar login
+    def render_login(self):
+        """
+            Renderiza el formulario de inicio de sesión.
+
+            Returns:
+                str: HTML del formulario de login.
+        """
+        return render_template("login.html")

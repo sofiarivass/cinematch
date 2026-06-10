@@ -10,6 +10,8 @@ from config.config import Config
 from datetime import datetime
 import hashlib
 import re
+from bson.objectid import ObjectId
+from flask import session
 
 
 class UsuarioModel:
@@ -58,7 +60,7 @@ class UsuarioModel:
         patron = r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
         return re.match(patron, email) is not None
 
-    def crear(self, nombre_usuario, email, contraseña, fecha_nacimiento, preferencias=[]):
+    def crear(self, nombre_usuario, email, contraseña, fecha_nacimiento, preferencias):
         """
         Crea un nuevo usuario.
 
@@ -224,3 +226,37 @@ class UsuarioModel:
         except Exception as e:
             print(f"Error obteniendo usuarios: {e}")
             return []
+
+    # Método adicional para autenticar usuarios
+    def autenticar(self, email, contraseña):
+        """ Autentica un usuario por email y contraseña.
+
+            Args:
+                email (str): Correo electrónico.
+                contraseña (str): Contraseña sin hashear.
+
+            Returns:
+                dict: Resultado con 'exito' (bool) y 'mensaje' (str).
+        """
+        try:
+            # Buscar usuario por email
+            usuario = self.obtener_por_email(email)
+
+            if not usuario:
+                return {"exito": False, "mensaje": "El correo no está registrado"}
+
+            # Verificar contraseña
+            if usuario["contraseña"] != self._hash_password(contraseña):
+                return {"exito": False, "mensaje": "Contraseña incorrecta"}
+
+            # Guardar sesión
+            session["usuario_id"] = str(usuario["_id"])
+            session["nombre_usuario"] = usuario["nombre_usuario"]
+            session["email"] = usuario["email"]
+
+            return {
+                "exito": True,
+                "mensaje": f"Bienvenido, {usuario['nombre_usuario']}"
+            }
+        except Exception as e:
+            return {"exito": False, "mensaje": f"Error al autenticar: {str(e)}"}
