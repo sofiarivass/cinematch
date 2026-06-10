@@ -47,7 +47,9 @@ class PeliculaModel:
             respuesta.raise_for_status()
             return respuesta.json()
         except requests.exceptions.ConnectionError:
-            raise Exception("No se pudo conectar con TMDB. Verificá tu conexión a internet.")
+            raise Exception(
+                "No se pudo conectar con TMDB. Verificá tu conexión a internet."
+            )
         except requests.exceptions.Timeout:
             raise Exception("La solicitud a TMDB tardó demasiado. Intentá de nuevo.")
         except requests.exceptions.HTTPError as e:
@@ -82,7 +84,7 @@ class PeliculaModel:
             "total_paginas": data.get("total_pages", 1),
             "pagina_actual": pagina,
         }
-    
+
     def obtener_providers(self, pelicula_id: int) -> dict:
         """
         Obtiene los proveedores de streaming específicos para una película en Argentina.
@@ -101,19 +103,22 @@ class PeliculaModel:
 
         return {
             "flatrate": parsear(ar_data.get("flatrate", [])),  # Streaming
-            "rent": parsear(ar_data.get("rent", [])),          # Alquiler
-            "buy": parsear(ar_data.get("buy", [])),            # Compra
+            "rent": parsear(ar_data.get("rent", [])),  # Alquiler
+            "buy": parsear(ar_data.get("buy", [])),  # Compra
         }
 
     def obtener_todos_providers_ar(self) -> list:
-        data = self._get("/watch/providers/movie", {
-            "watch_region": "AR",
-            "language": "es-AR",
-        })
+        data = self._get(
+            "/watch/providers/movie",
+            {
+                "watch_region": "AR",
+                "language": "es-AR",
+            },
+        )
         principales_ids = set(self.PROVIDERS_PRINCIPALES_AR)
         return [
             {
-                "id":     p.get("provider_id"),
+                "id": p.get("provider_id"),
                 "nombre": p.get("provider_name", ""),
             }
             for p in data.get("results", [])
@@ -121,11 +126,14 @@ class PeliculaModel:
         ]
 
     def obtener_providers_ar(self) -> list:
-        data = self._get("/watch/providers/movie", {
-            "watch_region": "AR",
-            "language": "es-AR",
-        })
-        
+        data = self._get(
+            "/watch/providers/movie",
+            {
+                "watch_region": "AR",
+                "language": "es-AR",
+            },
+        )
+
         principales = [
             {
                 "id": p.get("provider_id"),
@@ -141,13 +149,39 @@ class PeliculaModel:
 
         return principales
 
+    def obtener_todos_idiomas(self) -> list:
+        """Obtiene la lista completa de idiomas soportados por TMDB en español."""
+        try:
+            data = self._get("/configuration/languages")
+
+            # Formateamos la lista para la vista
+            idiomas = [
+                {
+                    "iso": i.get("iso_639_1"),
+                    "nombre": (
+                        i.get("english_name") if i.get("name") == "" else i.get("name")
+                    ),
+                }
+                for i in data
+            ]
+
+            # Los ordenamos alfabéticamente por nombre
+            idiomas.sort(key=lambda x: x["nombre"])
+            return idiomas
+        except Exception:
+            return []
+
     def obtener_credits(self, pelicula_id: int) -> dict:
         data = self._get(f"/movie/{pelicula_id}/credits")
 
         directores = [
             {
                 "nombre": p.get("name", "").split(" ", 1),
-                "foto": self.construir_url_imagen(p.get("profile_path")) if p.get("profile_path") else None,
+                "foto": (
+                    self.construir_url_imagen(p.get("profile_path"))
+                    if p.get("profile_path")
+                    else None
+                ),
             }
             for p in data.get("crew", [])
             if p.get("job") == "Director"
@@ -157,7 +191,11 @@ class PeliculaModel:
             {
                 "nombre": p.get("name", ""),
                 "personaje": p.get("character", ""),
-                "foto": self.construir_url_imagen(p.get("profile_path")) if p.get("profile_path") else None,
+                "foto": (
+                    self.construir_url_imagen(p.get("profile_path"))
+                    if p.get("profile_path")
+                    else None
+                ),
             }
             for p in sorted(data.get("cast", []), key=lambda x: x.get("order", 99))[:10]
         ]
@@ -214,8 +252,8 @@ class PeliculaModel:
             "puntuacion": round(data.get("vote_average", 0), 2),
             "votos": (
                 f"{data.get('vote_count', 0) / 1000:.1f}k"
-                if data.get('vote_count', 0) >= 1000
-                else str(data.get('vote_count', 0))
+                if data.get("vote_count", 0) >= 1000
+                else str(data.get("vote_count", 0))
             ),
             "poster": self.construir_url_imagen(data.get("poster_path")),
             "backdrop": self.construir_url_imagen(data.get("backdrop_path")),

@@ -21,8 +21,20 @@ class PeliculaView:
     def render_como_funciona(self) -> str:
         return render_template("como_funciona.html")
 
-    def render_encuesta_perfil(self, paso: int, providers: list = [], todos_providers: list = []) -> str:
-        return render_template("encuesta_perfil.html", paso=paso, providers=providers, todos_providers=todos_providers)
+    def render_encuesta_perfil(
+        self,
+        paso: int,
+        providers: list = [],
+        todos_providers: list = [],
+        todos_idiomas: list = [],
+    ) -> str:
+        return render_template(
+            "encuesta_perfil.html",
+            paso=paso,
+            providers=providers,
+            todos_providers=todos_providers,
+            todos_idiomas=todos_idiomas,  # 🟢 Inyectado en el contexto de Jinja2
+        )
 
     def render_recomendaciones(
         self,

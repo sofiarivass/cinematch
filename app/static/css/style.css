@@ -99,15 +99,12 @@ main {
     .navbar {
         padding: 0.8em 0.5em;
     }
-
     #logo {
         height: 35px;
     }
-
     .navbar-toggler {
         padding: 0.2rem 0.4rem;
     }
-
     .navbar-toggler-icon {
         width: 1.5em;
         height: 1.5em;
@@ -119,27 +116,22 @@ main {
         margin-top: 1.5rem;
         text-align: center;
     }
-
     .navbar-nav {
         align-items: center;
     }
-
     .navbar-nav .nav-item {
         margin-bottom: 0.75rem;
     }
-
     .navbar-nav .nav-link {
         display: inline-block;
         position: relative;
         padding: 0.5rem 0;
     }
-
     .active::after {
         left: 0;
         right: 0;
         margin: 0;
     }
-
     .navbar-collapse .d-flex {
         justify-content: center;
         margin-top: 1rem;
@@ -183,18 +175,15 @@ footer .text-body-secondary {
         text-align: center;
         padding: 2em 1.5em;
     }
-
     footer {
         flex-direction: column;
         gap: 1.5em;
     }
-
     footer p,
     footer ul {
         width: 100%;
         margin: 0;
     }
-
     footer ul {
         justify-content: center !important;
         flex-direction: column;
@@ -564,49 +553,39 @@ footer .text-body-secondary {
     .info-detalle-container {
         padding-left: 1.5em;
     }
-
     .titulo-detalle {
         font-size: 1.6rem;
     }
-
     .anio-detalle,
     .duracion-detalle {
         margin-left: 1em;
         font-size: 0.95rem;
     }
-
     .rating-detalle,
     .votos-detalle {
         font-size: 0.95rem;
     }
-
     .btn-outline {
         font-size: 1rem;
         padding: 0.5em 1em;
     }
-
     .clasificacion-detalle {
         font-size: 1rem;
     }
-
     .tagline-detalle {
         font-size: 1rem;
     }
-
     .col-keywords {
         display: none;
     }
-
     .col-providers {
         flex: unset;
         width: 100%;
     }
-
     .otros-detalles-clave,
     .otros-detalles-valor {
         font-size: 0.93rem;
     }
-
     .modal .btn-cerrar-modal {
         width: 0.7em;
         height: 0.7em;
@@ -618,76 +597,60 @@ footer .text-body-secondary {
     .card-detalle {
         padding: 1em;
     }
-
     .info-detalle-container {
         text-align: center;
         padding-left: 0;
         margin-top: 1em;
     }
-
     .titulo-detalle {
         font-size: 1.5rem;
     }
-
     .meta-detalle {
         font-size: 0.85rem;
     }
-
     .anio-detalle,
     .duracion-detalle {
         margin-left: 0.5em;
         font-size: 0.85rem;
     }
-
     .sinopsis-detalle {
         font-size: 0.9rem;
     }
-
     .h2-detalle {
         font-size: 1.3rem;
     }
-
     .img-detalle {
         width: 75px;
         height: 75px;
     }
-
     .crew-item {
         min-width: 75px;
     }
-
     .crew-nombre {
         font-size: 0.7rem;
     }
-
     .crew-personaje {
         font-size: 0.65rem;
     }
-
     .otros-detalles-clave,
     .otros-detalles-valor {
         font-size: 0.85rem;
     }
-
     .otros-detalles-clave li,
     .otros-detalles-valor li {
         margin-bottom: 0.5em;
     }
-
     .provider-logo {
         width: 32px;
         height: 32px;
     }
-
     .provider-label {
         font-size: 0.75rem;
         width: 4em;
     }
-
     .boton-trailer {
         margin-bottom: 0.5em;
     }
-
     .boton-web {
         margin-left: 0;
     }
@@ -985,16 +948,13 @@ footer .text-body-secondary {
     .img-btn-recomendacion {
         width: clamp(3em, 7.5vh, 4.5em);
     }
-
     .img-btn-info-recomendacion {
         width: clamp(2.5em, 6vh, 3.5em);
     }
-
     .txt-si,
     .txt-no {
         font-size: clamp(0.55rem, 1.4vh, 0.65rem);
     }
-
     .txt-info {
         font-size: clamp(0.45rem, 1.3vh, 0.55rem);
     }
@@ -1243,6 +1203,7 @@ footer .text-body-secondary {
     display: none;
 }
 
+
 /* Opciones en fila (disponibilidad y formato) */
 
 .encuesta-opcion-fila {
@@ -1316,8 +1277,36 @@ footer .text-body-secondary {
     transition: border-color 0.2s, box-shadow 0.2s;
 }
 
+.encuesta-opcion-idioma:has(.encuesta-check-hidden:checked) .encuesta-idioma-emoji i {
+    color: #5B72F5;
+}
+
 .encuesta-idioma-emoji {
-    font-size: 1.4rem;
+    font-size: 1.3rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.5em;
+    /* Ancho controlado idéntico al emoji */
+    height: 1.5em;
+    /* Alto controlado idéntico al emoji */
+    flex-shrink: 0;
+}
+
+.bandera-svg {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+    /* Evita que la bandera se estire o pierda su proporción */
+    border-radius: 4px;
+    /* Opcional: un sutil redondeado en las esquinas de las banderas queda excelente */
+}
+
+.encuesta-idioma-emoji i {
+    color: #4e5e78;
+    /* Color base grisáceo que combina con tus otros íconos */
+    transition: color 0.2s;
+    font-size: 1.9rem;
 }
 
 
@@ -1399,7 +1388,6 @@ footer .text-body-secondary {
     border-bottom: 1px solid #232D3E;
     padding-bottom: 0.5em;
     margin: 0.5em 2em;
-
     display: flex;
     align-items: center;
     gap: 1.2em;
@@ -1419,8 +1407,11 @@ footer .text-body-secondary {
     white-space: nowrap;
 }
 
+
 /* 🟢 MODIFICADO: Añadidas propiedades de elipsis para el texto que escribe el usuario */
+
 .encuesta-otro-input {
+    width: 100%;
     flex: 1;
     background: transparent;
     border: none;
@@ -1428,7 +1419,7 @@ footer .text-body-secondary {
     color: #cccccc80;
     font-size: 0.9rem;
     font-family: 'Montserrat', sans-serif;
-    min-width: 0; 
+    min-width: 0;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;

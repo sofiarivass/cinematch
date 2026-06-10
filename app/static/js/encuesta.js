@@ -1,4 +1,7 @@
-document.addEventListener("DOMContentLoaded", function () {
+// @ts-nocheck
+
+// PLATAFORMAS
+document.addEventListener("DOMContentLoaded", function() {
     const input = document.getElementById("input-otra-plataforma");
     if (!input) return;
 
@@ -24,7 +27,7 @@ document.addEventListener("DOMContentLoaded", function () {
         tag.dataset.id = provider.id;
         tag.innerHTML = `${provider.nombre} <button type="button" class="encuesta-tag-remove">×</button>`;
 
-        tag.querySelector(".encuesta-tag-remove").addEventListener("click", function () {
+        tag.querySelector(".encuesta-tag-remove").addEventListener("click", function() {
             seleccionados = seleccionados.filter(p => p.id !== provider.id);
             actualizarHidden();
             tag.remove();
@@ -37,7 +40,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     // ── Mostrar sugerencias ──
-    input.addEventListener("input", function () {
+    input.addEventListener("input", function() {
         const query = input.value.trim().toLowerCase();
         lista.innerHTML = "";
 
@@ -56,11 +59,11 @@ document.addEventListener("DOMContentLoaded", function () {
             return;
         }
 
-        filtrados.forEach(function (provider) {
+        filtrados.forEach(function(provider) {
             const li = document.createElement("li");
             li.className = "encuesta-sugerencia-item";
             li.textContent = provider.nombre;
-            li.addEventListener("click", function () {
+            li.addEventListener("click", function() {
                 agregarTag(provider);
             });
             lista.appendChild(li);
@@ -70,9 +73,138 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     // ── Cerrar sugerencias al hacer click afuera ──
-    document.addEventListener("click", function (e) {
+    document.addEventListener("click", function(e) {
         if (!input.contains(e.target) && !lista.contains(e.target)) {
             lista.style.display = "none";
         }
     });
+});
+
+// IDIOMAS
+document.addEventListener("DOMContentLoaded", () => {
+
+    const inputOtro = document.getElementById("input-otro-idioma");
+    const listaSugerencias = document.getElementById("sugerencias-idiomas");
+    const contenedorTags = document.getElementById("tags-idiomas-contenedor");
+    const formulario = document.getElementById("form-encuesta-idiomas");
+
+    if (!inputOtro || !TODOS_LOS_IDIOMAS) return;
+
+    let idiomasSeleccionados = new Set();
+
+    // Registrar tags pre-renderizados desde session
+    contenedorTags.querySelectorAll(".encuesta-tag").forEach(tag => {
+        const iso = tag.getAttribute("data-iso");
+        if (iso) idiomasSeleccionados.add(iso);
+
+        const botonEliminar = tag.querySelector(".encuesta-tag-remove");
+        if (botonEliminar) {
+            botonEliminar.addEventListener("click", () => {
+                tag.remove();
+                const hiddenIdioma = document.getElementById(`hidden-idioma-${iso}`);
+                if (hiddenIdioma) hiddenIdioma.remove();
+                idiomasSeleccionados.delete(iso);
+            });
+        }
+    });
+
+    const checkboxAny = formulario.querySelector('input[name="idiomas"][value="any"]');
+    const otrosCheckboxes = formulario.querySelectorAll('input[name="idiomas"]:not([value="any"])');
+
+    function aplicarEstadoIndistinto() {
+        if (checkboxAny.checked) {
+            otrosCheckboxes.forEach(cb => cb.checked = false);
+            contenedorTags.innerHTML = "";
+            idiomasSeleccionados.clear();
+            formulario.querySelectorAll('input[id^="hidden-idioma-"]').forEach(h => h.remove());
+            inputOtro.disabled = true;
+            inputOtro.placeholder = "Desmarcá 'Indistinto' para buscar";
+            listaSugerencias.style.display = "none";
+        } else {
+            inputOtro.disabled = false;
+            inputOtro.placeholder = "Ej: Deutsch, polski...";
+        }
+    }
+
+    checkboxAny.addEventListener("change", aplicarEstadoIndistinto);
+
+    otrosCheckboxes.forEach(cb => {
+        cb.addEventListener("change", () => {
+            if (cb.checked) {
+                checkboxAny.checked = false;
+                aplicarEstadoIndistinto();
+            }
+        });
+    });
+
+    // Aplicar estado inicial al cargar
+    aplicarEstadoIndistinto();
+
+    inputOtro.addEventListener("input", (e) => {
+        if (checkboxAny.checked) return;
+
+        const query = e.target.value.toLowerCase().trim();
+        listaSugerencias.innerHTML = "";
+
+        if (query.length < 2) {
+            listaSugerencias.style.display = "none";
+            return;
+        }
+
+        const fijos = ['es', 'en', 'pt', 'fr', 'ko', 'ja', 'it', 'any'];
+        const filtrados = TODOS_LOS_IDIOMAS.filter(idioma =>
+            idioma.nombre.toLowerCase().includes(query) &&
+            !idiomasSeleccionados.has(idioma.iso) &&
+            !fijos.includes(idioma.iso)
+        ).slice(0, 5);
+
+        if (filtrados.length > 0) {
+            filtrados.forEach(idioma => {
+                const li = document.createElement("li");
+                li.className = "encuesta-sugerencia-item";
+                li.textContent = idioma.nombre;
+                li.addEventListener("click", () => {
+                    agregarIdiomaTag(idioma.iso, idioma.nombre);
+                    inputOtro.value = "";
+                    listaSugerencias.style.display = "none";
+                });
+                listaSugerencias.appendChild(li);
+            });
+            listaSugerencias.style.display = "block";
+        } else {
+            listaSugerencias.style.display = "none";
+        }
+    });
+
+    document.addEventListener("click", (e) => {
+        if (!inputOtro.contains(e.target) && !listaSugerencias.contains(e.target)) {
+            listaSugerencias.style.display = "none";
+        }
+    });
+
+    function agregarIdiomaTag(iso, nombre) {
+        if (idiomasSeleccionados.has(iso)) return;
+        idiomasSeleccionados.add(iso);
+
+        const tag = document.createElement("div");
+        tag.className = "encuesta-tag";
+        tag.setAttribute("data-iso", iso);
+        tag.innerHTML = `<span>${nombre}</span><button type="button" class="encuesta-tag-remove">&times;</button>`;
+
+        const hiddenInput = document.createElement("input");
+        hiddenInput.type = "hidden";
+        hiddenInput.name = "idiomas";
+        hiddenInput.value = iso;
+        hiddenInput.id = `hidden-idioma-${iso}`;
+        formulario.appendChild(hiddenInput);
+
+        tag.querySelector(".encuesta-tag-remove").addEventListener("click", () => {
+            tag.remove();
+            const hiddenIdioma = document.getElementById(`hidden-idioma-${iso}`);
+            if (hiddenIdioma) hiddenIdioma.remove();
+            idiomasSeleccionados.delete(iso);
+        });
+
+        contenedorTags.appendChild(tag);
+    }
 });

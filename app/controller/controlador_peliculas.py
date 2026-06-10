@@ -39,30 +39,36 @@ def encuesta_perfil():
         # Guardar respuesta del paso actual en session
         if paso == 1:
             session["plataformas"] = request.form.getlist("plataformas")
+            otras = request.form.get("plataformas_otras", "")
+            session["plataformas_otras_ids"] = [
+                int(x) for x in otras.split(",") if x.strip().isdigit()
+            ]
         elif paso == 2:
             session["disponibilidad"] = request.form.get("disponibilidad")
         elif paso == 3:
             session["idiomas"] = request.form.getlist("idiomas")
         elif paso == 4:
             session["formato"] = request.form.get("formato")
-            
+
             # 🟢 ENCUESTA FINALIZADA: Armamos el objeto JSON estructurado
             preferencias_finales = {
                 "plataformas": session.get("plataformas", []),
                 "disponibilidad": session.get("disponibilidad", "any"),
                 "idiomas": session.get("idiomas", []),
-                "formato": session.get("formato", "any")
+                "formato": session.get("formato", "any"),
             }
-            
+
             # Recuperamos el usuario actual de la sesión (ej: session.get("usuario"))
             # Si no manejás sesión con ese nombre, cambialo por la variable correspondiente
             usuario_actual = session.get("usuario")
-            
+
             if usuario_actual:
                 # Guardamos en MongoDB vía Pymongo
-                modelo_usuario.guardar_preferencias(usuario_actual, preferencias_finales)
+                modelo_usuario.guardar_preferencias(
+                    usuario_actual, preferencias_finales
+                )
 
-            return redirect(url_for("peliculas.index"))  
+            return redirect(url_for("peliculas.index"))
 
         siguiente_paso = paso + 1
     else:
@@ -72,7 +78,16 @@ def encuesta_perfil():
     providers = modelo.obtener_providers_ar() if siguiente_paso == 1 else []
     todos_providers = modelo.obtener_todos_providers_ar() if siguiente_paso == 1 else []
 
-    return vista.render_encuesta_perfil(paso=siguiente_paso, providers=providers, todos_providers=todos_providers)
+    # 🟢 NUEVO: Si estamos en el paso 3, obtenemos todos los idiomas de TMDB
+    todos_idiomas = modelo.obtener_todos_idiomas() if siguiente_paso == 3 else []
+
+    return vista.render_encuesta_perfil(
+        paso=siguiente_paso,
+        providers=providers,
+        todos_providers=todos_providers,
+        todos_idiomas=todos_idiomas,
+    )
+
 
 # RUTA EXPLORAR
 @peliculas_bp.route("/explorar")
@@ -130,10 +145,10 @@ def recomendacion(pelicula_id: int):
         pelicula = modelo.obtener_detalle(pelicula_id)
         credits = modelo.obtener_credits(pelicula_id)
         keywords = modelo.obtener_keywords(pelicula_id)
-        
+
         # 🟢 CAMBIADO: usar obtener_providers para la película individual
-        providers = modelo.obtener_providers(pelicula_id) 
-        
+        providers = modelo.obtener_providers(pelicula_id)
+
         clasificacion = modelo.obtener_clasificacion(pelicula_id)
         return vista.render_recomendaciones(
             pelicula, credits, keywords, providers, clasificacion
@@ -149,10 +164,10 @@ def detalle(pelicula_id: int):
         pelicula = modelo.obtener_detalle(pelicula_id)
         credits = modelo.obtener_credits(pelicula_id)
         keywords = modelo.obtener_keywords(pelicula_id)
-        
+
         # 🟢 CAMBIADO: usar obtener_providers para la película individual
         providers = modelo.obtener_providers(pelicula_id)
-        
+
         clasificacion = modelo.obtener_clasificacion(pelicula_id)
         return vista.render_detalle(
             pelicula, credits, keywords, providers, clasificacion
