@@ -243,19 +243,19 @@
                 </div>
             </div>
             <div class="encuesta-btn-container">
-                <button type="submit" class="btn-encuesta">Siguiente</button>
-            </div>
-        </form>
+            <button type="submit" class="btn-encuesta">Siguiente</button>
+        </div>
+    </form>
 
-        <div id="datos-idiomas" data-json='{{ todos_idiomas | tojson | safe }}' style="display:none;"></div>
+    <div id="datos-idiomas" data-json='{{ todos_idiomas | tojson | safe }}' hidden></div>
 
-        <script>
-            const contenedorDatos = document.getElementById('datos-idiomas');
+    <script>
+        const contenedorDatos = document.getElementById('datos-idiomas');
+        // Sintaxis más limpia y segura para entornos dinámicos/responsive
+        const TODOS_LOS_IDIOMAS = contenedorDatos && contenedorDatos.dataset.json ? JSON.parse(contenedorDatos.dataset.json) : [];
 
-            const TODOS_LOS_IDIOMAS = JSON.parse(contenedorDatos.getBoundingClientRect ? contenedorDatos.dataset.json : '[]');
-
-            console.log(TODOS_LOS_IDIOMAS);
-        </script>
+        console.log(TODOS_LOS_IDIOMAS);
+    </script>
 
 
 
