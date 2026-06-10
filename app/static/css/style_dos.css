@@ -5,7 +5,8 @@
 
 .fondo {
     background: url('../img/fondo_registro.png') no-repeat center center fixed;
-    background-size: auto;
+    background-position: 50% 25%;
+    background-size: cover;
     
 }
 
@@ -20,17 +21,17 @@
 
 .registro-card {
     background-color: #ffffff;
-    border-radius: 12px;
+    border-radius: 25px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-    padding: 3rem 2rem;
-    max-width: 450px;
+    padding: 2.5rem 2rem;
+    max-width: 470px;
     width: 100%;
 }
 
 .registro-titulo {
     font-size: 2rem;
     font-weight: 700;
-    color: #1a1a1a;
+    color: #3A52D6;
     margin-bottom: 0.5rem;
     text-align: center;
 }
@@ -45,7 +46,7 @@
 .registro-form {
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
+    gap: 0.5rem;
 }
 
 .form-group {
@@ -62,16 +63,27 @@
 
 .form-group .form-control {
     padding: 0.75rem 1rem;
-    border: 1px solid #e0e0e0;
-    border-radius: 6px;
+    border: 1px solid #c2bfbf;
+    border-radius: 10px;
     font-size: 0.95rem;
     transition: all 0.3s ease;
 }
 
 .form-group .form-control:focus {
-    border-color: #007bff;
+    border-color: #3A52D6;
     box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
     outline: none;
+}
+
+/* Date input – remove calendar icon on webkit */
+input[type="date"]::-webkit-calendar-picker-indicator {
+    opacity: 0;
+    width: 100%;
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    cursor: pointer;
 }
 
 .form-group .form-control.is-invalid {
@@ -83,6 +95,55 @@
     font-size: 0.85rem;
     color: #999999;
 }
+
+/* estilos para los iconos del formulario */
+.field-wrap {
+    position: relative;
+    margin-bottom: 0.85rem;
+}
+
+.field-wrap .icon-left {
+    position: absolute;
+    left: 13px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #8896b0;
+    font-size: 1rem;
+    pointer-events: none;
+}
+
+.field-wrap .icon-right {
+    position: absolute;
+    right: 13px;
+    top: 50%;
+    transform: translateY(-40%);
+    color: #8896b0;
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+.field-wrap input {
+    width: 100%;
+    height: 48px;
+    border: 1.5px solid #c5cdd8;
+    border-radius: 10px;
+    background: #f0f3f8;
+    padding: 0 2.4rem 0 2.6rem !important;
+    font-size: 0.88rem;
+    color: #333;
+    outline: none;
+    transition: border-color 0.2s, background 0.2s;
+}
+
+.field-wrap input::placeholder {
+    color: #9ba8bc;
+}
+
+.field-wrap input:focus {
+    border-color: #2b4fff;
+    background: #fff;
+}
+
 
 .error-message {
     font-size: 0.85rem;
@@ -97,7 +158,9 @@
 
 .form-check {
     display: flex;
+    flex-direction: row;
     align-items: center;
+    justify-content: center;
     gap: 0.75rem;
 }
 
@@ -133,7 +196,7 @@
 }
 
 .btn-registro:hover {
-    transform: translateY(-2px);
+    transform: scale(1.02);
     box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
 }
 
@@ -143,12 +206,15 @@
     font-size: 1rem;
     font-weight: 600;
     border-radius: 6px;
+    background-color: #202122;
+    color: #dde8f1;
     cursor: pointer;
     transition: all 0.3s ease;
 }
 
 .btn-volver:hover {
-    background-color: #f8f9fa;
+    transform: scale(1.02);
+    color: #1f1d1d !important;
     border-color: #6c757d;
 }
 
