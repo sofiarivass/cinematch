@@ -98,6 +98,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 .form-group .form-control.is-invalid {
     border-color: #dc3545;
     box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.1);
+    background-image: none;
 }
 
 .form-group .form-text {
@@ -119,13 +120,23 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     color: #8896b0;
     font-size: 1rem;
     pointer-events: none;
+    z-index: 1;
+}
+
+.input-inner {
+    position: relative;
+    flex: 1;
+}
+
+.input-icons {
+    position: relative;
 }
 
 .field-wrap .icon-right {
     position: absolute;
     right: 13px;
     top: 50%;
-    transform: translateY(-40%);
+    transform: translateY(-50%);
     color: #8896b0;
     font-size: 1rem;
     cursor: pointer;
@@ -152,7 +163,6 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     border-color: #2b4fff;
     background: #fff;
 }
-
 
 .error-message {
     font-size: 0.85rem;

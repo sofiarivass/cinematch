@@ -15,36 +15,40 @@
 
         <!-- Correo electrónico -->
         <div class="form-group field-wrap">
-          <i class="bi bi-envelope icon-left"></i>
-          <div>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              class="form-control"
-              placeholder="Tu correo electrónico"
-              required
-            >
-            <div class="error-message" id="error-email"></div>
+          <div class="input-inner">
+            <div class="input-icons">
+              <i class="bi bi-envelope icon-left"></i>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                class="form-control"
+                placeholder="Tu correo electrónico"
+                required
+              >
+            </div>
+            <span class="error-message" id="error-email"></span>
           </div>
         </div>
 
         <!-- Contraseña -->
         <div class="form-group field-wrap">
-          <i class="bi bi-lock icon-left"></i>
-          <div>
-            <input
-              type="password"
-              id="contraseña"
-              name="contraseña"
-              class="form-control"
-              placeholder="Tu contraseña"
-              minlength="6"
-              required
-            >
-            <div class="error-message" id="error-contraseña"></div>
+          <div class="input-inner">
+            <div class="input-icons">
+              <i class="bi bi-lock icon-left"></i>
+              <input
+                type="password"
+                id="contraseña"
+                name="contraseña"
+                class="form-control"
+                placeholder="Tu contraseña"
+                minlength="6"
+                required
+              >
+              <i class="bi bi-eye-slash icon-right" id="togglePassword"></i>
+            </div>
+            <span class="error-message" id="error-contraseña"></span>
           </div>
-          <i class="bi bi-eye icon-right" id="togglePassword"></i>
         </div>
 
         <!-- Recordarme + Olvidé contraseña -->
@@ -83,7 +87,7 @@
   toggleBtn.addEventListener('click', () => {
     const isHidden = passwordInput.type === 'password';
     passwordInput.type = isHidden ? 'text' : 'password';
-    toggleBtn.className = isHidden ? 'bi bi-eye-slash icon-right' : 'bi bi-eye icon-right';
+    toggleBtn.className = isHidden ? 'bi bi-eye icon-right' : 'bi bi-eye-slash icon-right';
   });
 </script>
 
