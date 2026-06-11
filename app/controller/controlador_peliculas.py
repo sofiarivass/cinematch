@@ -164,13 +164,14 @@ def detalle(pelicula_id: int):
         pelicula = modelo.obtener_detalle(pelicula_id)
         credits = modelo.obtener_credits(pelicula_id)
         keywords = modelo.obtener_keywords(pelicula_id)
+        trailer = modelo.obtener_trailer(pelicula_id)
 
         # 🟢 CAMBIADO: usar obtener_providers para la película individual
         providers = modelo.obtener_providers(pelicula_id)
 
         clasificacion = modelo.obtener_clasificacion(pelicula_id)
         return vista.render_detalle(
-            pelicula, credits, keywords, providers, clasificacion
+            pelicula, credits, keywords, providers, clasificacion, trailer
         )
     except Exception as e:
         return vista.render_error(str(e))

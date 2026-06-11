@@ -210,10 +210,12 @@ footer .text-body-secondary {
     width: 50em;
     background-color: #030E21;
     border: 2px solid #232D3E;
-    border-radius: 20px;
+    border-radius: 30px;
     margin: auto;
     padding: 2em 2.5em;
 }
+
+
 
 .poster-detalle-container {
     display: flex;
@@ -334,6 +336,12 @@ footer .text-body-secondary {
 .btn-outline:focus {
     background-color: #232D3E !important;
     color: #CCCCCC !important;
+}
+
+.btn-outline:disabled {
+    opacity: 0.9;
+    cursor: not-allowed;
+    pointer-events: none;
 }
 
 .h2-detalle {
@@ -563,6 +571,10 @@ footer .text-body-secondary {
 @media (max-width: 691.99px) {
     .info-detalle-container {
         padding-left: 1.5em;
+    }
+
+    .generos-detalle {
+        font-size: 0.7rem;
     }
 
     .titulo-detalle {
@@ -959,8 +971,69 @@ footer .text-body-secondary {
     width: clamp(3.5em, 8vh, 5em);
 }
 
+.img-btn-recomendacion:hover {
+    box-shadow: 0 0 7px 7px #0a8408;
+}
+
 .img-btn-info-recomendacion {
     width: clamp(3em, 6.5vh, 4em);
+}
+
+.btn-redondo {
+    width: clamp(3.5em, 8vh, 5em);
+    height: clamp(3.5em, 8vh, 5em);
+    border-radius: 50%;
+    background-color: #FFFFFF;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: transform 0.2s, background-color 0.2s, box-shadow 0.2s;
+    text-decoration: none;
+}
+
+.boton-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-redondo-info {
+    width: clamp(3em, 6.5vh, 4em);
+    height: clamp(3em, 6.5vh, 4em);
+    background-color: #030E21;
+    border: 1px solid #232D3E;
+}
+
+.icono-btn-redondo {
+    width: 48%;
+    height: 48%;
+    object-fit: contain;
+}
+
+.icono-btn-info {
+    width: 42%;
+    height: 42%;
+}
+
+.btn-redondo-no:hover {
+    background-color: #ffecec;
+    box-shadow: 0 0 0.8em rgba(204, 0, 0, 0.5);
+    transform: scale(1.08);
+}
+
+.btn-redondo-si:hover {
+    background-color: #eaffec;
+    box-shadow: 0 0 0.8em rgba(65, 185, 0, 0.5);
+    transform: scale(1.08);
+}
+
+.btn-redondo-info:hover {
+    background-color: #232D3E8a;
+    box-shadow: 0 0 0.8em rgba(58, 82, 214, 0.4);
+    transform: scale(1.08);
 }
 
 .txt-si {

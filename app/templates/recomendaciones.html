@@ -6,7 +6,8 @@
             <div class="row">
                 <div class="backdrop-recomendacion-container">
                     {% if pelicula.backdrop %}
-                    <img src="{{ pelicula.backdrop }}" alt="{{ pelicula.titulo }}" class="backdrop-recomendacion" /> {% else %}
+                    <img src="{{ pelicula.backdrop }}" alt="{{ pelicula.titulo }}" class="backdrop-recomendacion" /> {%
+                    else %}
                     <div class="backdrop-recomendacion backdrop-placeholder"></div>
                     {% endif %}
 
@@ -18,7 +19,8 @@
                     {% if providers.flatrate %}
                     <div class="providers-recomendacion">
                         {% for p in providers.flatrate %}
-                        <img src="{{ p.logo }}" alt="{{ p.nombre }}" title="{{ p.nombre }}" class="provider-logo-recomendacion"> {% endfor %}
+                        <img src="{{ p.logo }}" alt="{{ p.nombre }}" title="{{ p.nombre }}"
+                            class="provider-logo-recomendacion"> {% endfor %}
                     </div>
                     {% endif %}
 
@@ -38,12 +40,15 @@
                     </div>
                     <div class="col-12">
                         <p class="meta-recomendacion">
-                            <span class="anio-recomendacion"><i class="bi bi-calendar-event"></i>  {{ pelicula.fecha[:4] }}</span>
-                            <span class="duracion-recomendacion"><i class="bi bi-clock"></i>  {{ pelicula.duracion }}</span> {% if credits.directores %}
+                            <span class="anio-recomendacion"><i class="bi bi-calendar-event"></i> {{ pelicula.fecha[:4]
+                                }}</span>
+                            <span class="duracion-recomendacion"><i class="bi bi-clock"></i> {{ pelicula.duracion
+                                }}</span> {% if credits.directores %}
                             <span class="director-recomendacion"><i class="bi bi-camera-reels"></i>
-                        {% for director in credits.directores %}
-                        {{ director.nombre[0] }} {{ director.nombre[1] if director.nombre|length > 1 else '' }}{% if not loop.last %}, {% endif %} {% endfor %}
-                    </span> {% endif %}
+                                {% for director in credits.directores %}
+                                {{ director.nombre[0] }} {{ director.nombre[1] if director.nombre|length > 1 else ''
+                                }}{% if not loop.last %}, {% endif %} {% endfor %}
+                            </span> {% endif %}
                         </p>
                     </div>
                     <div class="col-12">
@@ -62,7 +67,8 @@
                     <div class="col-6">
                         <h3 class="h3-recomendaciones">Elenco</h3>
                         <p class="elenco-recomendacion {% if pelicula.generos|length >= 3 %}elenco-clamp-2{% endif %}">
-                            {% for actor in credits.cast %}{{ actor.nombre }}{% if not loop.last %}, {% endif %}{% endfor %}
+                            {% for actor in credits.cast %}{{ actor.nombre }}{% if not loop.last %}, {% endif %}{%
+                            endfor %}
                         </p>
                     </div>
                 </div>
@@ -70,7 +76,7 @@
             <!-- cierre contenido-recomendacion-container -->
 
             <hr class="separador-botones-recomendacion">
-            <div class="row">
+            <!-- <div class="row">
                 <div class="col-5 boton-no">
                     <div>
                         <img src="{{ url_for('static', filename='img/botones/btn-no.svg') }} " role="button" class="img-btn-recomendacion rounded-circle">
@@ -79,7 +85,6 @@
                 </div>
                 <div class="col-2 boton-info">
                     <div>
-                        <!-- boton modal -->
                         <a role="button" data-bs-toggle="modal" data-bs-target="#modal-info-pelicula">
                             <img src="{{ url_for('static', filename='img/botones/btn-info.svg') }} " role="button" class="img-btn-info-recomendacion rounded-circle">
                         </a>
@@ -89,6 +94,36 @@
                 <div class="col-5 boton-si">
                     <div>
                         <img src="{{ url_for('static', filename='img/botones/btn-si.svg') }} " role="button" class="img-btn-recomendacion rounded-circle">
+                        <p class="txt-si">Me interesa →</p>
+                    </div>
+                </div>
+            </div> -->
+            <div class="row">
+                <div class="col-5 boton-no">
+                    <div>
+                        <button type="button" class="btn-redondo btn-redondo-no">
+                            <img src="{{ url_for('static', filename='img/botones/btn-no.svg') }}"
+                                class="icono-btn-redondo">
+                        </button>
+                        <p class="txt-no">← No me interesa</p>
+                    </div>
+                </div>
+                <div class="col-2 boton-info">
+                    <div>
+                        <a role="button" data-bs-toggle="modal" data-bs-target="#modal-info-pelicula"
+                            class="btn-redondo btn-redondo-info d-flex align-items-center justify-content-center">
+                            <img src="{{ url_for('static', filename='img/botones/btn-info.svg') }}"
+                                class="icono-btn-redondo icono-btn-info">
+                        </a>
+                        <p class="txt-info">Más info</p>
+                    </div>
+                </div>
+                <div class="col-5 boton-si">
+                    <div>
+                        <button type="button" class="btn-redondo btn-redondo-si">
+                            <img src="{{ url_for('static', filename='img/botones/btn-si.svg') }}"
+                                class="icono-btn-redondo">
+                        </button>
                         <p class="txt-si">Me interesa →</p>
                     </div>
                 </div>
@@ -106,7 +141,8 @@
 </div>
 
 <!-- Modal -->
-<div class="modal modal-xl fade" id="modal-info-pelicula" data-bs-backdrop="static" data-bs-keyboard="true" tabindex="-1" aria-labelledby="modal-info-pelicula-label" aria-hidden="true">
+<div class="modal modal-xl fade" id="modal-info-pelicula" data-bs-backdrop="static" data-bs-keyboard="true"
+    tabindex="-1" aria-labelledby="modal-info-pelicula-label" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <a class="btn-cerrar-modal" data-bs-dismiss="modal" aria-label="Cerrar">
@@ -118,33 +154,42 @@
                         <div class="row">
                             <div class="col-12 col-sm-4 poster-detalle-container">
                                 {% if pelicula.poster %}
-                                <img src="{{ pelicula.poster }}" alt="{{ pelicula.titulo }}" class="poster-detalle" /> {% else %}
+                                <img src="{{ pelicula.poster }}" alt="{{ pelicula.titulo }}" class="poster-detalle" />
+                                {% else %}
                                 <div>Sin imagen</div>
                                 {% endif %}
                             </div>
                             <div class="col-12 col-sm-8 info-detalle-container">
                                 <p class="generos-detalle">
                                     {% for genero in pelicula.generos %}
-                                    <span class="generos-detalle badge rounded-pill bg-secondary">{{ genero }}</span> {% endfor %}
+                                    <span class="generos-detalle badge rounded-pill bg-secondary">{{ genero }}</span> {%
+                                    endfor %}
                                 </p>
                                 <!-- <h1 class="titulo-detalle">{{ pelicula.titulo }}<span class="clasificacion-detalle badge text-bg-secondary">Test</span></h1> -->
                                 <h1 class="titulo-detalle">
                                     {{ pelicula.titulo }} {% if clasificacion %}
-                                    <span class="clasificacion-detalle badge text-bg-secondary">{{ clasificacion }}</span> {% endif %}
+                                    <span class="clasificacion-detalle badge text-bg-secondary">{{ clasificacion
+                                        }}</span> {% endif %}
                                 </h1>
                                 {% if pelicula.tagline %}
                                 <p class="tagline-detalle"><em>"{{ pelicula.tagline }}"</em></p>
                                 {% endif %}
                                 <p class="meta-detalle">
-                                    <span class="rating-detalle"><i class="bi bi-star-fill"></i>  {{ pelicula.puntuacion }}</span>
+                                    <span class="rating-detalle"><i class="bi bi-star-fill"></i> {{ pelicula.puntuacion
+                                        }}</span>
                                     <span class="barra-detalle">/</span>
-                                    <span class="votos-detalle"><i class="bi bi-person-fill"></i>  {{ pelicula.votos }}</span>
+                                    <span class="votos-detalle"><i class="bi bi-person-fill"></i> {{ pelicula.votos
+                                        }}</span>
                                     <br class="d-sm-none" />
-                                    <span class="anio-detalle"><i class="bi bi-calendar-event"></i>  {{ pelicula.fecha[:4] }}</span>
-                                    <span class="duracion-detalle"><i class="bi bi-clock"></i>  {{ pelicula.duracion }}</span>
+                                    <span class="anio-detalle"><i class="bi bi-calendar-event"></i> {{
+                                        pelicula.fecha[:4] }}</span>
+                                    <span class="duracion-detalle"><i class="bi bi-clock"></i> {{ pelicula.duracion
+                                        }}</span>
                                 </p>
-                                <a role="button" class="boton-trailer btn btn-outline" href="#" target="_blank"><i class="bi bi-play-fill"></i>  Ver trailer</a>
-                                <a role="button" class="boton-web btn btn-outline" href="{{ pelicula.web }}" target="_blank"><i class="bi bi-box-arrow-up-right"></i>  Web oficial</a>
+                                <a role="button" class="boton-trailer btn btn-outline" href="#" target="_blank"><i
+                                        class="bi bi-play-fill"></i> Ver trailer</a>
+                                <a role="button" class="boton-web btn btn-outline" href="{{ pelicula.web }}"
+                                    target="_blank"><i class="bi bi-box-arrow-up-right"></i> Web oficial</a>
                             </div>
                         </div>
                         <hr class="separador-detalle">
@@ -156,17 +201,21 @@
                         </div>
                         <div class="row  mt-3">
                             <div class="col-5 col-sm-3">
-                                <h2 class="h2-detalle">{% if credits.directores|length > 1 %}Directores{% else %}Director{% endif %}</h2>
+                                <h2 class="h2-detalle">{% if credits.directores|length > 1 %}Directores{% else
+                                    %}Director{% endif %}</h2>
                                 <div class="crew-scroll">
                                     {% for director in credits.directores %}
                                     <div class="crew-item">
                                         {% if director.foto %}
-                                        <img class="img-detalle rounded-circle" src="{{ director.foto }}" alt="{{ director.nombre }}"> {% else %}
+                                        <img class="img-detalle rounded-circle" src="{{ director.foto }}"
+                                            alt="{{ director.nombre }}"> {% else %}
                                         <div class="img-detalle rounded-circle img-placeholder">
-                                            <img src="{{ url_for('static', filename='img/director.svg') }}" class="placeholder-svg">
+                                            <img src="{{ url_for('static', filename='img/director.svg') }}"
+                                                class="placeholder-svg">
                                         </div>
                                         {% endif %}
-                                        <p class="crew-nombre">{{ director.nombre[0] }}<br>{{ director.nombre[1] if director.nombre|length > 1 else '' }}</p>
+                                        <p class="crew-nombre">{{ director.nombre[0] }}<br>{{ director.nombre[1] if
+                                            director.nombre|length > 1 else '' }}</p>
                                     </div>
                                     {% endfor %}
                                 </div>
@@ -177,9 +226,11 @@
                                     {% for actor in credits.cast %}
                                     <div class="crew-item">
                                         {% if actor.foto %}
-                                        <img class="img-detalle rounded-circle" src="{{ actor.foto }}" alt="{{ actor.nombre }}"> {% else %}
+                                        <img class="img-detalle rounded-circle" src="{{ actor.foto }}"
+                                            alt="{{ actor.nombre }}"> {% else %}
                                         <div class="img-detalle rounded-circle img-placeholder">
-                                            <img src="{{ url_for('static', filename='img/actor.svg') }}" class="placeholder-svg">
+                                            <img src="{{ url_for('static', filename='img/actor.svg') }}"
+                                                class="placeholder-svg">
                                         </div>
                                         {% endif %}
                                         <p class="crew-nombre">{{ actor.nombre }}</p>
@@ -194,17 +245,20 @@
                                 <h2 class="h2-detalle">Palabras clave</h2>
                                 <div class="keywords-scroll">
                                     {% for keyword in keywords %}
-                                    <span class="keywords-detalle badge bg-secondary keyword-badge">{{ keyword }}</span> {% endfor %}
+                                    <span class="keywords-detalle badge bg-secondary keyword-badge">{{ keyword }}</span>
+                                    {% endfor %}
                                 </div>
                             </div>
                             <div class="col-providers">
                                 <h2 class="h2-detalle">Dónde ver</h2>
-                                {% if providers.flatrate or providers.rent or providers.buy %} {% if providers.flatrate %}
+                                {% if providers.flatrate or providers.rent or providers.buy %} {% if providers.flatrate
+                                %}
                                 <div class="provider-row">
                                     <span class="provider-label">Incluida</span>
                                     <div class="provider-logos">
                                         {% for p in providers.flatrate %}
-                                        <img src="{{ p.logo }}" alt="{{ p.nombre }}" title="{{ p.nombre }}" class="provider-logo"> {% endfor %}
+                                        <img src="{{ p.logo }}" alt="{{ p.nombre }}" title="{{ p.nombre }}"
+                                            class="provider-logo"> {% endfor %}
                                     </div>
                                 </div>
                                 {% endif %} {% if providers.buy %}
@@ -212,7 +266,8 @@
                                     <span class="provider-label">Compra</span>
                                     <div class="provider-logos">
                                         {% for p in providers.buy %}
-                                        <img src="{{ p.logo }}" alt="{{ p.nombre }}" title="{{ p.nombre }}" class="provider-logo"> {% endfor %}
+                                        <img src="{{ p.logo }}" alt="{{ p.nombre }}" title="{{ p.nombre }}"
+                                            class="provider-logo"> {% endfor %}
                                     </div>
                                 </div>
                                 {% endif %} {% if providers.rent %}
@@ -220,11 +275,14 @@
                                     <span class="provider-label">Alquiler</span>
                                     <div class="provider-logos">
                                         {% for p in providers.rent %}
-                                        <img src="{{ p.logo }}" alt="{{ p.nombre }}" title="{{ p.nombre }}" class="provider-logo"> {% endfor %}
+                                        <img src="{{ p.logo }}" alt="{{ p.nombre }}" title="{{ p.nombre }}"
+                                            class="provider-logo"> {% endfor %}
                                     </div>
                                 </div>
                                 {% endif %}
-                                <span class="atribucion">Datos provistos por <a class="link-atribucion" href="https://www.justwatch.com/ar" target="_blank">JustWatch</a></span> {% else %}
+                                <span class="atribucion">Datos provistos por <a class="link-atribucion"
+                                        href="https://www.justwatch.com/ar" target="_blank">JustWatch</a></span> {% else
+                                %}
                                 <p class="no-disponible text-muted">Aún no disponible en streaming en Argentina</p>
                                 {% endif %}
                             </div>

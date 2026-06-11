@@ -99,6 +99,7 @@ class PeliculaView:
         keywords: list,
         providers: dict,
         clasificacion: str,
+        trailer: str | None = None,
     ) -> str:
         """
         Renderiza la vista de detalle de una película.
@@ -116,6 +117,7 @@ class PeliculaView:
             keywords=keywords,
             providers=providers,
             clasificacion=clasificacion,
+            trailer=trailer,
         )
 
     def render_error(self, mensaje: str) -> tuple[str, int]:

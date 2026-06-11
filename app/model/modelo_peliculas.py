@@ -229,6 +229,37 @@ class PeliculaModel:
 
         return extraer_cert("AR") or extraer_cert("US") or ""
 
+    def obtener_trailer(self, pelicula_id: int) -> str | None:
+        """
+        Obtiene el link de YouTube del trailer oficial.
+        Prioriza español, si no encuentra trae inglés, si no hay ninguno devuelve None.
+        """
+        data = self._get(f"/movie/{pelicula_id}/videos", {"language": "es-AR"})
+        videos = data.get("results", [])
+
+        # Si no hay videos en español, buscar en inglés
+        if not videos:
+            data_en = self._get(f"/movie/{pelicula_id}/videos", {"language": "en-US"})
+            videos = data_en.get("results", [])
+
+        # Filtrar solo trailers de YouTube
+        trailer = next(
+            (
+                v
+                for v in videos
+                if v.get("type") == "Trailer" and v.get("site") == "YouTube"
+            ),
+            None,
+        )
+
+        if not trailer:
+            # Intentar con cualquier video de YouTube si no hay trailer
+            trailer = next((v for v in videos if v.get("site") == "YouTube"), None)
+
+        if trailer:
+            return f"https://www.youtube.com/watch?v={trailer['key']}"
+        return None
+
     def obtener_detalle(self, pelicula_id: int) -> dict:
         data = self._get(f"/movie/{pelicula_id}")
         paises = self._obtener_nombres_paises()
@@ -241,6 +272,11 @@ class PeliculaModel:
             ),
             idioma_code,
         )
+        # Web oficial: intenta en español, si no en inglés
+        web = data.get("homepage", "")
+        if not web:
+            data_en = self._get(f"/movie/{pelicula_id}", {"language": "en-US"})
+            web = data_en.get("homepage", "")
 
         return {
             "id": data["id"],
@@ -262,7 +298,7 @@ class PeliculaModel:
             "generos": [g["name"] for g in data.get("genres", [])],
             "productora": [p["name"] for p in data.get("production_companies", [])],
             "tagline": data.get("tagline", ""),
-            "web": data.get("homepage", ""),
+            "web": web,
         }
 
     def buscar(self, query: str, pagina: int = 1) -> dict:
