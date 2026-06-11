@@ -1,221 +1,127 @@
 {% extends "base.html" %} {% block title %}Encuesta — CineMatch{% endblock %} {% block content %}
-
-
-
 <div class="container encuesta-container">
-
-
-
     <!-- BARRA DE PROGRESO -->
-
-    <div class="encuesta-progreso-wrapper">
-
+    <div class="encuesta-progreso-wrapper d-flex">
         <span class="encuesta-paso-txt">Paso {{ paso }} de 4</span>
-
         <span class="encuesta-titulo-txt">Encuesta de personalización</span>
-
     </div>
-
-    <div class="encuesta-barra">
-
-        <div class="encuesta-barra-fill" style="--progreso: {{ ((paso / 4) * 100) | int }}%;"></div>
-
+    <div class="encuesta-barra" style="--progreso: {{ ((paso / 4) * 100) | int }}%;">
+        <div class="encuesta-barra-fill"></div>
     </div>
-
-
-
-    <div class="card encuesta-card margen-footer">
-
-
-
+    <div class="card encuesta-card margen-footer text-center">
         <!-- ── PASO 0: Introducción ── -->
-
         {% if paso == 0 %}
-
         <form method="POST" action="{{ url_for('peliculas.encuesta_perfil') }}">
-
             <input type="hidden" name="paso" value="0">
-
             <h1 class="encuesta-titulo">Personalizemos<br>tu experiencia</h1>
-
             <p class="encuesta-desc">
-
                 Antes de comenzar, queremos conocerte un poco mejor para personalizar tu experiencia dentro de
-
                 <strong><span class="texto-blanco">Cine</span><span class="texto-color">Match</span></strong>.
-
             </p>
-
             <p class="encuesta-desc">
-
-                Te haremos una breve encuesta sobre tus plataformas de streaming, idiomas y preferencias de visualización. Esta información nos permitirá ofrecerte recomendaciones más precisas y adaptadas a vos.
-
+                Te haremos una breve encuesta sobre tus plataformas de streaming, idiomas y preferencias de
+                visualización. Esta información nos permitirá ofrecerte recomendaciones más precisas y adaptadas a vos.
             </p>
-
             <p class="encuesta-nota"><em>Podrás modificar estas preferencias más adelante desde tu perfil.</em></p>
-
-            <div class="encuesta-btn-container">
-
+            <div class="encuesta-btn-container d-flex justify-content-center">
                 <button type="submit" class="btn-encuesta">Comenzar</button>
-
             </div>
-
         </form>
-
-
-
         <!-- ── PASO 1: Plataformas ── -->
-
         {% elif paso == 1 %}
-
         <form method="POST" action="{{ url_for('peliculas.encuesta_perfil') }}">
-
             <input type="hidden" name="paso" value="1">
-
-            <a href="{{ url_for('peliculas.encuesta_perfil', paso=0) }}" class="encuesta-volver">
-
-                <img id="btn-regresar" src="{{ url_for('static', filename='img/botones/btn-regresar.svg') }}" alt="Regresar" height="30">
-
+            <a href="{{ url_for('peliculas.encuesta_perfil', paso=0) }}" class="encuesta-volver d-block text-start">
+                <img id="btn-regresar" src="{{ url_for('static', filename='img/botones/btn-regresar.svg') }}"
+                    alt="Regresar" height="30">
             </a>
-
             <h1 class="encuesta-titulo">Selecciona tus<br>plataformas de streaming</h1>
-
-            <p class="encuesta-desc">Personalizaremos tus recomendaciones basándonos en los servicios que ya tenés contratados
-
+            <p class="encuesta-desc">Personalizaremos tus recomendaciones basándonos en los servicios que ya tenés
+                contratados
             </p>
-
-            <div class="encuesta-grid-plataformas">
-
+            <div class="encuesta-grid-plataformas justify-content-center">
                 {% for p in providers %}
-
-                <label class="encuesta-opcion-logo">
-
+                <label class="encuesta-opcion-logo d-flex align-items-center justify-content-center">
                     <input type="checkbox" name="plataformas" value="{{ p.id }}" class="encuesta-check-hidden" {% if
                         p.id|string in session.get('plataformas', []) or p.id in session.get('plataformas', [])
                         %}checked{% endif %}>
-
                     <img src="{{ url_for('static', filename=p.logo) }}" alt="{{ p.nombre }}" title="{{ p.nombre }}"
                         class="encuesta-logo-img">
-
                 </label> {% endfor %}
-
             </div>
-
-            <div class="encuesta-tags-container" id="tags-container">
-                {% for p_id in session.get('plataformas_otras_ids', []) %} {% for p in todos_providers %} {% if p.id == p_id %}
-                <span class="encuesta-tag" data-id="{{ p.id }}">
-                {{ p.nombre }} <button type="button" class="encuesta-tag-remove">×</button>
-            </span> {% endif %} {% endfor %} {% endfor %}
+            <div class="encuesta-tags-container d-flex flex-wrap" id="tags-container">
+                {% for p_id in session.get('plataformas_otras_ids', []) %} {% for p in todos_providers %} {% if p.id ==
+                p_id %}
+                <span class="encuesta-tag d-flex align-items-center" data-id="{{ p.id }}">
+                    {{ p.nombre }} <button type="button" class="encuesta-tag-remove">×</button>
+                </span> {% endif %} {% endfor %} {% endfor %}
             </div>
-
             <input type="hidden" name="plataformas_otras" id="plataformas-otras-hidden">
-
-
-
-            <div class="encuesta-otro">
-
+            <div class="encuesta-otro d-flex">
                 <label class="encuesta-otro-label">Otra:</label>
-
                 <div class="encuesta-otro-wrapper">
-
-                    <input type="text" id="input-otra-plataforma" placeholder="Ej: MovistarTV, MUBI..." class="encuesta-otro-input" autocomplete="off">
-
+                    <input type="text" id="input-otra-plataforma" placeholder="Ej: MovistarTV, MUBI..."
+                        class="encuesta-otro-input" autocomplete="off">
                     <ul class="encuesta-sugerencias" id="sugerencias-lista"></ul>
-
                 </div>
-
             </div>
-
-
-
             <!-- Lista de providers para JS -->
-
             <script>
                 const todosProviders = JSON.parse('{{ todos_providers | tojson | safe }}');
-
                 console.log(todosProviders);
             </script>
-
             <div class="encuesta-btn-container">
-
                 <button type="submit" class="btn-encuesta">Siguiente</button>
-
             </div>
-
         </form>
-
-
-
         <!-- ── PASO 2: Disponibilidad ── -->
-
         {% elif paso == 2 %}
-
         <form method="POST" action="{{ url_for('peliculas.encuesta_perfil') }}">
-
             <input type="hidden" name="paso" value="2">
-
-            <a href="{{ url_for('peliculas.encuesta_perfil', paso=1) }}" class="encuesta-volver">
-
-                <img id="logo" src="{{ url_for('static', filename='img/botones/btn-regresar.svg') }}" alt="Regresar" height="30">
-
+            <a href="{{ url_for('peliculas.encuesta_perfil', paso=1) }}" class="encuesta-volver d-block text-start">
+                <img id="logo" src="{{ url_for('static', filename='img/botones/btn-regresar.svg') }}" alt="Regresar"
+                    height="30">
             </a>
-
             <h1 class="encuesta-titulo">Disponibilidad del<br>contenido</h1>
-
-            <p class="encuesta-desc">Podemos recomendarte contenido incluido en tus suscripciones o también opciones disponibles para alquilar o comprar digitalmente</p>
-
-
-
-            {% for opcion in [ {"value": "flatrate", "icono": "bi-play-circle", "texto": "Solo contenido incluido en mis plataformas"}, {"value": "rent_buy", "icono": "bi-currency-dollar","texto": "Opciones disponibles para alquilar o comprar"}, {"value": "any",
+            <p class="encuesta-desc">Podemos recomendarte contenido incluido en tus suscripciones o también opciones
+                disponibles para alquilar o comprar digitalmente</p>
+            {% for opcion in [ {"value": "flatrate", "icono": "bi-play-circle", "texto": "Solo contenido incluido en mis
+            plataformas"}, {"value": "rent_buy", "icono": "bi-currency-dollar","texto": "Opciones disponibles para
+            alquilar o comprar"}, {"value": "any",
             "icono": "bi-collection-play","texto": "Indistinto"} ] %}
-
-            <label class="encuesta-opcion-fila">
-
+            <label class="encuesta-opcion-fila d-flex align-items-center">
                 <input type="radio" name="disponibilidad" value="{{ opcion.value }}" class="encuesta-radio-hidden" {% if
                     session.get('disponibilidad')==opcion.value %}checked{% endif %}>
-
-                <i class="bi {{ opcion.icono }} encuesta-opcion-icono"></i>
-
+                <i
+                    class="bi {{ opcion.icono }} encuesta-opcion-icono d-flex align-items-center justify-content-center"></i>
                 <span class="encuesta-opcion-texto">{{ opcion.texto }}</span>
-
             </label> {% endfor %}
-
-
-
             <div class="encuesta-btn-container">
-
                 <button type="submit" class="btn-encuesta">Siguiente</button>
-
             </div>
-
         </form>
-
-
-
         <!-- ── PASO 3: Idiomas ── -->
-
         {% elif paso == 3 %}
-
         <form method="POST" action="{{ url_for('peliculas.encuesta_perfil') }}" id="form-encuesta-idiomas">
-
             <input type="hidden" name="paso" value="3">
-
-            <a href="{{ url_for('peliculas.encuesta_perfil', paso=2) }}" class="encuesta-volver">
-
-                <img id="logo" src="{{ url_for('static', filename='img/botones/btn-regresar.svg') }}" alt="Regresar" height="30">
+            <a href="{{ url_for('peliculas.encuesta_perfil', paso=2) }}" class="encuesta-volver d-block text-start">
+                <img id="logo" src="{{ url_for('static', filename='img/botones/btn-regresar.svg') }}" alt="Regresar"
+                    height="30">
             </a>
             <h1 class="encuesta-titulo">¿En qué idiomas preferís<br>ver contenido?</h1>
             <p class="encuesta-desc">Esto nos ayuda a priorizar títulos disponibles en tus idiomas de preferencia</p>
-
-
             <div class="encuesta-grid-idiomas">
-                {% for idioma in [ {"value": "es", "svg": "img/banderas/es.svg", "texto": "Español"}, {"value": "en", "svg": "img/banderas/us.svg", "texto": "Inglés"}, {"value": "pt", "svg": "img/banderas/br.svg", "texto": "Portugués"}, {"value": "fr", "svg": "img/banderas/fr.svg",
-                "texto": "Francés"}, {"value": "ko", "svg": "img/banderas/kr.svg", "texto": "Coreano"}, {"value": "ja", "svg": "img/banderas/jp.svg", "texto": "Japonés"}, {"value": "it", "svg": "img/banderas/it.svg", "texto": "Italiano"}, {"value": "any",
+                {% for idioma in [ {"value": "es", "svg": "img/banderas/es.svg", "texto": "Español"}, {"value": "en",
+                "svg": "img/banderas/us.svg", "texto": "Inglés"}, {"value": "pt", "svg": "img/banderas/br.svg", "texto":
+                "Portugués"}, {"value": "fr", "svg": "img/banderas/fr.svg",
+                "texto": "Francés"}, {"value": "ko", "svg": "img/banderas/kr.svg", "texto": "Coreano"}, {"value": "ja",
+                "svg": "img/banderas/jp.svg", "texto": "Japonés"}, {"value": "it", "svg": "img/banderas/it.svg",
+                "texto": "Italiano"}, {"value": "any",
                 "icon": "bi bi-globe2", "texto": "Indistinto"} ] %}
-                <label class="encuesta-opcion-idioma">
+                <label class="encuesta-opcion-idioma d-flex align-items-center">
                     <input type="checkbox" name="idiomas" value="{{ idioma.value }}" class="encuesta-check-hidden" {% if
                         idioma.value in session.get('idiomas', []) %}checked{% endif %}>
-                    <span class="encuesta-idioma-emoji">
+                    <span class="encuesta-idioma-emoji d-inline-flex">
                         {% if idioma.value == "any" %}
                         <i class="{{ idioma.icon }}"></i>
                         {% else %}
@@ -226,84 +132,63 @@
                     <span class="encuesta-opcion-texto">{{ idioma.texto }}</span>
                 </label> {% endfor %}
             </div>
-
             <div class="encuesta-tags-container" id="tags-idiomas-contenedor">
-                {% set fijos = ['es', 'en', 'pt', 'fr', 'ko', 'ja', 'it', 'any'] %} {% for iso in session.get('idiomas', []) %} {% if iso not in fijos %} {% for idioma in todos_idiomas %} {% if idioma.iso == iso %}
+                {% set fijos = ['es', 'en', 'pt', 'fr', 'ko', 'ja', 'it', 'any'] %} {% for iso in session.get('idiomas',
+                []) %} {% if iso not in fijos %} {% for idioma in todos_idiomas %} {% if idioma.iso == iso %}
                 <div class="encuesta-tag" data-iso="{{ iso }}">
                     <span>{{ idioma.nombre }}</span>
                     <button type="button" class="encuesta-tag-remove">&times;</button>
                 </div>
-                <input type="hidden" name="idiomas" value="{{ iso }}" id="hidden-idioma-{{ iso }}"> {% endif %} {% endfor %} {% endif %} {% endfor %}
+                <input type="hidden" name="idiomas" value="{{ iso }}" id="hidden-idioma-{{ iso }}"> {% endif %} {%
+                endfor %} {% endif %} {% endfor %}
             </div>
-            <div class="encuesta-otro">
+            <div class="encuesta-otro d-flex">
                 <label class="encuesta-otro-label">Otro:</label>
                 <div class="encuesta-otro-wrapper">
-                    <input type="text" id="input-otro-idioma" placeholder="Ej: Deutsch, polski..." class="encuesta-otro-input" autocomplete="off">
+                    <input type="text" id="input-otro-idioma" placeholder="Ej: Deutsch, polski..."
+                        class="encuesta-otro-input" autocomplete="off">
                     <ul class="encuesta-sugerencias" id="sugerencias-idiomas"></ul>
                 </div>
             </div>
             <div class="encuesta-btn-container">
-            <button type="submit" class="btn-encuesta">Siguiente</button>
-        </div>
-    </form>
+                <button type="submit" class="btn-encuesta">Siguiente</button>
+            </div>
+        </form>
+        <div id="datos-idiomas" data-json='{{ todos_idiomas | tojson | safe }}' hidden></div>
+        <script>
+            const contenedorDatos = document.getElementById('datos-idiomas');
+            // Sintaxis más limpia y segura para entornos dinámicos/responsive
+            const TODOS_LOS_IDIOMAS = contenedorDatos && contenedorDatos.dataset.json ? JSON.parse(contenedorDatos.dataset.json) : [];
 
-    <div id="datos-idiomas" data-json='{{ todos_idiomas | tojson | safe }}' hidden></div>
-
-    <script>
-        const contenedorDatos = document.getElementById('datos-idiomas');
-        // Sintaxis más limpia y segura para entornos dinámicos/responsive
-        const TODOS_LOS_IDIOMAS = contenedorDatos && contenedorDatos.dataset.json ? JSON.parse(contenedorDatos.dataset.json) : [];
-
-        console.log(TODOS_LOS_IDIOMAS);
-    </script>
-
-
+            console.log(TODOS_LOS_IDIOMAS);
+        </script>
 
         <!-- ── PASO 4: Formato ── -->
-
         {% elif paso == 4 %}
-
         <form method="POST" action="{{ url_for('peliculas.encuesta_perfil') }}">
-
             <input type="hidden" name="paso" value="4">
-
-            <a href="{{ url_for('peliculas.encuesta_perfil', paso=3) }}" class="encuesta-volver">
-
-                <img id="logo" src="{{ url_for('static', filename='img/botones/btn-regresar.svg') }}" alt="Regresar" height="30">
-
+            <a href="{{ url_for('peliculas.encuesta_perfil', paso=3) }}" class="encuesta-volver d-block text-start">
+                <img id="logo" src="{{ url_for('static', filename='img/botones/btn-regresar.svg') }}" alt="Regresar"
+                    height="30">
             </a>
-
             <h1 class="encuesta-titulo">¿Cómo preferís mirar<br>contenido?</h1>
-
             <p class="encuesta-desc">Priorizaremos contenido disponible en el formato que más te resulte cómodo</p>
-
-            {% for opcion in [ {"value": "doblado", "icono": "bi-mic", "texto": "Doblado"}, {"value": "subtitulado", "icono": "bi-badge-cc", "texto": "Subtitulado"}, {"value": "any", "icono": "bi-badge-cc-fill", "texto": "Indistinto"} ] %}
-
-            <label class="encuesta-opcion-fila">
-
+            {% for opcion in [ {"value": "doblado", "icono": "bi-mic", "texto": "Doblado"}, {"value": "subtitulado",
+            "icono": "bi-badge-cc", "texto": "Subtitulado"}, {"value": "any", "icono": "bi-badge-cc-fill", "texto":
+            "Indistinto"} ] %}
+            <label class="encuesta-opcion-fila d-flex align-items-center">
                 <input type="radio" name="formato" value="{{ opcion.value }}" class="encuesta-radio-hidden" {% if
                     session.get('formato')==opcion.value %}checked{% endif %}>
-
-                <i class="bi {{ opcion.icono }} encuesta-opcion-icono"></i>
-
+                <i
+                    class="bi {{ opcion.icono }} encuesta-opcion-icono d-flex align-items-center justify-content-center"></i>
                 <span class="encuesta-opcion-texto">{{ opcion.texto }}</span>
-
             </label> {% endfor %}
-
             <div class="encuesta-btn-container">
-
                 <button type="submit" class="btn-encuesta">Finalizar</button>
-
             </div>
-
         </form>
-
         {% endif %}
-
-
-
     </div>
-
 </div>
 
 {% endblock %}

@@ -1,14 +1,14 @@
 {% extends "base.html" %} {% block title %}Recomendaciones — CineMatch{% endblock %} {% block content %}
 
 <div class="container margen-nav margen-footer">
-    <div class="card card-recomendacion">
+    <div class="card card-recomendacion d-flex flex-column">
         <div class="card-body">
             <div class="row">
                 <div class="backdrop-recomendacion-container">
                     {% if pelicula.backdrop %}
-                    <img src="{{ pelicula.backdrop }}" alt="{{ pelicula.titulo }}" class="backdrop-recomendacion" /> {%
+                    <img src="{{ pelicula.backdrop }}" alt="{{ pelicula.titulo }}" class="backdrop-recomendacion d-block" /> {%
                     else %}
-                    <div class="backdrop-recomendacion backdrop-placeholder"></div>
+                    <div class="backdrop-recomendacion d-block backdrop-placeholder"></div>
                     {% endif %}
 
                     <!-- Clasificación arriba a la izquierda -->
@@ -17,7 +17,7 @@
 
                     <!-- Logos de streaming arriba a la derecha -->
                     {% if providers.flatrate %}
-                    <div class="providers-recomendacion">
+                    <div class="providers-recomendacion d-flex">
                         {% for p in providers.flatrate %}
                         <img src="{{ p.logo }}" alt="{{ p.nombre }}" title="{{ p.nombre }}"
                             class="provider-logo-recomendacion"> {% endfor %}
@@ -25,7 +25,7 @@
                     {% endif %}
 
                     <!-- Botón trailer abajo a la derecha -->
-                    <a href="#" class="btn-trailer-recomendacion" target="_blank">
+                    <a href="#" class="btn-trailer-recomendacion align-items-center" target="_blank">
                         <i class="bi bi-play-fill"></i> Ver trailer
                     </a>
                 </div>
@@ -34,12 +34,12 @@
 
                 <div class="row">
                     <div class="col-12">
-                        <h1 class="titulo-recomendacion">
+                        <h1 class="titulo-recomendacion d-block">
                             {{ pelicula.titulo }}
                         </h1>
                     </div>
                     <div class="col-12">
-                        <p class="meta-recomendacion">
+                        <p class="meta-recomendacion d-flex flex-nowrap align-items-center">
                             <span class="anio-recomendacion"><i class="bi bi-calendar-event"></i> {{ pelicula.fecha[:4]
                                 }}</span>
                             <span class="duracion-recomendacion"><i class="bi bi-clock"></i> {{ pelicula.duracion
@@ -56,7 +56,7 @@
                     </div>
                 </div>
                 <hr class="separador-recomendacion">
-                <div class="row info-recomendacion">
+                <div class="row info-recomendacion text-center">
                     <div class="col-6">
                         <h3 class="h3-recomendaciones">Géneros</h3>
                         <p>
@@ -73,42 +73,19 @@
                     </div>
                 </div>
             </div>
-            <!-- cierre contenido-recomendacion-container -->
-
+           
             <hr class="separador-botones-recomendacion">
-            <!-- <div class="row">
-                <div class="col-5 boton-no">
-                    <div>
-                        <img src="{{ url_for('static', filename='img/botones/btn-no.svg') }} " role="button" class="img-btn-recomendacion rounded-circle">
-                        <p class="txt-no">← No me interesa</p>
-                    </div>
-                </div>
-                <div class="col-2 boton-info">
-                    <div>
-                        <a role="button" data-bs-toggle="modal" data-bs-target="#modal-info-pelicula">
-                            <img src="{{ url_for('static', filename='img/botones/btn-info.svg') }} " role="button" class="img-btn-info-recomendacion rounded-circle">
-                        </a>
-                        <p class="txt-info">Más info</p>
-                    </div>
-                </div>
-                <div class="col-5 boton-si">
-                    <div>
-                        <img src="{{ url_for('static', filename='img/botones/btn-si.svg') }} " role="button" class="img-btn-recomendacion rounded-circle">
-                        <p class="txt-si">Me interesa →</p>
-                    </div>
-                </div>
-            </div> -->
             <div class="row">
-                <div class="col-5 boton-no">
+                <div class="col-5 boton-no d-flex align-items-center justify-content-center">
                     <div>
-                        <button type="button" class="btn-redondo btn-redondo-no">
+                        <button type="button" class="btn-redondo btn-redondo-no d-flex align-items-center justify-content-center">
                             <img src="{{ url_for('static', filename='img/botones/btn-no.svg') }}"
                                 class="icono-btn-redondo">
                         </button>
                         <p class="txt-no">← No me interesa</p>
                     </div>
                 </div>
-                <div class="col-2 boton-info">
+                <div class="col-2 boton-info d-flex flex-column align-items-center justify-content-center">
                     <div>
                         <a role="button" data-bs-toggle="modal" data-bs-target="#modal-info-pelicula"
                             class="btn-redondo btn-redondo-info d-flex align-items-center justify-content-center">
@@ -118,9 +95,9 @@
                         <p class="txt-info">Más info</p>
                     </div>
                 </div>
-                <div class="col-5 boton-si">
+                <div class="col-5 boton-si d-flex align-items-center justify-content-center">
                     <div>
-                        <button type="button" class="btn-redondo btn-redondo-si">
+                        <button type="button" class="btn-redondo btn-redondo-si d-flex align-items-center justify-content-center">
                             <img src="{{ url_for('static', filename='img/botones/btn-si.svg') }}"
                                 class="icono-btn-redondo">
                         </button>
@@ -145,14 +122,14 @@
     tabindex="-1" aria-labelledby="modal-info-pelicula-label" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
-            <a class="btn-cerrar-modal" data-bs-dismiss="modal" aria-label="Cerrar">
+            <a class="btn-cerrar-modal d-flex align-items-center justify-content-center" data-bs-dismiss="modal" aria-label="Cerrar">
                 <i class="bi bi-x"></i>
             </a>
             <div class="container-fluid px-0 px-lg-3">
                 <div class="card card-detalle">
                     <div class="card-body">
                         <div class="row">
-                            <div class="col-12 col-sm-4 poster-detalle-container">
+                            <div class="col-12 col-sm-4 poster-detalle-container d-flex align-items-center justify-content-center">
                                 {% if pelicula.poster %}
                                 <img src="{{ pelicula.poster }}" alt="{{ pelicula.titulo }}" class="poster-detalle" />
                                 {% else %}
@@ -165,10 +142,9 @@
                                     <span class="generos-detalle badge rounded-pill bg-secondary">{{ genero }}</span> {%
                                     endfor %}
                                 </p>
-                                <!-- <h1 class="titulo-detalle">{{ pelicula.titulo }}<span class="clasificacion-detalle badge text-bg-secondary">Test</span></h1> -->
                                 <h1 class="titulo-detalle">
                                     {{ pelicula.titulo }} {% if clasificacion %}
-                                    <span class="clasificacion-detalle badge text-bg-secondary">{{ clasificacion
+                                    <span class="clasificacion-detalle badge text-bg-secondary d-inline-block">{{ clasificacion
                                         }}</span> {% endif %}
                                 </h1>
                                 {% if pelicula.tagline %}
@@ -203,13 +179,13 @@
                             <div class="col-5 col-sm-3">
                                 <h2 class="h2-detalle">{% if credits.directores|length > 1 %}Directores{% else
                                     %}Director{% endif %}</h2>
-                                <div class="crew-scroll">
+                                <div class="crew-scroll d-flex flex-row">
                                     {% for director in credits.directores %}
-                                    <div class="crew-item">
+                                    <div class="crew-item d-flex flex-column align-items-center text-center">
                                         {% if director.foto %}
                                         <img class="img-detalle rounded-circle" src="{{ director.foto }}"
                                             alt="{{ director.nombre }}"> {% else %}
-                                        <div class="img-detalle rounded-circle img-placeholder">
+                                        <div class="img-detalle rounded-circle img-placeholder d-flex align-items-center justify-content-center">
                                             <img src="{{ url_for('static', filename='img/director.svg') }}"
                                                 class="placeholder-svg">
                                         </div>
@@ -222,13 +198,13 @@
                             </div>
                             <div class="col-7 col-sm-9 elenco-detalle">
                                 <h2 class="h2-detalle">Elenco</h2>
-                                <div class="crew-scroll">
+                                <div class="crew-scroll d-flex flex-row">
                                     {% for actor in credits.cast %}
-                                    <div class="crew-item">
+                                    <div class="crew-item d-flex flex-column align-items-center text-center">
                                         {% if actor.foto %}
                                         <img class="img-detalle rounded-circle" src="{{ actor.foto }}"
                                             alt="{{ actor.nombre }}"> {% else %}
-                                        <div class="img-detalle rounded-circle img-placeholder">
+                                        <div class="img-detalle rounded-circle img-placeholder d-flex align-items-center justify-content-center">
                                             <img src="{{ url_for('static', filename='img/actor.svg') }}"
                                                 class="placeholder-svg">
                                         </div>
@@ -240,10 +216,10 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="row fila-keywords-providers  mt-2">
+                        <div class="row fila-keywords-providers mt-2 d-flex flex-wrap">
                             <div class="col-keywords">
                                 <h2 class="h2-detalle">Palabras clave</h2>
-                                <div class="keywords-scroll">
+                                <div class="keywords-scroll d-flex flex-wrap">
                                     {% for keyword in keywords %}
                                     <span class="keywords-detalle badge bg-secondary keyword-badge">{{ keyword }}</span>
                                     {% endfor %}
@@ -253,27 +229,27 @@
                                 <h2 class="h2-detalle">Dónde ver</h2>
                                 {% if providers.flatrate or providers.rent or providers.buy %} {% if providers.flatrate
                                 %}
-                                <div class="provider-row">
+                                <div class="provider-row d-flex align-items-center">
                                     <span class="provider-label">Incluida</span>
-                                    <div class="provider-logos">
+                                    <div class="provider-logos d-flex flex-wrap">
                                         {% for p in providers.flatrate %}
                                         <img src="{{ p.logo }}" alt="{{ p.nombre }}" title="{{ p.nombre }}"
                                             class="provider-logo"> {% endfor %}
                                     </div>
                                 </div>
                                 {% endif %} {% if providers.buy %}
-                                <div class="provider-row">
+                                <div class="provider-row d-flex align-items-center">
                                     <span class="provider-label">Compra</span>
-                                    <div class="provider-logos">
+                                    <div class="provider-logos d-flex flex-wrap">
                                         {% for p in providers.buy %}
                                         <img src="{{ p.logo }}" alt="{{ p.nombre }}" title="{{ p.nombre }}"
                                             class="provider-logo"> {% endfor %}
                                     </div>
                                 </div>
                                 {% endif %} {% if providers.rent %}
-                                <div class="provider-row">
+                                <div class="provider-row d-flex align-items-center">
                                     <span class="provider-label">Alquiler</span>
-                                    <div class="provider-logos">
+                                    <div class="provider-logos d-flex flex-wrap">
                                         {% for p in providers.rent %}
                                         <img src="{{ p.logo }}" alt="{{ p.nombre }}" title="{{ p.nombre }}"
                                             class="provider-logo"> {% endfor %}
