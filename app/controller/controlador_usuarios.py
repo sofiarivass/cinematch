@@ -70,10 +70,14 @@ def registro():
 
             # Crear usuario
             resultado = usuario_modelo.crear(
-                nombre_usuario, email, contraseña, fecha_nacimiento, preferencias=[]
+                nombre_usuario, email, contraseña, fecha_nacimiento, preferencias={}
             )
 
+            
+            # Si el registro fue exitoso, iniciar sesión automáticamente
             if resultado["exito"]:
+                session['usuario_id'] = resultado['usuario_id'] 
+                session['nombre_usuario'] = nombre_usuario 
                 return jsonify({
                     "exito": True,
                     "mensaje": resultado["mensaje"],

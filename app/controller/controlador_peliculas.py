@@ -52,7 +52,7 @@ def encuesta_perfil():
 
             # 🟢 ENCUESTA FINALIZADA: Armamos el objeto JSON estructurado
             preferencias_finales = {
-                "plataformas": session.get("plataformas", []),
+                "plataformas": [int(p) for p in session.get("plataformas", [])],
                 "disponibilidad": session.get("disponibilidad", "any"),
                 "idiomas": session.get("idiomas", []),
                 "formato": session.get("formato", "any"),
@@ -60,7 +60,7 @@ def encuesta_perfil():
 
             # Recuperamos el usuario actual de la sesión (ej: session.get("usuario"))
             # Si no manejás sesión con ese nombre, cambialo por la variable correspondiente
-            usuario_actual = session.get("usuario")
+            usuario_actual = session.get("nombre_usuario")
 
             if usuario_actual:
                 # Guardamos en MongoDB vía Pymongo
