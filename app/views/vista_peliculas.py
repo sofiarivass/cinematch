@@ -1,5 +1,5 @@
 """
-app/views/vista.py
+app/views/vista_peliculas.py
 ───────────────────
 Capa de Vista (V en MVC).
 
@@ -119,6 +119,17 @@ class PeliculaView:
             clasificacion=clasificacion,
             trailer=trailer,
         )
+
+    def render_modal_pelicula(self, pelicula, credits, keywords, providers, clasificacion, trailer=None) -> str:
+        return render_template(
+            "modal_pelicula.html",
+            pelicula=pelicula,
+            credits=credits,
+            keywords=keywords,
+            providers=providers,
+            clasificacion=clasificacion,
+            trailer=trailer,
+    )
 
     def render_error(self, mensaje: str) -> tuple[str, int]:
         """

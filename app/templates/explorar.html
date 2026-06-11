@@ -3,17 +3,20 @@
 
 <!-- BUSCADOR -->
 <form class="navbar__search" action="{{ url_for('peliculas.buscar') }}" method="get">
-    <input type="text" name="q" placeholder="Buscar película..." value="{{ query if query else '' }}" class="navbar__input" />
+    <input type="text" name="q" placeholder="Buscar película..." value="{{ query if query else '' }}"
+        class="navbar__input" />
     <button type="submit" class="navbar__btn">Buscar</button>
 </form>
 {% if peliculas %}
 <!-- GRILLA DE PELÍCULAS -->
 <div class="grid">
     {% for pelicula in peliculas %}
-    <a href="{{ url_for('peliculas.detalle', pelicula_id=pelicula.id) }}" class="card">
+    <div class="card" data-pelicula-id="{{ pelicula.id }}" data-bs-toggle="modal" data-bs-target="#modal-info-pelicula"
+        style="cursor: pointer;">
         <div class="card__img-wrapper">
             {% if pelicula.poster %}
-            <img src="{{ pelicula.poster }}" alt="{{ pelicula.titulo }}" class="card__img" loading="lazy" /> {% else %}
+            <img src="{{ pelicula.poster }}" alt="{{ pelicula.titulo }}" class="card__img" loading="lazy" />
+            {% else %}
             <div class="card__no-img">Sin imagen</div>
             {% endif %}
             <span class="card__score">⭐ {{ "%.1f"|format(pelicula.puntuacion) }}</span>
@@ -21,9 +24,10 @@
         <div class="card__body">
             <h2 class="card__title">{{ pelicula.titulo }}</h2>
             <p class="card__date">📅 {{ pelicula.fecha if pelicula.fecha else "Fecha desconocida" }}</p>
-            <p class="card__desc">{{ pelicula.descripcion[:120] }}{% if pelicula.descripcion|length > 120 %}...{% endif %}</p>
+            <p class="card__desc">{{ pelicula.descripcion[:120] }}{% if pelicula.descripcion|length > 120 %}...{% endif
+                %}</p>
         </div>
-    </a>
+    </div>
     {% endfor %}
 </div>
 
@@ -31,10 +35,12 @@
 {% if total_paginas > 1 %}
 <nav class="pagination margen-footer">
     {% if pagina_actual > 1 %}
-    <a href="?{% if query %}q={{ query }}&{% endif %}page={{ pagina_actual - 1 }}" class="pagination__btn">← Anterior</a> {% endif %}
+    <a href="?{% if query %}q={{ query }}&{% endif %}page={{ pagina_actual - 1 }}" class="pagination__btn">←
+        Anterior</a> {% endif %}
 
     <span class="pagination__info">Página {{ pagina_actual }} de {{ total_paginas }}</span> {% if pagina_actual
-    < total_paginas %} <a href="?{% if query %}q={{ query }}&{% endif %}page={{ pagina_actual + 1 }}" class="pagination__btn">Siguiente →</a>
+    < total_paginas %} <a href="?{% if query %}q={{ query }}&{% endif %}page={{ pagina_actual + 1 }}"
+        class="pagination__btn">Siguiente →</a>
         {% endif %}
 </nav>
 {% endif %} {% else %}
@@ -42,4 +48,15 @@
     <p class="empty__text">😕 No se encontraron resultados para "<strong>{{ query }}</strong>".</p>
     <a href="{{ url_for('peliculas.index') }}" class="btn">Volver al inicio</a>
 </div>
-{% endif %} {% endblock %}
+{% endif %}
+<div class="modal modal-xl fade" id="modal-info-pelicula" data-bs-keyboard="true" tabindex="-1"
+    aria-labelledby="modal-info-pelicula-label" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content" id="modal-contenido">
+            <div class="d-flex justify-content-center p-5">
+                <div class="spinner-border text-light" role="status"></div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

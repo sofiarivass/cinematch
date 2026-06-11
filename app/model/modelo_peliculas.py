@@ -1,5 +1,5 @@
 """
-app/model/modelo.py
+app/model/modelo_peliculas.py
 ───────────────────
 Capa de Modelo (M en MVC).
 """

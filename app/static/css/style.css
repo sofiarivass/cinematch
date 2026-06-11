@@ -473,6 +473,19 @@ footer .text-body-secondary {
     font-size: 0.68rem;
 }
 
+.botones-detalle {
+    display: flex;
+    gap: 1.8em;
+    margin-top: 0.5em;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.botones-detalle .btn-outline {
+    margin-top: 0;
+    white-space: nowrap;
+}
+
 .link-atribucion {
     opacity: 1;
     color: #3a52d6 !important;
@@ -658,6 +671,10 @@ footer .text-body-secondary {
     .provider-label {
         font-size: 0.75rem;
         width: 4em;
+    }
+
+    .botones-detalle {
+        justify-content: center;
     }
 
     .boton-trailer {

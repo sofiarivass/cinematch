@@ -1,5 +1,5 @@
 """
-app/controller/controlador.py
+app/controller/controlador_peliculas.py
 ──────────────────────────────
 Capa de Controlador (C en MVC).
 
@@ -176,6 +176,19 @@ def detalle(pelicula_id: int):
     except Exception as e:
         return vista.render_error(str(e))
 
+# RUTA CONTENIDO MODAL DETALLE PELIS
+@peliculas_bp.route("/pelicula/<int:pelicula_id>/modal")
+def modal_pelicula(pelicula_id: int):
+    try:
+        pelicula = modelo.obtener_detalle(pelicula_id)
+        credits = modelo.obtener_credits(pelicula_id)
+        keywords = modelo.obtener_keywords(pelicula_id)
+        providers = modelo.obtener_providers(pelicula_id)
+        clasificacion = modelo.obtener_clasificacion(pelicula_id)
+        trailer = modelo.obtener_trailer(pelicula_id)
+        return vista.render_modal_pelicula(pelicula, credits, keywords, providers, clasificacion, trailer)
+    except Exception as e:
+        return str(e), 500
 
 # RUTA COMO FUNCIONA
 @peliculas_bp.route("/como-funciona")

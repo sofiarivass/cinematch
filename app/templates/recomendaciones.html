@@ -6,7 +6,8 @@
             <div class="row">
                 <div class="backdrop-recomendacion-container">
                     {% if pelicula.backdrop %}
-                    <img src="{{ pelicula.backdrop }}" alt="{{ pelicula.titulo }}" class="backdrop-recomendacion d-block" /> {%
+                    <img src="{{ pelicula.backdrop }}" alt="{{ pelicula.titulo }}"
+                        class="backdrop-recomendacion d-block" /> {%
                     else %}
                     <div class="backdrop-recomendacion d-block backdrop-placeholder"></div>
                     {% endif %}
@@ -73,12 +74,13 @@
                     </div>
                 </div>
             </div>
-           
+
             <hr class="separador-botones-recomendacion">
             <div class="row">
                 <div class="col-5 boton-no d-flex align-items-center justify-content-center">
                     <div>
-                        <button type="button" class="btn-redondo btn-redondo-no d-flex align-items-center justify-content-center">
+                        <button type="button"
+                            class="btn-redondo btn-redondo-no d-flex align-items-center justify-content-center">
                             <img src="{{ url_for('static', filename='img/botones/btn-no.svg') }}"
                                 class="icono-btn-redondo">
                         </button>
@@ -88,6 +90,7 @@
                 <div class="col-2 boton-info d-flex flex-column align-items-center justify-content-center">
                     <div>
                         <a role="button" data-bs-toggle="modal" data-bs-target="#modal-info-pelicula"
+                            data-pelicula-id="{{ pelicula.id }}"
                             class="btn-redondo btn-redondo-info d-flex align-items-center justify-content-center">
                             <img src="{{ url_for('static', filename='img/botones/btn-info.svg') }}"
                                 class="icono-btn-redondo icono-btn-info">
@@ -97,7 +100,8 @@
                 </div>
                 <div class="col-5 boton-si d-flex align-items-center justify-content-center">
                     <div>
-                        <button type="button" class="btn-redondo btn-redondo-si d-flex align-items-center justify-content-center">
+                        <button type="button"
+                            class="btn-redondo btn-redondo-si d-flex align-items-center justify-content-center">
                             <img src="{{ url_for('static', filename='img/botones/btn-si.svg') }}"
                                 class="icono-btn-redondo">
                         </button>
@@ -118,179 +122,13 @@
 </div>
 
 <!-- Modal -->
-<div class="modal modal-xl fade" id="modal-info-pelicula" data-bs-backdrop="static" data-bs-keyboard="true"
-    tabindex="-1" aria-labelledby="modal-info-pelicula-label" aria-hidden="true">
+<div class="modal modal-xl fade" id="modal-info-pelicula" data-bs-keyboard="true" tabindex="-1"
+    aria-labelledby="modal-info-pelicula-label" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <a class="btn-cerrar-modal d-flex align-items-center justify-content-center" data-bs-dismiss="modal" aria-label="Cerrar">
-                <i class="bi bi-x"></i>
-            </a>
-            <div class="container-fluid px-0 px-lg-3">
-                <div class="card card-detalle">
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-12 col-sm-4 poster-detalle-container d-flex align-items-center justify-content-center">
-                                {% if pelicula.poster %}
-                                <img src="{{ pelicula.poster }}" alt="{{ pelicula.titulo }}" class="poster-detalle" />
-                                {% else %}
-                                <div>Sin imagen</div>
-                                {% endif %}
-                            </div>
-                            <div class="col-12 col-sm-8 info-detalle-container">
-                                <p class="generos-detalle">
-                                    {% for genero in pelicula.generos %}
-                                    <span class="generos-detalle badge rounded-pill bg-secondary">{{ genero }}</span> {%
-                                    endfor %}
-                                </p>
-                                <h1 class="titulo-detalle">
-                                    {{ pelicula.titulo }} {% if clasificacion %}
-                                    <span class="clasificacion-detalle badge text-bg-secondary d-inline-block">{{ clasificacion
-                                        }}</span> {% endif %}
-                                </h1>
-                                {% if pelicula.tagline %}
-                                <p class="tagline-detalle"><em>"{{ pelicula.tagline }}"</em></p>
-                                {% endif %}
-                                <p class="meta-detalle">
-                                    <span class="rating-detalle"><i class="bi bi-star-fill"></i> {{ pelicula.puntuacion
-                                        }}</span>
-                                    <span class="barra-detalle">/</span>
-                                    <span class="votos-detalle"><i class="bi bi-person-fill"></i> {{ pelicula.votos
-                                        }}</span>
-                                    <br class="d-sm-none" />
-                                    <span class="anio-detalle"><i class="bi bi-calendar-event"></i> {{
-                                        pelicula.fecha[:4] }}</span>
-                                    <span class="duracion-detalle"><i class="bi bi-clock"></i> {{ pelicula.duracion
-                                        }}</span>
-                                </p>
-                                <a role="button" class="boton-trailer btn btn-outline" href="#" target="_blank"><i
-                                        class="bi bi-play-fill"></i> Ver trailer</a>
-                                <a role="button" class="boton-web btn btn-outline" href="{{ pelicula.web }}"
-                                    target="_blank"><i class="bi bi-box-arrow-up-right"></i> Web oficial</a>
-                            </div>
-                        </div>
-                        <hr class="separador-detalle">
-                        <div class="row">
-                            <div class="col-12">
-                                <h2 class="h2-detalle">Sinopsis</h2>
-                                <p class="sinopsis-detalle">{{ pelicula.descripcion }}</p>
-                            </div>
-                        </div>
-                        <div class="row  mt-3">
-                            <div class="col-5 col-sm-3">
-                                <h2 class="h2-detalle">{% if credits.directores|length > 1 %}Directores{% else
-                                    %}Director{% endif %}</h2>
-                                <div class="crew-scroll d-flex flex-row">
-                                    {% for director in credits.directores %}
-                                    <div class="crew-item d-flex flex-column align-items-center text-center">
-                                        {% if director.foto %}
-                                        <img class="img-detalle rounded-circle" src="{{ director.foto }}"
-                                            alt="{{ director.nombre }}"> {% else %}
-                                        <div class="img-detalle rounded-circle img-placeholder d-flex align-items-center justify-content-center">
-                                            <img src="{{ url_for('static', filename='img/director.svg') }}"
-                                                class="placeholder-svg">
-                                        </div>
-                                        {% endif %}
-                                        <p class="crew-nombre">{{ director.nombre[0] }}<br>{{ director.nombre[1] if
-                                            director.nombre|length > 1 else '' }}</p>
-                                    </div>
-                                    {% endfor %}
-                                </div>
-                            </div>
-                            <div class="col-7 col-sm-9 elenco-detalle">
-                                <h2 class="h2-detalle">Elenco</h2>
-                                <div class="crew-scroll d-flex flex-row">
-                                    {% for actor in credits.cast %}
-                                    <div class="crew-item d-flex flex-column align-items-center text-center">
-                                        {% if actor.foto %}
-                                        <img class="img-detalle rounded-circle" src="{{ actor.foto }}"
-                                            alt="{{ actor.nombre }}"> {% else %}
-                                        <div class="img-detalle rounded-circle img-placeholder d-flex align-items-center justify-content-center">
-                                            <img src="{{ url_for('static', filename='img/actor.svg') }}"
-                                                class="placeholder-svg">
-                                        </div>
-                                        {% endif %}
-                                        <p class="crew-nombre">{{ actor.nombre }}</p>
-                                        <p class="crew-personaje">{{ actor.personaje }}</p>
-                                    </div>
-                                    {% endfor %}
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row fila-keywords-providers mt-2 d-flex flex-wrap">
-                            <div class="col-keywords">
-                                <h2 class="h2-detalle">Palabras clave</h2>
-                                <div class="keywords-scroll d-flex flex-wrap">
-                                    {% for keyword in keywords %}
-                                    <span class="keywords-detalle badge bg-secondary keyword-badge">{{ keyword }}</span>
-                                    {% endfor %}
-                                </div>
-                            </div>
-                            <div class="col-providers">
-                                <h2 class="h2-detalle">Dónde ver</h2>
-                                {% if providers.flatrate or providers.rent or providers.buy %} {% if providers.flatrate
-                                %}
-                                <div class="provider-row d-flex align-items-center">
-                                    <span class="provider-label">Incluida</span>
-                                    <div class="provider-logos d-flex flex-wrap">
-                                        {% for p in providers.flatrate %}
-                                        <img src="{{ p.logo }}" alt="{{ p.nombre }}" title="{{ p.nombre }}"
-                                            class="provider-logo"> {% endfor %}
-                                    </div>
-                                </div>
-                                {% endif %} {% if providers.buy %}
-                                <div class="provider-row d-flex align-items-center">
-                                    <span class="provider-label">Compra</span>
-                                    <div class="provider-logos d-flex flex-wrap">
-                                        {% for p in providers.buy %}
-                                        <img src="{{ p.logo }}" alt="{{ p.nombre }}" title="{{ p.nombre }}"
-                                            class="provider-logo"> {% endfor %}
-                                    </div>
-                                </div>
-                                {% endif %} {% if providers.rent %}
-                                <div class="provider-row d-flex align-items-center">
-                                    <span class="provider-label">Alquiler</span>
-                                    <div class="provider-logos d-flex flex-wrap">
-                                        {% for p in providers.rent %}
-                                        <img src="{{ p.logo }}" alt="{{ p.nombre }}" title="{{ p.nombre }}"
-                                            class="provider-logo"> {% endfor %}
-                                    </div>
-                                </div>
-                                {% endif %}
-                                <span class="atribucion">Datos provistos por <a class="link-atribucion"
-                                        href="https://www.justwatch.com/ar" target="_blank">JustWatch</a></span> {% else
-                                %}
-                                <p class="no-disponible text-muted">Aún no disponible en streaming en Argentina</p>
-                                {% endif %}
-                            </div>
-                        </div>
-                        <div class="row  mt-3">
-                            <h2 class="h2-detalle h2-otros-detalles mt-4">Más detalles</h2>
-                            <div class="col-5 col-sm-3">
-                                <ul class="otros-detalles-clave">
-                                    <li>Título original</li>
-                                    <li>País de origen</li>
-                                    <li>Idioma original</li>
-                                    <li>Productora</li>
-                                </ul>
-                            </div>
-                            <div class="col-7 col-sm-9">
-                                <ul class="otros-detalles-valor">
-                                    <li>{{ pelicula.titulo_original }}</li>
-                                    <li>{{ pelicula.pais | join(', ') }}</li>
-                                    <li>{{ pelicula.idioma_original }}</li>
-                                    <li>{{ pelicula.productora | join(', ') }}</li>
-                                </ul>
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
+        <div class="modal-content" id="modal-contenido">
+            <div class="d-flex justify-content-center p-5">
+                <div class="spinner-border text-light" role="status"></div>
             </div>
-
-            <!-- <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Understood</button>
-            </div> -->
         </div>
     </div>
 </div>
