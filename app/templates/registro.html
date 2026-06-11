@@ -140,6 +140,19 @@
     passwordInputRepeat.type = isHiddenRepeat ? 'text' : 'password';
     toggleBtnRepeat.className = isHiddenRepeat ? 'bi bi-eye-slash icon-right' : 'bi bi-eye icon-right';
   });
+
+  // Validación en ambos sentidos
+  function validarCoincidencia() {
+    const errorEl = document.getElementById('error-repetir_contraseña');
+    if (passwordInputRepeat.value && passwordInput.value !== passwordInputRepeat.value) {
+      errorEl.textContent = 'Las contraseñas no coinciden';
+    } else {
+      errorEl.textContent = '';
+    }
+  }
+
+  passwordInput.addEventListener('input', validarCoincidencia);
+  passwordInputRepeat.addEventListener('input', validarCoincidencia);
 </script>
 <script>
   document.getElementById('formulario-registro').addEventListener('submit', async function(e) {
