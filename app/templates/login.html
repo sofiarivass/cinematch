@@ -68,7 +68,20 @@
         <!-- Botones -->
         <div class="registro-botones">
           <button type="submit" class="btn btn-primary btn-registro">Ingresar</button>
-          <a href="{{ url_for('peliculas.index') }}" class="btn btn-outline-secondary btn-volver">Volver</a>
+        </div>
+
+        <div class="d-flex align-items-center my-1">
+          <hr class="flex-grow-1">
+          <span class="mx-3 text-muted">o</span>
+          <hr class="flex-grow-1">
+        </div>
+
+        <div class="mt-1">
+          <a href="{{ url_for('usuarios.login_google') }}"
+            class="btn btn-outline-dark w-100">
+              <i class="bi bi-google"></i>
+              Continuar con Google
+          </a>
         </div>
 
         <!-- Link a registro -->

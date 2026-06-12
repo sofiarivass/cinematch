@@ -24,3 +24,7 @@ class Config:
 
     # ── MongoDB ──────────────────────────────────────────────────────────
     MONGO_URI = os.getenv("MONGO_URI")
+
+    # ── Google OAuth ──────────────────────────────────────────
+    GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID")
+    GOOGLE_CLIENT_SECRET = os.getenv("GOOGLE_CLIENT_SECRET")

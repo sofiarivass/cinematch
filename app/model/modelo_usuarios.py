@@ -60,7 +60,7 @@ class UsuarioModel:
         patron = r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
         return re.match(patron, email) is not None
 
-    def crear(self, nombre_usuario, email, contraseña, fecha_nacimiento, preferencias):
+    def crear(self, nombre_usuario, email, contraseña, fecha_nacimiento, preferencias, google_auth=False):
         """
         Crea un nuevo usuario.
 
@@ -89,9 +89,10 @@ class UsuarioModel:
             usuario = {
                 "nombre_usuario": nombre_usuario,
                 "email": email,
-                "contraseña": self._hash_password(contraseña),
+                "contraseña": self._hash_password(contraseña) if contraseña else None,
                 "fecha_nacimiento": fecha_nacimiento,
                 "preferencias": preferencias,
+                "google_auth": google_auth,
                 "fecha_registro": datetime.now(),
             }
 
@@ -226,7 +227,7 @@ class UsuarioModel:
             print(f"Error obteniendo usuarios: {e}")
             return []
 
-    # Método adicional para autenticar usuarios
+    # Método adicional para autenticar usuarios normales y guardar sesión
     def autenticar(self, email, contraseña):
         """Autentica un usuario por email y contraseña.
 
@@ -266,3 +267,20 @@ class UsuarioModel:
         """
         # Usamos el método actualizar que ya tenías programado
         return self.actualizar(nombre_usuario, {"preferencias": preferencias_dict})
+    
+    # Método adicional para generar un nombre de usuario único a partir del email
+    def generar_nombre_usuario_unico(self, email):
+        """
+        Genera un nombre de usuario único a partir del email.
+        """
+
+        base = email.split("@")[0]
+        nombre_usuario = base
+
+        contador = 1
+
+        while self.obtener_por_nombre(nombre_usuario):
+            nombre_usuario = f"{base}{contador}"
+            contador += 1
+
+        return nombre_usuario
