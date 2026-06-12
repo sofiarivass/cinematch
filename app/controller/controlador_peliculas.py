@@ -38,11 +38,10 @@ def encuesta_perfil():
 
         # Guardar respuesta del paso actual en session
         if paso == 1:
-            session["plataformas"] = request.form.getlist("plataformas")
             otras = request.form.get("plataformas_otras", "")
-            session["plataformas_otras_ids"] = [
-                int(x) for x in otras.split(",") if x.strip().isdigit()
-            ]
+            plataformas_otras = [int(x) for x in otras.split(",") if x.strip().isdigit()]
+            session["plataformas"] = list(set([int(p) for p in request.form.getlist("plataformas")] + plataformas_otras))
+            session["plataformas_otras_ids"] = plataformas_otras 
         elif paso == 2:
             session["disponibilidad"] = request.form.get("disponibilidad")
         elif paso == 3:
@@ -60,7 +59,7 @@ def encuesta_perfil():
 
             # Recuperamos el usuario actual de la sesión (ej: session.get("usuario"))
             # Si no manejás sesión con ese nombre, cambialo por la variable correspondiente
-            usuario_actual = session.get("usuario")
+            usuario_actual = session.get("nombre_usuario")
 
             if usuario_actual:
                 # Guardamos en MongoDB vía Pymongo

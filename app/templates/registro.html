@@ -47,38 +47,42 @@
 
         <!-- Contraseña -->
         <div class="form-group field-wrap">
-          <i class="bi bi-lock icon-left"></i>
-          <div>
-            <input 
-            type="password" 
-            id="contraseña" 
-            name="contraseña" 
-            class="form-control" 
-            placeholder="Contraseña segura"
-            minlength="6"
-            required
-            >
-            <div class="error-message" id="error-contraseña"></div>
+          <div class="input-inner">
+            <div class="input-icons">
+              <i class="bi bi-lock icon-left"></i>
+              <input 
+              type="password" 
+              id="contraseña" 
+              name="contraseña" 
+              class="form-control" 
+              placeholder="Contraseña segura"
+              minlength="6"
+              required
+              >
+              <i class="bi bi-eye-slash icon-right" id="togglePassword"></i>
+            </div>
+            <span class="error-message mt-1" id="error-contraseña"></span>
           </div>
-          <i class="bi bi-eye icon-right" id="togglePassword"></i>
         </div>
         
         <!-- Repetir contraseña -->
         <div class="form-group field-wrap">
-          <i class="bi bi-lock icon-left"></i>
-          <div>
-            <input 
-            type="password" 
-            id="repetir_contraseña" 
-            name="repetir_contraseña" 
-            class="form-control" 
-            placeholder="Repite tu contraseña"
-            minlength="6"
-            required
-            >
-            <div class="error-message" id="error-repetir_contraseña"></div>
+          <div class="input-inner">
+            <div class="input-icons">
+              <i class="bi bi-lock icon-left"></i>
+              <input 
+              type="password" 
+              id="repetir_contraseña" 
+              name="repetir_contraseña" 
+              class="form-control" 
+              placeholder="Repite tu contraseña"
+              minlength="6"
+              required
+              >
+              <i class="bi bi-eye-slash icon-right" id="togglePasswordRepeat"></i>
+            </div>
+            <span class="error-message mt-1" id="error-repetir_contraseña"></span>
           </div>
-          <i class="bi bi-eye icon-right" id="togglePasswordRepeat"></i>
         </div>
 
         <!-- Fecha de nacimiento -->
@@ -110,8 +114,21 @@
 
         <!-- Botones -->
         <div class="registro-botones">
-          <button type="submit" class="btn btn-primary btn-registro">Continuar</button>
-          <a href="{{ url_for('peliculas.index') }}" class="btn btn-outline-secondary btn-volver">Volver</a>
+          <button type="submit" class="btn btn-primary btn-registro">Registrarse</button>
+        </div>
+
+        <div class="d-flex align-items-center my-1">
+          <hr class="flex-grow-1">
+          <span class="mx-3 text-muted">o</span>
+          <hr class="flex-grow-1">
+        </div>
+
+        <div class="mt-1">
+          <a href="{{ url_for('usuarios.login_google') }}"
+            class="btn btn-outline-dark w-100">
+              <i class="bi bi-google"></i>
+              Continuar con Google
+          </a>
         </div>
 
         <!-- Link a iniciar sesión -->
@@ -132,15 +149,30 @@
   toggleBtn.addEventListener('click', () => {
     const isHidden = passwordInput.type === 'password';
     passwordInput.type = isHidden ? 'text' : 'password';
-    toggleBtn.className = isHidden ? 'bi bi-eye-slash icon-right' : 'bi bi-eye icon-right';
+    toggleBtn.className = isHidden ? 'bi bi-eye icon-right' : 'bi bi-eye-slash icon-right';
   });
   
   toggleBtnRepeat.addEventListener('click', () => {
     const isHiddenRepeat = passwordInputRepeat.type === 'password';
     passwordInputRepeat.type = isHiddenRepeat ? 'text' : 'password';
-    toggleBtnRepeat.className = isHiddenRepeat ? 'bi bi-eye-slash icon-right' : 'bi bi-eye icon-right';
+    toggleBtnRepeat.className = isHiddenRepeat ? 'bi bi-eye icon-right' : 'bi bi-eye-slash icon-right';
   });
+
+  // Validación en ambos sentidos
+  function validarCoincidencia() {
+    const errorEl = document.getElementById('error-repetir_contraseña');
+    if (passwordInputRepeat.value && passwordInput.value !== passwordInputRepeat.value) {
+      errorEl.textContent = 'Las contraseñas no coinciden';
+    } else {
+      errorEl.textContent = '';
+    }
+  }
+
+  passwordInput.addEventListener('input', validarCoincidencia);
+  passwordInputRepeat.addEventListener('input', validarCoincidencia);
 </script>
+
+<!-- Validación del formulario, antes de registrar al Usuario en la base de datos -->
 <script>
   document.getElementById('formulario-registro').addEventListener('submit', async function(e) {
     e.preventDefault();

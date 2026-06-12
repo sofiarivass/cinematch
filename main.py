@@ -9,10 +9,12 @@ Uso:
 
 from flask import Flask
 from config.config import Config
+
 from app.controller.controlador_peliculas import peliculas_bp
 from app.controller.controlador_series import series_bp
 from app.controller.controlador_usuarios import usuarios_bp
 
+from app.services.google_oauth import init_oauth
 
 def create_app() -> Flask:
     """
@@ -29,6 +31,8 @@ def create_app() -> Flask:
 
     # Cargar configuración desde config/config.py
     app.config.from_object(Config)
+
+    init_oauth(app)
 
     # Registrar blueprints del controlador
     app.register_blueprint(peliculas_bp)

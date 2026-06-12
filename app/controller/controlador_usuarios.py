@@ -5,6 +5,7 @@ Controlador para gestionar rutas de usuarios (registro, login, etc.)
 """
 
 from flask import Blueprint, request, redirect, url_for, flash, jsonify, session
+from app.services.google_oauth import oauth
 from app.model.modelo_usuarios import UsuarioModel
 from app.views.vista_usuarios import UsuarioView
 
@@ -70,10 +71,14 @@ def registro():
 
             # Crear usuario
             resultado = usuario_modelo.crear(
-                nombre_usuario, email, contraseña, fecha_nacimiento, preferencias=[]
+                nombre_usuario, email, contraseña, fecha_nacimiento, preferencias={}
             )
 
+            
+            # Si el registro fue exitoso, iniciar sesión automáticamente
             if resultado["exito"]:
+                session['usuario_id'] = resultado['usuario_id'] 
+                session['nombre_usuario'] = nombre_usuario 
                 return jsonify({
                     "exito": True,
                     "mensaje": resultado["mensaje"],
@@ -144,3 +149,69 @@ def login():
 def logout():
     session.clear()
     return redirect(url_for('peliculas.index'))
+
+# Ruta para login con Google
+@usuarios_bp.route("/login/google")
+def login_google():
+    redirect_uri = url_for(
+        "usuarios.google_callback",
+        _external=True
+    )
+
+    return oauth.google.authorize_redirect(redirect_uri)
+
+@usuarios_bp.route("/google/callback")
+def google_callback():
+    try:
+        # Obtener token y datos de Google
+        token = oauth.google.authorize_access_token()
+
+        user_info = token.get("userinfo")
+
+        if not user_info:
+            user_info = oauth.google.parse_id_token(token, nonce=None)
+
+        email = user_info["email"]
+
+        # Buscar usuario en BD
+        usuario = usuario_modelo.obtener_por_email(email)
+
+        if not usuario:
+            nombre_usuario = usuario_modelo.generar_nombre_usuario_unico(email)
+            # Crear usuario si no existe
+            resultado = usuario_modelo.crear(
+                nombre_usuario=nombre_usuario,
+                email=email,
+                contraseña=None,
+                fecha_nacimiento=None,
+                preferencias={},
+                google_auth=True
+            )
+
+            if not resultado["exito"]:
+                return jsonify({
+                    "exito": False,
+                    "mensaje": "Error creando usuario con Google"
+                }), 500
+
+            # sesión
+            session["usuario_id"] = resultado["usuario_id"]
+            session["nombre_usuario"] = nombre_usuario
+
+            return redirect(url_for("peliculas.encuesta_perfil"))
+
+        # Si ya existe
+        session["usuario_id"] = str(usuario["_id"])
+        session["nombre_usuario"] = usuario["nombre_usuario"]
+
+        return redirect(url_for("peliculas.index"))
+
+    except Exception as e:
+        import traceback
+        print("\n🔥 ERROR COMPLETO GOOGLE OAUTH 🔥")
+        print(traceback.format_exc())
+
+        return jsonify({
+            "exito": False,
+            "mensaje": str(e)
+        }), 500
