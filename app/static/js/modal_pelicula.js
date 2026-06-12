@@ -27,6 +27,25 @@ document.addEventListener("DOMContentLoaded", function () {
             .then(r => r.text())
             .then(html => {
                 modalContenido.innerHTML = html;
+
+                if (modalEl.dataset.footer === "true") {
+                    modalContenido.insertAdjacentHTML(
+                        "beforeend",
+                        `
+            <div class="modal-footer justify-content-center">
+                <a role="button" data-bs-toggle="modal" data-bs-target="#modal-info-pelicula" data-pelicula-id="{{ pelicula.id }}" class="btn-modal-footer d-flex align-items-center justify-content-center">
+                    <i class="bi bi-bookmark icono-modal-footer"></i>
+                </a>
+                <a role="button" data-bs-toggle="modal" data-bs-target="#modal-info-pelicula" data-pelicula-id="{{ pelicula.id }}" class="btn-modal-footer d-flex align-items-center justify-content-center">
+                    <i class="bi bi-heart icono-modal-footer"></i>
+                </a>
+                <a role="button" data-bs-toggle="modal" data-bs-target="#modal-info-pelicula" data-pelicula-id="{{ pelicula.id }}" class="btn-modal-footer d-flex align-items-center justify-content-center">
+                    <i class="bi bi-eye icono-modal-footer"></i>
+                </a>
+            </div>
+            `
+                    );
+                }
             })
             .catch(() => {
                 modalContenido.innerHTML =

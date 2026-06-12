@@ -5,7 +5,7 @@
 <div class="container-fluid px-0 px-lg-3">
     <div class="card card-detalle">
         <div class="card-body">
-            <div class="row">
+            <div class="row align-items-center">
                 <div class="col-12 col-sm-4 poster-detalle-container d-flex align-items-center justify-content-center">
                     {% if pelicula.poster %}
                     <img src="{{ pelicula.poster }}" alt="{{ pelicula.titulo }}" class="poster-detalle" />
@@ -16,10 +16,10 @@
                 <div class="col-12 col-sm-8 info-detalle-container">
                     <p class="generos-detalle">
                         {% for genero in pelicula.generos %}
-                        <span class="generos-detalle badge rounded-pill bg-secondary">{{ genero }}</span> {%
+                        <span class="generos-detalle badge rounded-pill badge-detalle">{{ genero }}</span> {%
                         endfor %}
                     </p>
-                    <h1 class="titulo-detalle d-inline align-items-center justify-content-center">
+                    <h1 class="titulo-detalle d-inline">
                         {{ pelicula.titulo }} {% if clasificacion %}
                         <span class="clasificacion-detalle badge text-bg-secondary d-inline-block">{{ clasificacion
                             }}</span> {% endif %}
@@ -39,132 +39,148 @@
                         <span class="duracion-detalle"><i class="bi bi-clock"></i> {{ pelicula.duracion
                             }}</span>
                     </p>
-                    <div class="botones-detalle">
-                    <a role="button" class="boton-trailer btn btn-outline" href="#" target="_blank">
-                        <i class="bi bi-play-fill"></i> Ver trailer
-                    </a>
-
-                    <a role="button" class="boton-web btn btn-outline" href="{{ pelicula.web }}" target="_blank">
-                        <i class="bi bi-box-arrow-up-right"></i> Web oficial
-                    </a>
-                </div>
-            </div>
-        </div>
-        <hr class="separador-detalle">
-        <div class="row">
-            <div class="col-12">
-                <h2 class="h2-detalle">Sinopsis</h2>
-                <p class="sinopsis-detalle">{{ pelicula.descripcion }}</p>
-            </div>
-        </div>
-        <div class="row  mt-3">
-            <div class="col-5 col-sm-3">
-                <h2 class="h2-detalle">{% if credits.directores|length > 1 %}Directores{% else
-                    %}Director{% endif %}</h2>
-                <div class="crew-scroll d-flex flex-row">
-                    {% for director in credits.directores %}
-                    <div class="crew-item d-flex flex-column align-items-center text-center">
-                        {% if director.foto %}
-                        <img class="img-detalle rounded-circle" src="{{ director.foto }}" alt="{{ director.nombre }}">
+                    <div class="botones-detalle d-flex flex-wrap align-items-center">
+                        {% if trailer %}
+                        <a role="button" class="boton-trailer btn btn-outline" href="{{ trailer }}" target="_blank">
+                            <i class="bi bi-play-fill"></i> Ver trailer
+                        </a>
                         {% else %}
-                        <div
-                            class="img-detalle rounded-circle img-placeholder d-flex align-items-center justify-content-center">
-                            <img src="{{ url_for('static', filename='img/director.svg') }}" class="placeholder-svg">
-                        </div>
+                        <button class="boton-trailer btn btn-outline" disabled>
+                            <i class="bi bi-play-fill"></i> Ver trailer
+                        </button>
                         {% endif %}
-                        <p class="crew-nombre">{{ director.nombre[0] }}<br>{{ director.nombre[1] if
-                            director.nombre|length > 1 else '' }}</p>
-                    </div>
-                    {% endfor %}
-                </div>
-            </div>
-            <div class="col-7 col-sm-9 elenco-detalle">
-                <h2 class="h2-detalle">Elenco</h2>
-                <div class="crew-scroll d-flex flex-row">
-                    {% for actor in credits.cast %}
-                    <div class="crew-item d-flex flex-column align-items-center text-center">
-                        {% if actor.foto %}
-                        <img class="img-detalle rounded-circle" src="{{ actor.foto }}" alt="{{ actor.nombre }}"> {%
-                        else %}
-                        <div
-                            class="img-detalle rounded-circle img-placeholder d-flex align-items-center justify-content-center">
-                            <img src="{{ url_for('static', filename='img/actor.svg') }}" class="placeholder-svg">
-                        </div>
-                        {% endif %}
-                        <p class="crew-nombre">{{ actor.nombre }}</p>
-                        <p class="crew-personaje">{{ actor.personaje }}</p>
-                    </div>
-                    {% endfor %}
-                </div>
-            </div>
-        </div>
-        <div class="row fila-keywords-providers mt-2 d-flex flex-wrap">
-            <div class="col-keywords">
-                <h2 class="h2-detalle">Palabras clave</h2>
-                <div class="keywords-scroll d-flex flex-wrap">
-                    {% for keyword in keywords %}
-                    <span class="keywords-detalle badge bg-secondary keyword-badge">{{ keyword }}</span>
-                    {% endfor %}
-                </div>
-            </div>
-            <div class="col-providers">
-                <h2 class="h2-detalle">Dónde ver</h2>
-                {% if providers.flatrate or providers.rent or providers.buy %} {% if providers.flatrate
-                %}
-                <div class="provider-row d-flex align-items-center">
-                    <span class="provider-label">Incluida</span>
-                    <div class="provider-logos d-flex flex-wrap">
-                        {% for p in providers.flatrate %}
-                        <img src="{{ p.logo }}" alt="{{ p.nombre }}" title="{{ p.nombre }}" class="provider-logo">
-                        {% endfor %}
-                    </div>
-                </div>
-                {% endif %} {% if providers.buy %}
-                <div class="provider-row d-flex align-items-center">
-                    <span class="provider-label">Compra</span>
-                    <div class="provider-logos d-flex flex-wrap">
-                        {% for p in providers.buy %}
-                        <img src="{{ p.logo }}" alt="{{ p.nombre }}" title="{{ p.nombre }}" class="provider-logo">
-                        {% endfor %}
-                    </div>
-                </div>
-                {% endif %} {% if providers.rent %}
-                <div class="provider-row d-flex align-items-center">
-                    <span class="provider-label">Alquiler</span>
-                    <div class="provider-logos d-flex flex-wrap">
-                        {% for p in providers.rent %}
-                        <img src="{{ p.logo }}" alt="{{ p.nombre }}" title="{{ p.nombre }}" class="provider-logo">
-                        {% endfor %}
-                    </div>
-                </div>
-                {% endif %}
-                <span class="atribucion">Datos provistos por <a class="link-atribucion"
-                        href="https://www.justwatch.com/ar" target="_blank">JustWatch</a></span> {% else
-                %}
-                <p class="no-disponible text-muted">Aún no disponible en streaming en Argentina</p>
-                {% endif %}
-            </div>
-        </div>
-        <div class="row  mt-3">
-            <h2 class="h2-detalle h2-otros-detalles mt-4">Más detalles</h2>
-            <div class="col-5 col-sm-3">
-                <ul class="otros-detalles-clave">
-                    <li>Título original</li>
-                    <li>País de origen</li>
-                    <li>Idioma original</li>
-                    <li>Productora</li>
-                </ul>
-            </div>
-            <div class="col-7 col-sm-9">
-                <ul class="otros-detalles-valor">
-                    <li>{{ pelicula.titulo_original }}</li>
-                    <li>{{ pelicula.pais | join(', ') }}</li>
-                    <li>{{ pelicula.idioma_original }}</li>
-                    <li>{{ pelicula.productora | join(', ') }}</li>
-                </ul>
-            </div>
 
+                        {% if pelicula.web %}
+                        <a role="button" class="boton-web btn btn-outline" href="{{ pelicula.web }}" target="_blank">
+                            <i class="bi bi-box-arrow-up-right"></i> Web oficial
+                        </a>
+                        {% else %}
+                        <button class="boton-web btn btn-outline" disabled>
+                            <i class="bi bi-box-arrow-up-right"></i> Web oficial
+                        </button>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <hr class="separador-detalle">
+            <div class="row">
+                <div class="col-12">
+                    <h2 class="h2-detalle">Sinopsis</h2>
+                    <p class="sinopsis-detalle">{{ pelicula.descripcion }}</p>
+                </div>
+            </div>
+            <div class="row  mt-3">
+                <div class="col-5 col-sm-3">
+                    <h2 class="h2-detalle">{% if credits.directores|length > 1 %}Directores{% else
+                        %}Director{% endif %}</h2>
+                    <div class="crew-scroll d-flex flex-row gap-4">
+                        {% for director in credits.directores %}
+                        <div class="crew-item d-flex flex-column align-items-center text-center">
+                            {% if director.foto %}
+                            <img class="img-detalle rounded-circle" src="{{ director.foto }}"
+                                alt="{{ director.nombre }}">
+                            {% else %}
+                            <div
+                                class="img-detalle rounded-circle img-placeholder d-flex align-items-center justify-content-center">
+                                <img src="{{ url_for('static', filename='img/director.svg') }}" class="placeholder-svg">
+                            </div>
+                            {% endif %}
+                            <p class="crew-nombre">{{ director.nombre[0] }}<br>{{ director.nombre[1] if
+                                director.nombre|length > 1 else '' }}</p>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="col-7 col-sm-9 elenco-detalle">
+                    <h2 class="h2-detalle">Elenco</h2>
+                    <div class="crew-scroll d-flex flex-row gap-4">
+                        {% for actor in credits.cast %}
+                        <div class="crew-item d-flex flex-column align-items-center text-center">
+                            {% if actor.foto %}
+                            <img class="img-detalle rounded-circle" src="{{ actor.foto }}" alt="{{ actor.nombre }}"> {%
+                            else %}
+                            <div
+                                class="img-detalle rounded-circle img-placeholder d-flex align-items-center justify-content-center">
+                                <img src="{{ url_for('static', filename='img/actor.svg') }}" class="placeholder-svg">
+                            </div>
+                            {% endif %}
+                            <p class="crew-nombre">{{ actor.nombre }}</p>
+                            <p class="crew-personaje">{{ actor.personaje }}</p>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            <div class="row fila-keywords-providers mt-2 d-flex flex-wrap">
+                <div class="col-keywords">
+                    <h2 class="h2-detalle">Palabras clave</h2>
+                    <div class="keywords-scroll d-flex flex-wrap">
+                        {% for keyword in keywords %}
+                        <span class="keywords-detalle badge badge-detalle keyword-badge">{{ keyword }}</span>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="col-providers">
+                    <h2 class="h2-detalle">Dónde ver</h2>
+                    {% if providers.flatrate or providers.rent or providers.buy %} {% if providers.flatrate
+                    %}
+                    <div class="provider-row d-flex align-items-center my-3">
+                        <span class="provider-label">Incluida</span>
+                        <div class="provider-logos d-flex flex-wrap">
+                            {% for p in providers.flatrate %}
+                            <img src="{{ p.logo }}" alt="{{ p.nombre }}" title="{{ p.nombre }}" class="provider-logo">
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %} {% if providers.buy %}
+                    <div class="provider-row d-flex align-items-center my-3">
+                        <span class="provider-label">Compra</span>
+                        <div class="provider-logos d-flex flex-wrap">
+                            {% for p in providers.buy %}
+                            <img src="{{ p.logo }}" alt="{{ p.nombre }}" title="{{ p.nombre }}" class="provider-logo">
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %} {% if providers.rent %}
+                    <div class="provider-row d-flex align-items-center my-3">
+                        <span class="provider-label">Alquiler</span>
+                        <div class="provider-logos d-flex flex-wrap">
+                            {% for p in providers.rent %}
+                            <img src="{{ p.logo }}" alt="{{ p.nombre }}" title="{{ p.nombre }}" class="provider-logo">
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+                    <span class="atribucion">Datos provistos por <a class="link-atribucion"
+                            href="https://www.justwatch.com/ar" target="_blank">JustWatch</a></span> {% else
+                    %}
+                    <p class="no-disponible text-muted">Aún no disponible en streaming en Argentina</p>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="row mt-3">
+                <h2 class="h2-detalle h2-otros-detalles mt-4">Más detalles</h2>
+                <div class="col-12">
+                    <dl class="otros-detalles">
+                        <div class="otros-detalles-fila">
+                            <dt>Título original</dt>
+                            <dd>{{ pelicula.titulo_original }}</dd>
+                        </div>
+                        <div class="otros-detalles-fila">
+                            <dt>País de origen</dt>
+                            <dd>{{ pelicula.pais | join(', ') }}</dd>
+                        </div>
+                        <div class="otros-detalles-fila">
+                            <dt>Idioma original</dt>
+                            <dd>{{ pelicula.idioma_original }}</dd>
+                        </div>
+                        <div class="otros-detalles-fila">
+                            <dt>Productora</dt>
+                            <dd>{{ pelicula.productora | join(', ') }}</dd>
+                        </div>
+                    </dl>
+                </div>
+            </div>
         </div>
     </div>
-</div>
 </div>

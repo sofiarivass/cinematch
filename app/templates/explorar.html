@@ -8,27 +8,48 @@
     <button type="submit" class="navbar__btn">Buscar</button>
 </form>
 {% if peliculas %}
-<!-- GRILLA DE PELÍCULAS -->
-<div class="grid">
-    {% for pelicula in peliculas %}
-    <div class="card" data-pelicula-id="{{ pelicula.id }}" data-bs-toggle="modal" data-bs-target="#modal-info-pelicula"
-        style="cursor: pointer;">
-        <div class="card__img-wrapper">
-            {% if pelicula.poster %}
-            <img src="{{ pelicula.poster }}" alt="{{ pelicula.titulo }}" class="card__img" loading="lazy" />
-            {% else %}
-            <div class="card__no-img">Sin imagen</div>
-            {% endif %}
-            <span class="card__score">⭐ {{ "%.1f"|format(pelicula.puntuacion) }}</span>
+<style>
+    #explorar-carousel {
+        scroll-behavior: smooth;
+        scrollbar-width: none;
+    }
+
+    #explorar-carousel::-webkit-scrollbar {
+        display: none;
+    }
+</style>
+<div class="d-flex align-items-center gap-2 mt-4">
+    <button type="button" class="btn btn-outline-light flex-shrink-0" data-scroll-dir="-1" aria-label="Anterior"
+        style="width: 2.5rem; height: 2.5rem; padding: 0;">
+        <i class="bi bi-chevron-left"></i>
+    </button>
+
+    <div id="explorar-carousel" class="d-flex flex-nowrap gap-3 overflow-auto pb-2">
+        {% for pelicula in peliculas %}
+        <div class="card flex-shrink-0" data-pelicula-id="{{ pelicula.id }}" data-bs-toggle="modal"
+            data-bs-target="#modal-info-pelicula" style="width: 17rem; cursor: pointer;">
+            <div class="card__img-wrapper">
+                {% if pelicula.poster %}
+                <img src="{{ pelicula.poster }}" alt="{{ pelicula.titulo }}" class="card__img" loading="lazy" />
+                {% else %}
+                <div class="card__no-img">Sin imagen</div>
+                {% endif %}
+                <span class="card__score">⭐ {{ "%.1f"|format(pelicula.puntuacion) }}</span>
+            </div>
+            <div class="card__body">
+                <h2 class="card__title">{{ pelicula.titulo }}</h2>
+                <p class="card__date">📅 {{ pelicula.fecha if pelicula.fecha else "Fecha desconocida" }}</p>
+                <p class="card__desc">{{ pelicula.descripcion[:120] }}{% if pelicula.descripcion|length > 120 %}...{%
+                    endif %}</p>
+            </div>
         </div>
-        <div class="card__body">
-            <h2 class="card__title">{{ pelicula.titulo }}</h2>
-            <p class="card__date">📅 {{ pelicula.fecha if pelicula.fecha else "Fecha desconocida" }}</p>
-            <p class="card__desc">{{ pelicula.descripcion[:120] }}{% if pelicula.descripcion|length > 120 %}...{% endif
-                %}</p>
-        </div>
+        {% endfor %}
     </div>
-    {% endfor %}
+
+    <button type="button" class="btn btn-outline-light flex-shrink-0" data-scroll-dir="1" aria-label="Siguiente"
+        style="width: 2.5rem; height: 2.5rem; padding: 0;">
+        <i class="bi bi-chevron-right"></i>
+    </button>
 </div>
 
 <!-- PAGINACIÓN -->
@@ -49,7 +70,7 @@
     <a href="{{ url_for('peliculas.index') }}" class="btn">Volver al inicio</a>
 </div>
 {% endif %}
-<div class="modal modal-xl fade" id="modal-info-pelicula" data-bs-keyboard="true" tabindex="-1"
+<div class="modal modal-xl fade" id="modal-info-pelicula" data-footer="true" data-bs-keyboard="true" tabindex="-1"
     aria-labelledby="modal-info-pelicula-label" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content" id="modal-contenido">
@@ -59,4 +80,12 @@
         </div>
     </div>
 </div>
+<script>
+    const carousel = document.getElementById('explorar-carousel');
+    document.querySelectorAll('[data-scroll-dir]').forEach((button) => {
+        button.addEventListener('click', () => {
+            carousel.scrollBy({ left: Number(button.dataset.scrollDir) * 340, behavior: 'smooth' });
+        });
+    });
+</script>
 {% endblock %}

@@ -81,8 +81,7 @@
                     <div>
                         <button type="button"
                             class="btn-redondo btn-redondo-no d-flex align-items-center justify-content-center">
-                            <img src="{{ url_for('static', filename='img/botones/btn-no.svg') }}"
-                                class="icono-btn-redondo">
+                            <i class="bi bi-hand-thumbs-down-fill icono-btn-redondo"></i>
                         </button>
                         <p class="txt-no">← No me interesa</p>
                     </div>
@@ -92,8 +91,7 @@
                         <a role="button" data-bs-toggle="modal" data-bs-target="#modal-info-pelicula"
                             data-pelicula-id="{{ pelicula.id }}"
                             class="btn-redondo btn-redondo-info d-flex align-items-center justify-content-center">
-                            <img src="{{ url_for('static', filename='img/botones/btn-info.svg') }}"
-                                class="icono-btn-redondo icono-btn-info">
+                            <i class="bi bi-info-circle icono-btn-redondo icono-btn-info"></i>
                         </a>
                         <p class="txt-info">Más info</p>
                     </div>
@@ -102,8 +100,7 @@
                     <div>
                         <button type="button"
                             class="btn-redondo btn-redondo-si d-flex align-items-center justify-content-center">
-                            <img src="{{ url_for('static', filename='img/botones/btn-si.svg') }}"
-                                class="icono-btn-redondo">
+                            <i class="bi bi-hand-thumbs-up-fill icono-btn-redondo"></i>
                         </button>
                         <p class="txt-si">Me interesa →</p>
                     </div>
@@ -122,7 +119,7 @@
 </div>
 
 <!-- Modal -->
-<div class="modal modal-xl fade" id="modal-info-pelicula" data-bs-keyboard="true" tabindex="-1"
+<div class="modal modal-xl fade" id="modal-info-pelicula" data-footer="false" data-bs-keyboard="true" tabindex="-1"
     aria-labelledby="modal-info-pelicula-label" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content" id="modal-contenido">

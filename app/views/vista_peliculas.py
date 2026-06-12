@@ -69,7 +69,7 @@ class PeliculaView:
         total_paginas: int,
         titulo_seccion: str,
         query: str = "",
-    ) -> str:
+        ) -> str:
         """
         Renderiza la vista de listado de películas.
 
