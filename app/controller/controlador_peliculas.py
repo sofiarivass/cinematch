@@ -189,8 +189,3 @@ def modal_pelicula(pelicula_id: int):
     except Exception as e:
         return str(e), 500
 
-# RUTA COMO FUNCIONA
-@peliculas_bp.route("/como-funciona")
-def como_funciona():
-    """Muestra la página de información."""
-    return vista.render_como_funciona()

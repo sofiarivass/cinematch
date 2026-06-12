@@ -1,3 +1,136 @@
 {% extends "base.html" %} {% block title %}Inicio — CineMatch{% endblock %} {% block content %}
-<h1>Inicio</h1>
+<div>
+    <section class="cm-hero">
+    <div class="cm-hero__inner">
+      <div class="cm-hero__content">
+        <div class="cm-hero__eyebrow">✦ Recomendaciones con IA</div>
+        <h1 class="cm-hero__title">
+          Descubrí tu próxima<br>
+          <span>película favorita</span>
+        </h1>
+        <p class="cm-hero__sub">
+          Recomendaciones personalizadas según tus gustos y preferencias. Sin listas interminables, solo películas que realmente te van a gustar.
+        </p>
+        <div class="cm-hero__ctas">
+          <a href="{{ url_for('usuarios.registro') }}" class="btn-hero-primary">
+            ✦ Crear cuenta gratis
+          </a>
+          <a href="#scf" class="btn-hero-secondary">
+            ▶ ¿No sabés qué ver?
+          </a>
+        </div>
+      </div>
+
+      <div class="cm-hero__visual">
+        <div class="cm-hero__sofa-card">
+          <div class="cm-hero__sofa-label">Recomendado para vos</div>
+          <div class="cm-posters-row">
+            <div class="cm-poster cm-poster--1"></div>
+            <div class="cm-poster cm-poster--2"></div>
+            <div class="cm-poster cm-poster--3"></div>
+            <div class="cm-poster cm-poster--4"></div>
+            <div class="cm-poster cm-poster--5"></div>
+          </div>
+          <div class="cm-match-badge">
+            <strong>92%</strong> compatibilidad estimada · <span style="color:var(--accent);font-size:11px;">Interstellar</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- RECOMENDACIONES DE HOY -->
+  <section class="cm-section">
+    <div class="cm-section__head">
+      <span class="cm-section__title">Recomendaciones de hoy</span>
+      <span class="cm-section__notice">Tendencias globales · <a href="/registro" style="color:var(--accent);text-decoration:none;">Registrate para ver las tuyas</a></span>
+    </div>
+    <div class="cm-movies-row">
+      {% set movies_placeholder = [
+        {"title": "Oppenheimer", "year": "2023", "genre": "Drama"},
+        {"title": "Dune: Parte 2", "year": "2024", "genre": "Sci-Fi"},
+        {"title": "La zona de interés", "year": "2023", "genre": "Drama"},
+        {"title": "Pobres criaturas", "year": "2023", "genre": "Comedia"},
+        {"title": "Past Lives", "year": "2023", "genre": "Romance"},
+        {"title": "Io Capitano", "year": "2023", "genre": "Drama"},
+        {"title": "Society of Snow", "year": "2023", "genre": "Supervivencia"}
+      ] %}
+      {% for movie in movies_placeholder %}
+      <div class="cm-movie-card">
+        <div class="cm-movie-card__poster">🎬</div>
+        <div class="cm-movie-card__info">
+          <div class="cm-movie-card__title">{{ movie.title }}</div>
+          <div class="cm-movie-card__meta">{{ movie.year }} · {{ movie.genre }}</div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </section>
+
+  <!-- CÓMO FUNCIONA (mini strip) -->
+  <div style="max-width:1100px; margin:0 auto; padding:0 2rem 32px;" id="scf">
+    <div class="cm-how-strip">
+      <div class="cm-how-strip__head">¿Cómo funciona CineMatch?</div>
+      <div class="cm-how-strip__steps">
+        <div class="cm-how-step">
+          <div class="cm-how-step__num">1</div>
+          <div class="cm-how-step__label">Elegís tus gustos</div>
+          <div class="cm-how-step__desc">Seleccionás géneros, directores y películas que ya viste</div>
+        </div>
+        <div class="cm-how-arrow">→</div>
+        <div class="cm-how-step">
+          <div class="cm-how-step__num">2</div>
+          <div class="cm-how-step__label">El algoritmo analiza</div>
+          <div class="cm-how-step__desc">Comparamos patrones con miles de espectadores similares</div>
+        </div>
+        <div class="cm-how-arrow">→</div>
+        <div class="cm-how-step">
+          <div class="cm-how-step__num">3</div>
+          <div class="cm-how-step__label">Recibís recomendaciones</div>
+          <div class="cm-how-step__desc">Películas que realmente van con vos, no con todo el mundo</div>
+        </div>
+      </div>
+      <div style="text-align:center; margin-top:20px;">
+        <a href="/como-funciona" style="font-size:13px; color:var(--accent); text-decoration:none;">Ver cómo funciona en detalle →</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- AHORA EN TENDENCIA -->
+  <section class="cm-section">
+    <div class="cm-section__head">
+      <span class="cm-section__title">Ahora en tendencia</span>
+      <a href="/explorar" class="cm-section__link">Ver todas →</a>
+    </div>
+    <div class="cm-trend-row">
+      {% set trending = [
+        {"title": "Dune: Parte 2", "genre": "Ciencia ficción"},
+        {"title": "Godzilla x Kong", "genre": "Acción"},
+        {"title": "Kung Fu Panda 4", "genre": "Animación"},
+        {"title": "Civil War", "genre": "Thriller"},
+        {"title": "Ghostbusters: Imperio", "genre": "Comedia"}
+      ] %}
+      {% for film in trending %}
+      <div class="cm-trend-card">
+        <div class="cm-trend-card__poster">#{{ loop.index }}</div>
+        <div class="cm-trend-card__body">
+          <div class="cm-trend-card__title">{{ film.title }}</div>
+          <div class="cm-trend-card__genre">{{ film.genre }}</div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </section>
+
+  <!-- QUIZ BANNER -->
+  <div style="padding: 0 2rem;">
+    <div class="cm-quiz-banner">
+      <div class="cm-quiz-banner__left">
+        <div class="cm-quiz-banner__title">🎯 ¿No sabés qué ver?</div>
+        <div class="cm-quiz-banner__sub">Respondé 5 preguntas rápidas y te recomendamos algo para esta noche</div>
+      </div>
+      <a href="/quiz" class="btn-primary" style="white-space:nowrap; padding: 10px 24px; font-size:14px;">Comenzar quiz</a>
+    </div>
+  </div>
+</div>
 {% endblock %}

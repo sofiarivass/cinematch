@@ -18,9 +18,6 @@ class PeliculaView:
     def render_index(self) -> str:
         return render_template("index.html")
 
-    def render_como_funciona(self) -> str:
-        return render_template("como_funciona.html")
-
     def render_encuesta_perfil(
         self,
         paso: int,
