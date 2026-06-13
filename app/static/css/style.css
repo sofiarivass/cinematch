@@ -65,7 +65,7 @@ main {
     position: absolute;
     left: 0;
     right: 0;
-    bottom: 0em;
+    bottom: 0.1em;
     height: 0.15em;
     margin: 0 0.4em;
     background: #5B72F5;
@@ -181,6 +181,12 @@ footer .text-body-secondary {
     color: #cccccc99 !important;
     font-weight: 500;
     font-size: 0.9rem;
+    transition: all 0.2s;
+}
+
+footer .nav-link:hover {
+    transition: all 0.2s;
+    transform: scale(1.04);
 }
 
 .cinematch {
@@ -1067,8 +1073,8 @@ footer .text-body-secondary {
 }
 
 .btn-redondo {
-    width: clamp(3.5em, 8vh, 5em);
-    height: clamp(3.5em, 8vh, 5em);
+    width: clamp(3.5em, 8vh, 4em);
+    height: clamp(3.5em, 8vh, 4em);
     border-radius: 50%;
     background-color: #FFFFFF;
     border: none;
@@ -1078,18 +1084,18 @@ footer .text-body-secondary {
 }
 
 .icono-btn-redondo {
-    font-size: clamp(1.6rem, 4vh, 2.4rem);
+    font-size: clamp(1.6rem, 4vh, 2rem);
 }
 
 .btn-redondo-info {
-    width: clamp(3em, 6.5vh, 4em);
-    height: clamp(3em, 6.5vh, 4em);
+    width: clamp(3em, 6.5vh, 3.5em);
+    height: clamp(3em, 6.5vh, 3.5em);
     background-color: #030E21;
     border: 1px solid #232D3E;
 }
 
 .icono-btn-info {
-    font-size: clamp(1.3rem, 3.2vh, 2rem);
+    font-size: clamp(1.3rem, 3.2vh, 1.4rem);
     position: relative;
     top: 1px;
 }
@@ -1125,13 +1131,13 @@ footer .text-body-secondary {
 }
 
 .txt-si {
-    font-size: clamp(0.6rem, 1.6vh, 0.75rem);
+    font-size: clamp(0.6rem, 1.6vh, 0.7rem);
     text-align: center;
     color: #41B900;
 }
 
 .txt-no {
-    font-size: clamp(0.6rem, 1.6vh, 0.75rem);
+    font-size: clamp(0.6rem, 1.6vh, 0.7rem);
     text-align: center;
     color: #CC0000;
 }
@@ -1160,6 +1166,12 @@ footer .text-body-secondary {
     text-decoration: none;
     font-weight: 500;
     margin-bottom: clamp(0.9em, 1.5vh, 1.5em);
+    transition: all 0.2s;
+}
+
+.btn-vista:hover {
+    transition: all 0.2s;
+    transform: scale(1.04);
 }
 
 .btn-no-recomendar {
@@ -1168,6 +1180,12 @@ footer .text-body-secondary {
     color: #3F4A5C;
     text-decoration: none;
     font-weight: 500;
+    transition: all 0.2s;
+}
+
+.btn-no-recomendar:hover {
+    transition: all 0.2s;
+    transform: scale(1.04);
 }
 
 
