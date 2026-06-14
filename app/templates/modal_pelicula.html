@@ -73,7 +73,7 @@
                 <div class="col-5 col-sm-3">
                     <h2 class="h2-detalle">{% if credits.directores|length > 1 %}Directores{% else
                         %}Director{% endif %}</h2>
-                    <div class="crew-scroll d-flex flex-row gap-4">
+                    <div class="crew-scroll d-flex flex-row gap-2">
                         {% for director in credits.directores %}
                         <div class="crew-item d-flex flex-column align-items-center text-center">
                             {% if director.foto %}
@@ -93,7 +93,7 @@
                 </div>
                 <div class="col-7 col-sm-9 elenco-detalle">
                     <h2 class="h2-detalle">Elenco</h2>
-                    <div class="crew-scroll d-flex flex-row gap-4">
+                    <div class="crew-scroll d-flex flex-row gap-2">
                         {% for actor in credits.cast %}
                         <div class="crew-item d-flex flex-column align-items-center text-center">
                             {% if actor.foto %}
@@ -112,6 +112,7 @@
                 </div>
             </div>
             <div class="row fila-keywords-providers mt-2 d-flex flex-wrap">
+
                 <div class="col-keywords">
                     <h2 class="h2-detalle">Palabras clave</h2>
                     <div class="keywords-scroll d-flex flex-wrap">
@@ -120,6 +121,7 @@
                         {% endfor %}
                     </div>
                 </div>
+
                 <div class="col-providers">
                     <h2 class="h2-detalle">Dónde ver</h2>
                     {% if providers.flatrate or providers.rent or providers.buy %} {% if providers.flatrate
@@ -151,16 +153,15 @@
                         </div>
                     </div>
                     {% endif %}
-                    <span class="atribucion">Datos provistos por <a class="link-atribucion"
+                    <span class="atribucion justwatch">Datos provistos por <a class="link-atribucion"
                             href="https://www.justwatch.com/ar" target="_blank">JustWatch</a></span> {% else
                     %}
                     <p class="no-disponible text-muted">Aún no disponible en streaming en Argentina</p>
                     {% endif %}
                 </div>
-            </div>
-            <div class="row mt-3">
-                <h2 class="h2-detalle h2-otros-detalles mt-4">Más detalles</h2>
-                <div class="col-12">
+
+                <div class="col-mas-detalles">
+                    <h2 class="h2-detalle h2-otros-detalles">Más detalles</h2>
                     <dl class="otros-detalles">
                         <div class="otros-detalles-fila">
                             <dt>Título original</dt>
@@ -180,6 +181,7 @@
                         </div>
                     </dl>
                 </div>
+
             </div>
         </div>
     </div>

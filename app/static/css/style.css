@@ -8,7 +8,7 @@ main {
 }
 
 .margen-nav {
-    margin-top: 8em;
+    margin-top: 6em;
 }
 
 
@@ -18,7 +18,7 @@ main {
     padding: 0.8em 2.5em;
     font-family: 'Montserrat', sans-serif;
     font-weight: 500;
-    font-size: 1.25rem;
+    font-size: 1rem;
 }
 
 .navbar-toggler {
@@ -40,6 +40,20 @@ main {
 .navbar .nav-link {
     color: #FFFFFF !important;
     margin: 0 0.25em;
+    transition: all 0.2s;
+}
+
+.navbar .nav-link:hover {
+    transform: scale(1.04);
+}
+
+.navbar-brand,
+.navbar-brand:hover {
+    transition: all 0.2s;
+}
+
+.navbar-brand:hover {
+    transform: scale(1.04);
 }
 
 .active {
@@ -51,7 +65,7 @@ main {
     position: absolute;
     left: 0;
     right: 0;
-    bottom: 0em;
+    bottom: 0.1em;
     height: 0.15em;
     margin: 0 0.4em;
     background: #5B72F5;
@@ -65,12 +79,15 @@ main {
     border-color: #3A52D6;
     border-radius: 0.6em;
     font-weight: 500;
-    font-size: 1.2rem;
+    font-size: 0.9rem;
+    transition: all 0.2s;
 }
 
 .btn-iniciar-sesion:hover {
     background-color: #192fa3;
     border-color: #192fa3;
+    transition: all 0.2s;
+    transform: scale(1.04);
 }
 
 .btn-crear-cuenta {
@@ -79,12 +96,15 @@ main {
     border-color: #3A52D6;
     border-radius: 0.6em;
     font-weight: 500;
-    font-size: 1.2rem;
+    font-size: 0.9rem;
+    transition: all 0.2s;
 }
 
 .btn-crear-cuenta:hover {
     background-color: #192fa3;
     border-color: #192fa3;
+    transition: all 0.2s;
+    transform: scale(1.04);
 }
 
 @media (max-width: 500px) {
@@ -154,24 +174,40 @@ main {
 footer {
     border-top: 0.05em solid #3F4A5C !important;
     font-family: "M PLUS Rounded 1c", sans-serif;
-    padding: 1.25em 3em;
+    padding: 1em 2.5em;
 }
 
 footer .text-body-secondary {
     color: #cccccc99 !important;
     font-weight: 500;
-    font-size: 1rem;
+    font-size: 0.9rem;
+    transition: all 0.2s;
+}
+
+footer .nav-link:hover {
+    transition: all 0.2s;
+    transform: scale(1.04);
 }
 
 .cinematch {
     color: #3A52D6;
     font-weight: 800;
-    font-size: 1.25rem;
-    margin-bottom: 0.40em;
+    font-size: 1.05rem;
+    margin-bottom: 0.20em;
 }
 
 .copyright {
-    font-size: 0.875rem;
+    font-size: 0.75rem;
+}
+
+.atribucion {
+    color: #cccccc !important;
+    opacity: 0.6;
+    font-style: italic;
+}
+
+.atribucion.tmdb {
+    font-size: 0.65rem;
 }
 
 @media (max-width: 900px) {
@@ -224,7 +260,7 @@ footer .text-body-secondary {
 .modal .card-detalle {
     border-radius: 0;
     border: none;
-    padding: 1.5em;
+    padding: 1.5em 1.5em 0em 1.5em;
 }
 
 .btn-cerrar-modal {
@@ -248,20 +284,26 @@ footer .text-body-secondary {
 }
 
 .btn-modal-footer {
-    width: clamp(3.5em, 8vh, 5em);
-    height: clamp(3.5em, 8vh, 5em);
+    width: clamp(3.2em, 7.7vh, 4.7em);
+    height: clamp(3.2em, 7.7vh, 4.7em);
     border-radius: 50%;
     background-color: #FFFFFF;
     border: none;
     cursor: pointer;
-    transition: transform 0.2s, background-color 0.2s, box-shadow 0.2s;
+    transition: all 0.2s;
     text-decoration: none;
     background-color: #030E21;
     border: 1px solid #232D3E;
 }
 
+.btn-modal-footer:hover {
+    background-color: #232D3E8a;
+    box-shadow: 0 0 0.8em rgba(58, 82, 214, 0.4);
+    transform: scale(1.08);
+}
+
 .icono-modal-footer {
-    font-size: clamp(1.5rem, 2.4vw, 1.9rem);
+    font-size: clamp(1.4rem, 2.5vw, 1.6rem);
     color: #3A52D6;
 }
 
@@ -276,7 +318,7 @@ footer .text-body-secondary {
 
 .poster-detalle {
     width: 100%;
-    max-width: 220px;
+    max-width: 170px;
     border-radius: 18px;
 }
 
@@ -292,20 +334,21 @@ footer .text-body-secondary {
 
 .generos-detalle {
     font-weight: 500;
-    font-size: 0.8rem;
+    font-size: 0.65rem;
     text-transform: uppercase;
+    margin-bottom: 0.75em;
 }
 
 .titulo-detalle {
     font-weight: 800;
-    font-size: 2.1rem;
+    font-size: 1.8rem;
     color: #FFFFFF;
     line-height: 1.4;
 }
 
 .clasificacion-detalle {
     font-weight: 600;
-    font-size: 1.25rem;
+    font-size: 1.05rem;
     padding: 0.5em 0.6em;
     border-radius: 0.5em;
     vertical-align: middle;
@@ -320,9 +363,10 @@ footer .text-body-secondary {
 
 .tagline-detalle {
     color: #cccccccf;
-    font-size: 1.2rem;
+    font-size: 1rem;
     font-weight: 300;
     margin-top: 1em;
+    margin-bottom: 0.5em;
 }
 
 .meta-detalle {
@@ -331,33 +375,33 @@ footer .text-body-secondary {
 
 .rating-detalle {
     font-weight: 700;
-    font-size: 1.1rem;
+    font-size: 0.9rem;
     color: #D6BF3A;
 }
 
 .barra-detalle {
     font-weight: 800;
-    font-size: 1.2rem;
+    font-size: 1rem;
     color: #212C3D;
 }
 
 .separador-detalle {
     border-top: 2px solid #232D3E;
-    margin-top: 2.5em;
+    margin-top: 2em;
     opacity: 1;
 }
 
 .votos-detalle {
     font-weight: 700;
-    font-size: 1.1rem;
+    font-size: 0.9rem;
     color: #3A52D6;
 }
 
 .anio-detalle,
 .duracion-detalle {
-    margin-left: 2em;
+    margin-left: 1.5em;
     font-weight: 500;
-    font-size: 1.1rem;
+    font-size: 0.9rem;
     color: #CCCCCC;
 }
 
@@ -370,7 +414,7 @@ footer .text-body-secondary {
     border-radius: 50px;
     padding: 0.5em 1.25em;
     font-weight: 500;
-    font-size: 1.18rem;
+    font-size: 0.98rem;
 }
 
 .btn-outline:hover,
@@ -387,7 +431,7 @@ footer .text-body-secondary {
 
 .h2-detalle {
     font-weight: 700;
-    font-size: 1.5rem;
+    font-size: 1.2rem;
     color: #FFFFFF;
     margin-top: 0.8em;
     margin-bottom: 0.5em;
@@ -395,16 +439,16 @@ footer .text-body-secondary {
 
 .sinopsis-detalle {
     font-weight: 300;
-    font-size: 1rem;
+    font-size: 0.85rem;
     color: #CCCCCC;
     margin-bottom: 0;
 }
 
 .img-detalle {
-    width: 100px;
-    height: 100px;
+    width: 85px;
+    height: 85px;
     object-fit: cover;
-    border: 3.5px solid #232D3E;
+    border: 3px solid #232D3E;
     flex-shrink: 0;
 }
 
@@ -442,7 +486,7 @@ footer .text-body-secondary {
 
 .crew-nombre {
     font-family: 'M PLUS Rounded 1c', sans-serif;
-    font-size: 0.8rem;
+    font-size: 0.6rem;
     font-weight: 700;
     color: #cccccc80;
     margin-top: 0.4em;
@@ -451,7 +495,7 @@ footer .text-body-secondary {
 
 .crew-personaje {
     font-family: 'M PLUS Rounded 1c', sans-serif;
-    font-size: 0.75rem;
+    font-size: 0.55rem;
     font-weight: 400;
     color: #cccccc80;
     margin: 0;
@@ -464,7 +508,7 @@ footer .text-body-secondary {
 
 .keywords-detalle {
     font-weight: 500;
-    font-size: 0.8rem;
+    font-size: 0.6rem;
     text-transform: uppercase;
     border-radius: 0.7em;
 }
@@ -500,7 +544,7 @@ footer .text-body-secondary {
 
 .provider-label {
     font-family: 'M PLUS Rounded 1c', sans-serif;
-    font-size: 0.85rem;
+    font-size: 0.65rem;
     color: #CCCCCC;
     width: 4.8em;
     flex-shrink: 0;
@@ -517,16 +561,16 @@ footer .text-body-secondary {
     border-radius: 12px;
 }
 
-.atribucion {
+.atribucion.justwatch {
     color: #cccccc !important;
     opacity: 0.6;
     font-style: italic;
-    font-size: 0.68rem;
+    font-size: 0.58rem;
 }
 
 .botones-detalle {
     gap: 1em;
-    margin-top: 2.5em;
+    margin-top: 1em;
 }
 
 .botones-detalle .btn-outline {
@@ -547,7 +591,7 @@ footer .text-body-secondary {
 
 .no-disponible {
     font-family: 'M PLUS Rounded 1c', sans-serif;
-    font-size: 1rem;
+    font-size: 0.8rem;
     color: #ccccccaf !important;
     font-style: italic;
 }
@@ -567,7 +611,7 @@ footer .text-body-secondary {
 .otros-detalles dt {
     font-family: 'M PLUS Rounded 1c', sans-serif;
     font-weight: 500;
-    font-size: 1.1rem;
+    font-size: 0.9rem;
     color: #cccccc80;
     min-width: 8em;
     flex-shrink: 0;
@@ -576,11 +620,19 @@ footer .text-body-secondary {
 .otros-detalles dd {
     font-family: 'M PLUS Rounded 1c', sans-serif;
     font-weight: 400;
-    font-size: 1.1rem;
+    font-size: 0.9rem;
     color: #cccccc;
     margin: 0;
 }
 
+.col-mas-detalles {
+    width: 100%;
+    margin-top: 1rem;
+}
+
+.h2-otros-detalles {
+    margin-top: 0.8em;
+}
 
 /* RESPONSIVE DETALLE */
 
@@ -590,46 +642,40 @@ footer .text-body-secondary {
     }
 }
 
-@media (max-width: 767.98px) {
-    .card-detalle {
-        width: 100%;
-        padding: 1.5em;
-        border-radius: 0;
-        border-left: none;
-        border-right: none;
-    }
-}
-
-@media (max-width: 691.99px) {
+@media (max-width: 601.99px) {
     .info-detalle-container {
         padding-left: 1.5em;
     }
 
     .generos-detalle {
-        font-size: 0.7rem;
+        font-size: 0.55rem;
     }
 
     .titulo-detalle {
-        font-size: 1.6rem;
+        font-size: 1.15rem;
     }
 
     .sinopsis-detalle {
-        font-size: 0.8rem;
+        font-size: 0.65rem;
     }
 
     .h2-detalle {
-        font-size: 1.1rem;
+        font-size: 0.8rem;
     }
 
     .anio-detalle,
     .duracion-detalle {
         margin-left: 1em;
-        font-size: 0.95rem;
+        font-size: 0.7rem;
     }
 
     .rating-detalle,
     .votos-detalle {
-        font-size: 0.95rem;
+        font-size: 0.7rem;
+    }
+
+    .barra-detalle {
+        font-size: 0.9rem;
     }
 
     .botones-detalle {
@@ -637,16 +683,25 @@ footer .text-body-secondary {
     }
 
     .btn-outline {
-        font-size: 0.97rem;
+        font-size: 0.77rem;
         padding: 0.5em 1em;
     }
 
     .clasificacion-detalle {
-        font-size: 1rem;
+        font-size: 0.75rem;
     }
 
     .tagline-detalle {
-        font-size: 1rem;
+        font-size: 0.7rem;
+    }
+
+    .col-keywords {
+        display: none;
+    }
+
+    .otros-detalles dt,
+    .otros-detalles dd {
+        font-size: 0.73rem;
     }
 
     .col-keywords {
@@ -654,25 +709,33 @@ footer .text-body-secondary {
     }
 
     .col-providers {
-        flex: unset;
-        width: 100%;
+        flex: 1;
+        width: 50%;
+        padding-right: 15px;
     }
 
-    .otros-detalles dt,
-    .otros-detalles dd {
-        font-size: 0.93rem;
+    .col-mas-detalles {
+        flex: 1;
+        width: 50%;
+        margin-top: 0;
+        padding-left: 15px;
     }
 
     .modal .btn-cerrar-modal {
         width: 0.7em;
         height: 0.7em;
-        font-size: 2.7rem;
+        font-size: 2.5rem;
+    }
+
+    .btn-modal-footer {
+        width: clamp(2.5em, 6vh, 3.5em);
+        height: clamp(2.5em, 6vh, 3.5em);
     }
 }
 
 @media (max-width: 575.98px) {
     .card-detalle {
-        padding: 1em;
+        padding: 1em 1em 0em 1em;
     }
 
     .info-detalle-container {
@@ -681,31 +744,19 @@ footer .text-body-secondary {
         margin-top: 1em;
     }
 
-    .titulo-detalle {
-        font-size: 1.5rem;
-    }
-
     .meta-detalle {
-        font-size: 0.85rem;
+        font-size: 0.7rem;
     }
 
     .anio-detalle,
     .duracion-detalle {
         margin-left: 0.5em;
-        font-size: 0.85rem;
-    }
-
-    .sinopsis-detalle {
-        font-size: 0.8rem;
-    }
-
-    .h2-detalle {
-        font-size: 1.1rem;
     }
 
     .img-detalle {
-        width: 75px;
-        height: 75px;
+        width: 60px;
+        height: 60px;
+        border: 2px solid #232D3E;
     }
 
     .crew-item {
@@ -713,16 +764,16 @@ footer .text-body-secondary {
     }
 
     .crew-nombre {
-        font-size: 0.7rem;
+        font-size: 0.5rem;
     }
 
     .crew-personaje {
-        font-size: 0.65rem;
+        font-size: 0.45rem;
     }
 
     .otros-detalles dt,
     .otros-detalles dd {
-        font-size: 0.85rem;
+        font-size: 0.65rem;
     }
 
     .provider-logo {
@@ -731,23 +782,47 @@ footer .text-body-secondary {
     }
 
     .provider-label {
-        font-size: 0.75rem;
+        font-size: 0.55rem;
         width: 4em;
+    }
+
+    .atribucion.justwatch {
+        font-size: 0.45rem;
     }
 
     .botones-detalle {
         justify-content: center;
-        gap: 0.5em;
+        gap: 0.25em;
     }
 
     .botones-detalle .btn-outline {
         min-width: 0;
-        font-size: 1.1rem;
+        font-size: 0.8rem;
         padding: 0.6em 1.5em;
         margin: 0.5em;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
+    }
+
+    .separador-detalle {
+        margin-top: 1.8em;
+    }
+}
+
+@media (max-width: 460px) {
+    .col-providers {
+        width: 100%;
+        flex: unset;
+        padding-right: 0;
+    }
+
+    .col-mas-detalles {
+        width: 100%;
+        flex: unset;
+        margin-top: 1.5rem;
+        /* Se vuelve a pasar para abajo */
+        padding-left: 0;
     }
 }
 
@@ -998,8 +1073,8 @@ footer .text-body-secondary {
 }
 
 .btn-redondo {
-    width: clamp(3.5em, 8vh, 5em);
-    height: clamp(3.5em, 8vh, 5em);
+    width: clamp(3.5em, 8vh, 4em);
+    height: clamp(3.5em, 8vh, 4em);
     border-radius: 50%;
     background-color: #FFFFFF;
     border: none;
@@ -1009,18 +1084,18 @@ footer .text-body-secondary {
 }
 
 .icono-btn-redondo {
-    font-size: clamp(1.6rem, 4vh, 2.4rem);
+    font-size: clamp(1.6rem, 4vh, 2rem);
 }
 
 .btn-redondo-info {
-    width: clamp(3em, 6.5vh, 4em);
-    height: clamp(3em, 6.5vh, 4em);
+    width: clamp(3em, 6.5vh, 3.5em);
+    height: clamp(3em, 6.5vh, 3.5em);
     background-color: #030E21;
     border: 1px solid #232D3E;
 }
 
 .icono-btn-info {
-    font-size: clamp(1.3rem, 3.2vh, 2rem);
+    font-size: clamp(1.3rem, 3.2vh, 1.4rem);
     position: relative;
     top: 1px;
 }
@@ -1056,13 +1131,13 @@ footer .text-body-secondary {
 }
 
 .txt-si {
-    font-size: clamp(0.6rem, 1.6vh, 0.75rem);
+    font-size: clamp(0.6rem, 1.6vh, 0.7rem);
     text-align: center;
     color: #41B900;
 }
 
 .txt-no {
-    font-size: clamp(0.6rem, 1.6vh, 0.75rem);
+    font-size: clamp(0.6rem, 1.6vh, 0.7rem);
     text-align: center;
     color: #CC0000;
 }
@@ -1091,6 +1166,12 @@ footer .text-body-secondary {
     text-decoration: none;
     font-weight: 500;
     margin-bottom: clamp(0.9em, 1.5vh, 1.5em);
+    transition: all 0.2s;
+}
+
+.btn-vista:hover {
+    transition: all 0.2s;
+    transform: scale(1.04);
 }
 
 .btn-no-recomendar {
@@ -1099,6 +1180,12 @@ footer .text-body-secondary {
     color: #3F4A5C;
     text-decoration: none;
     font-weight: 500;
+    transition: all 0.2s;
+}
+
+.btn-no-recomendar:hover {
+    transition: all 0.2s;
+    transform: scale(1.04);
 }
 
 
