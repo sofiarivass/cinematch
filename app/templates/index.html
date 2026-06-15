@@ -1,9 +1,9 @@
 {% extends "base.html" %} {% block title %}Inicio — CineMatch{% endblock %} {% block content %}
 <div>
-    <section class="cm-hero">
+  <section class="cm-hero">  
     <div class="cm-hero__inner">
       <div class="cm-hero__content">
-        <div class="cm-hero__eyebrow">✦ Recomendaciones con IA</div>
+        <!-- <div class="cm-hero__eyebrow">✦ Recomendaciones con IA</div> -->
         <h1 class="cm-hero__title">
           Descubrí tu próxima<br>
           <span>película favorita</span>
@@ -21,22 +21,8 @@
         </div>
       </div>
 
-      <div class="cm-hero__visual">
-        <div class="cm-hero__sofa-card">
-          <div class="cm-hero__sofa-label">Recomendado para vos</div>
-          <div class="cm-posters-row">
-            <div class="cm-poster cm-poster--1"></div>
-            <div class="cm-poster cm-poster--2"></div>
-            <div class="cm-poster cm-poster--3"></div>
-            <div class="cm-poster cm-poster--4"></div>
-            <div class="cm-poster cm-poster--5"></div>
-          </div>
-          <div class="cm-match-badge">
-            <strong>92%</strong> compatibilidad estimada · <span style="color:var(--accent);font-size:11px;">Interstellar</span>
-          </div>
-        </div>
-      </div>
-    </div>
+      <div class="cm-hero__visual"></div>
+    </div> 
   </section>
 
   <!-- RECOMENDACIONES DE HOY -->
@@ -45,25 +31,86 @@
       <span class="cm-section__title">Recomendaciones de hoy</span>
       <span class="cm-section__notice">Tendencias globales · <a href="/registro" style="color:var(--accent);text-decoration:none;">Registrate para ver las tuyas</a></span>
     </div>
-    <div class="cm-movies-row">
-      {% set movies_placeholder = [
-        {"title": "Oppenheimer", "year": "2023", "genre": "Drama"},
-        {"title": "Dune: Parte 2", "year": "2024", "genre": "Sci-Fi"},
-        {"title": "La zona de interés", "year": "2023", "genre": "Drama"},
-        {"title": "Pobres criaturas", "year": "2023", "genre": "Comedia"},
-        {"title": "Past Lives", "year": "2023", "genre": "Romance"},
-        {"title": "Io Capitano", "year": "2023", "genre": "Drama"},
-        {"title": "Society of Snow", "year": "2023", "genre": "Supervivencia"}
-      ] %}
-      {% for movie in movies_placeholder %}
-      <div class="cm-movie-card">
-        <div class="cm-movie-card__poster">🎬</div>
-        <div class="cm-movie-card__info">
-          <div class="cm-movie-card__title">{{ movie.title }}</div>
-          <div class="cm-movie-card__meta">{{ movie.year }} · {{ movie.genre }}</div>
-        </div>
+
+    <!-- {% set movies_placeholder = [
+      {"title": "Oppenheimer", "year": "2023", "genre": "Drama"},
+      {"title": "Dune: Parte 2", "year": "2024", "genre": "Sci-Fi"},
+      {"title": "La zona de interés", "year": "2023", "genre": "Drama"},
+      {"title": "Pobres criaturas", "year": "2023", "genre": "Comedia"},
+      {"title": "Past Lives", "year": "2023", "genre": "Romance"},
+      {"title": "Io Capitano", "year": "2023", "genre": "Drama"},
+      {"title": "Society of Snow", "year": "2023", "genre": "Supervivencia"}
+    ] %}
+    {% for movie in movies_placeholder %}
+    <div class="cm-movie-card">
+      <div class="cm-movie-card__poster">🎬</div>
+      <div class="cm-movie-card__info">
+        <div class="cm-movie-card__title">{{ movie.title }}</div>
+        <div class="cm-movie-card__meta">{{ movie.year }} · {{ movie.genre }}</div>
       </div>
-      {% endfor %}
+    </div>
+    {% endfor %} -->
+    <!-- <div class="cm-movies-row">
+      {% if peliculas %}
+        {% for pelicula in peliculas %}
+        <a href="{{ url_for('peliculas.detalle', pelicula_id=pelicula.id) }}" class="cm-movie-card" title="{{ pelicula.titulo }}">
+          <div class="cm-movie-card__poster">
+            {% if pelicula.poster %}
+              <img src="{{ pelicula.poster }}" alt="{{ pelicula.titulo }}" class="img-fluid rounded" loading="lazy" />
+              <img src="https://placehold.co/600x400?text=img+no+disponible" alt="imagen-no-disponible" class="img-fluid rounded">
+            {% else %}
+              <img src="https://placehold.co/600x400?text=img+no+disponible" alt="imagen-no-disponible" class="img-fluid rounded">
+            {% endif %}
+          </div>
+          <div class="cm-movie-card__info">
+            <div class="cm-movie-card__title">{{ pelicula.titulo }}</div>
+            <div class="cm-movie-card__meta">{{ pelicula.fecha[:4] if pelicula.fecha else "Fecha desconocida" }}</div>
+          </div>
+        </a>
+        {% endfor %}
+      {% else %}
+        <p>No hay recomendaciones disponibles en este momento.</p>
+      {% endif %}
+    </div> -->
+
+    <div id="peliculasCarousel" class="carousel slide" data-bs-ride="true">
+      <div class="carousel-inner">
+        {% if peliculas %}
+          {% for i in range(0, peliculas|length, 6) %}
+          <div class="carousel-item {% if i == 0 %}active{% endif %}">
+            <div class="row g-3">
+              {% for pelicula in peliculas[i:i+6] %}
+              <div class="col-2">
+                <a href="{{ url_for('peliculas.detalle', pelicula_id=pelicula.id) }}" class="cm-movie-card text-decoration-none">
+                  <div class="cm-movie-card__poster">
+                    {% if pelicula.poster %}
+                      <img src="https://image.tmdb.org/t/p/w300{{ pelicula.poster }}" alt="{{ pelicula.title }}" class="img-fluid rounded" loading="lazy"/>
+                    {% else %}
+                      <img src="https://placehold.co/200x300?text=Sin+imagen" alt="Sin imagen" class="img-fluid rounded">
+                    {% endif %}
+                  </div>
+                  <div class="cm-movie-card__info">
+                    <div class="cm-movie-card__title">{{ pelicula.title }}</div>
+                    <div class="cm-movie-card__meta">{{ pelicula.fecha[:4] if pelicula.fecha else "Fecha desconocida" }}</div>
+                  </div>
+                </a>
+              </div>
+              {% endfor %}
+            </div>
+          </div>
+          {% endfor %}
+        {% else %}
+          <p class="text-white">No hay recomendaciones disponibles.</p>
+        {% endif %}
+      </div>
+
+      <button class="carousel-control-prev" type="button" data-bs-target="#peliculasCarousel" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon"></span>
+      </button>
+      <button class="carousel-control-next" type="button" data-bs-target="#peliculasCarousel" data-bs-slide="next">
+        <span class="carousel-control-next-icon"></span>
+      </button>
+
     </div>
   </section>
 

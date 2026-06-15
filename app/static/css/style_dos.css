@@ -4,75 +4,75 @@
    ──────────────────────────────────────────────────────────────── */
 
 .fondo {
-    background: url('../img/fondo_registro.png') no-repeat center center fixed;
-    background-position: 50% 25%;
-    background-size: cover;
+  background: url('../img/fondos/fondo_registro.png') no-repeat center center fixed;
+  background-position: 50% 25%;
+  background-size: cover;
     
 }
 
 .registro-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    padding: 2rem 1rem;
-    margin-top: 5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 2rem 1rem;
+  margin-top: 5rem;
 }
 
 .registro-card {
-    background-color: #ffffff;
-    border-radius: 25px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-    padding: 2.5rem 2rem;
-    max-width: 470px;
-    width: 100%;
+  background-color: #ffffff;
+  border-radius: 25px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  padding: 2.5rem 2rem;
+  max-width: 470px;
+  width: 100%;
 }
 
 .registro-titulo {
-    font-size: 2rem;
-    font-weight: 700;
-    color: #3A52D6;
-    margin-bottom: 0.5rem;
-    text-align: center;
+  font-size: 2rem;
+  font-weight: 700;
+  color: #3A52D6;
+  margin-bottom: 0.5rem;
+  text-align: center;
 }
 
 .registro-subtitulo {
-    font-size: 0.95rem;
-    color: #666666;
-    text-align: center;
-    margin-bottom: 2rem;
+  font-size: 0.95rem;
+  color: #666666;
+  text-align: center;
+  margin-bottom: 2rem;
 }
 
 .registro-form {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 }
 
 .form-group {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 }
 
 .form-group .form-label {
-    font-size: 0.95rem;
-    font-weight: 500;
-    color: #1a1a1a;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #1a1a1a;
 }
 
 .form-group .form-control {
-    padding: 0.75rem 1rem;
-    border: 1px solid #c2bfbf;
-    border-radius: 10px;
-    font-size: 0.95rem;
-    transition: all 0.3s ease;
+  padding: 0.75rem 1rem;
+  border: 1px solid #c2bfbf;
+  border-radius: 10px;
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
 }
 
 .form-group .form-control:focus {
-    border-color: #3A52D6;
-    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
-    outline: none;
+  border-color: #3A52D6;
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+  outline: none;
 }
 
 input:invalid {
@@ -86,172 +86,172 @@ input {
 
 /* Date input – remove calendar icon on webkit */
 input[type="date"]::-webkit-calendar-picker-indicator {
-    opacity: 0;
-    width: 100%;
-    position: absolute;
-    left: 0;
-    top: 0;
-    height: 100%;
-    cursor: pointer;
+  opacity: 0;
+  width: 100%;
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  cursor: pointer;
 }
 
 .form-group .form-control.is-invalid {
-    border-color: #dc3545;
-    box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.1);
-    background-image: none;
+  border-color: #dc3545;
+  box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.1);
+  background-image: none;
 }
 
 .form-group .form-text {
-    font-size: 0.85rem;
-    color: #999999;
+  font-size: 0.85rem;
+  color: #999999;
 }
 
 /* estilos para los iconos del formulario */
 .field-wrap {
-    position: relative;
-    margin-bottom: 0.85rem;
+  position: relative;
+  margin-bottom: 0.85rem;
 }
 
 .field-wrap .icon-left {
-    position: absolute;
-    left: 13px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: #8896b0;
-    font-size: 1rem;
-    pointer-events: none;
-    z-index: 1;
+  position: absolute;
+  left: 13px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #8896b0;
+  font-size: 1rem;
+  pointer-events: none;
+  z-index: 1;
 }
 
 .input-inner {
-    position: relative;
-    flex: 1;
+  position: relative;
+  flex: 1;
 }
 
 .input-icons {
-    position: relative;
+  position: relative;
 }
 
 .field-wrap .icon-right {
-    position: absolute;
-    right: 13px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: #8896b0;
-    font-size: 1rem;
-    cursor: pointer;
+  position: absolute;
+  right: 13px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #8896b0;
+  font-size: 1rem;
+  cursor: pointer;
 }
 
 .field-wrap input {
-    width: 100%;
-    height: 48px;
-    border: 1.5px solid #c5cdd8;
-    border-radius: 10px;
-    background: #f0f3f8;
-    padding: 0 2.4rem 0 2.6rem !important;
-    font-size: 0.88rem;
-    color: #333;
-    outline: none;
-    transition: border-color 0.2s, background 0.2s;
+  width: 100%;
+  height: 48px;
+  border: 1.5px solid #c5cdd8;
+  border-radius: 10px;
+  background: #f0f3f8;
+  padding: 0 2.4rem 0 2.6rem !important;
+  font-size: 0.88rem;
+  color: #333;
+  outline: none;
+  transition: border-color 0.2s, background 0.2s;
 }
 
 .field-wrap input::placeholder {
-    color: #9ba8bc;
+  color: #9ba8bc;
 }
 
 .field-wrap input:focus {
-    border-color: #2b4fff;
-    background: #fff;
+  border-color: #2b4fff;
+  background: #fff;
 }
 
 .error-message {
-    font-size: 0.85rem;
-    color: #dc3545;
-    margin-top: -0.25rem;
-    display: none;
+  font-size: 0.85rem;
+  color: #dc3545;
+  margin-top: -0.25rem;
+  display: none;
 }
 
 .error-message:not(:empty) {
-    display: block;
+  display: block;
 }
 
 .form-check {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-    gap: 0.75rem;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
 }
 
 .form-check-input {
-    width: 1.25rem;
-    height: 1.25rem;
-    cursor: pointer;
-    accent-color: #007bff;
+  width: 1.25rem;
+  height: 1.25rem;
+  cursor: pointer;
+  accent-color: #007bff;
 }
 
 .form-check-label {
-    font-size: 0.95rem;
-    color: #1a1a1a;
-    cursor: pointer;
-    margin-bottom: 0;
+  font-size: 0.95rem;
+  color: #1a1a1a;
+  cursor: pointer;
+  margin-bottom: 0;
 }
 
 .registro-botones {
-    display: flex;
-    gap: 1rem;
-    margin-top: 0.5rem;
+  display: flex;
+  gap: 1rem;
+  margin-top: 0.5rem;
 }
 
 .btn-registro {
-    flex: 1;
-    padding: 0.75rem 1.5rem;
-    font-size: 1rem;
-    font-weight: 600;
-    border-radius: 6px;
-    border: none;
-    cursor: pointer;
-    transition: all 0.3s ease;
+  flex: 1;
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
 }
 
 .btn-registro:hover {
-    transform: scale(1.02);
-    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
+  transform: scale(1.02);
+  box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
 }
 
 .btn-volver {
-    flex: 1;
-    padding: 0.75rem 1.5rem;
-    font-size: 1rem;
-    font-weight: 600;
-    border-radius: 6px;
-    background-color: #202122;
-    color: #dde8f1;
-    cursor: pointer;
-    transition: all 0.3s ease;
+  flex: 1;
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 6px;
+  background-color: #202122;
+  color: #dde8f1;
+  cursor: pointer;
+  transition: all 0.3s ease;
 }
 
 .btn-volver:hover {
-    transform: scale(1.02);
-    color: #1f1d1d !important;
-    border-color: #6c757d;
+  transform: scale(1.02);
+  color: #1f1d1d !important;
+  border-color: #6c757d;
 }
 
 .registro-link {
-    text-align: center;
-    font-size: 0.95rem;
-    color: #666666;
-    margin-top: 1rem;
+  text-align: center;
+  font-size: 0.95rem;
+  color: #666666;
+  margin-top: 1rem;
 }
 
 .registro-link a {
-    color: #007bff;
-    text-decoration: none;
-    font-weight: 600;
+  color: #007bff;
+  text-decoration: none;
+  font-weight: 600;
 }
 
 .registro-link a:hover {
-    text-decoration: underline;
+  text-decoration: underline;
 }
 
 /* ────────────────────────────────────────────────────────────────
@@ -260,59 +260,59 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 
 @media (max-width: 767.98px) {
     .registro-container {
-        margin-top: 4rem;
-        padding: 1rem 1rem;
+      margin-top: 4rem;
+      padding: 1rem 1rem;
     }
 
     .registro-card {
-        padding: 2rem 1.5rem;
+      padding: 2rem 1.5rem;
     }
 
     .registro-titulo {
-        font-size: 1.75rem;
+      font-size: 1.75rem;
     }
 
     .registro-subtitulo {
-        font-size: 0.9rem;
+      font-size: 0.9rem;
     }
 
     .registro-botones {
-        flex-direction: column;
+      flex-direction: column;
     }
 
     .btn-registro,
     .btn-volver {
-        width: 100%;
+      width: 100%;
     }
 }
 
 @media (max-width: 479.98px) {
     .registro-container {
-        margin-top: 3.5rem;
-        padding: 0.75rem 0.75rem;
+      margin-top: 3.5rem;
+      padding: 0.75rem 0.75rem;
     }
 
     .registro-card {
-        padding: 1.5rem 1rem;
-        border-radius: 8px;
+      padding: 1.5rem 1rem;
+      border-radius: 8px;
     }
 
     .registro-titulo {
-        font-size: 1.5rem;
+      font-size: 1.5rem;
     }
 
     .registro-form {
-        gap: 1rem;
+      gap: 1rem;
     }
 
     .form-group .form-control {
-        padding: 0.65rem 0.85rem;
-        font-size: 0.9rem;
+      padding: 0.65rem 0.85rem;
+      font-size: 0.9rem;
     }
 
     .form-check-input {
-        width: 1.1rem;
-        height: 1.1rem;
+      width: 1.1rem;
+      height: 1.1rem;
     }
 }
 
@@ -338,7 +338,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     --border-soft:  rgba(255,255,255,0.06);
   }
 
-  * { box-sizing: border-box; margin: 0; padding: 0; }
+  /* * { box-sizing: border-box; margin: 0; padding: 0; } */
 
   /* .btn-ghost {
     font-size: 13px;
@@ -379,26 +379,34 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     min-height: 520px;
     display: flex;
     align-items: center;
-    padding: 80px 2rem 60px;
+    padding: 75px 0px 30px;
     position: relative;
     overflow: hidden;
+    background-image: 
+        linear-gradient(to bottom, rgba(10, 14, 35, 0) 50%, rgba(10, 14, 35, 1) 100%),
+        linear-gradient(to right, rgba(10, 14, 35, 1) 0%, rgba(10, 14, 35, 0) 15%),
+        linear-gradient(to left, rgba(10, 14, 35, 1) 0%, rgba(10, 14, 35, 0) 15%), 
+        url('../img/fondos/fondo_inicio.png');
+    background-position: 50% 85%;
+    background-size: cover;
   }
-
+  
   .cm-hero::before {
     content: '';
     position: absolute;
     inset: 0;
     background: radial-gradient(ellipse 60% 50% at 70% 40%, rgba(59,130,246,0.12) 0%, transparent 70%),
-                radial-gradient(ellipse 40% 40% at 20% 70%, rgba(99,102,241,0.08) 0%, transparent 60%);
+    radial-gradient(ellipse 40% 40% at 20% 70%, rgba(99,102,241,0.08) 0%, transparent 60%);
     pointer-events: none;
   }
 
   .cm-hero__inner {
-    max-width: 1100px;
-    margin: 0 auto;
+    max-width: 95%;
     width: 100%;
+    margin: 0 auto;
+    padding: 0 2rem;
     display: grid;
-    grid-template-columns: 1fr 420px;
+    grid-template-columns: 1fr 320px;
     align-items: center;
     gap: 3rem;
   }
@@ -557,7 +565,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 
   /* ── SECCIÓN GENÉRICA ── */
   .cm-section {
-    max-width: 1100px;
+    max-width: 95%;
     margin: 0 auto;
     padding: 0 2rem 60px;
   }
@@ -818,4 +826,19 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     .cm-how-strip__steps { grid-template-columns: 1fr; gap: 16px; }
     .cm-how-arrow { display: none; }
     .cm-quiz-banner { flex-direction: column; text-align: center; }
+  }
+
+  @media (max-width: 480px) {
+    .cm-hero { 
+      width: 100%; padding: 10px 0px 15px; background-image: 
+        linear-gradient(to bottom, rgba(10, 14, 35, 0) 50%, rgba(10, 14, 35, 1) 100%),
+        linear-gradient(to right, rgba(10, 14, 35, 1) 0%, rgba(10, 14, 35, 0) 15%),
+        linear-gradient(to left, rgba(10, 14, 35, 1) 0%, rgba(10, 14, 35, 0) 15%), 
+        url('../img/fondos/fondo_inicio_mobil.png');
+      background-position: 50% 85%;
+      background-size: cover; 
+    }
+    .cm-hero__inner { width: 100%; padding: 0 1rem; }
+    .cm-section { padding: 0 0.5rem 60px; }   
+    .cm-section {width: 100%; padding: 0 1rem 60px; }
   }

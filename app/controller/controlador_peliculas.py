@@ -27,7 +27,8 @@ vista = PeliculaView()
 # RUTA INICIO
 @peliculas_bp.route("/")
 def index():
-    return vista.render_index()
+    peliculas = modelo.obtener_populares(1)["peliculas"][:18]
+    return vista.render_index(peliculas=peliculas)
 
 
 # SESIÓN DE USUARIO Y RUTA DE ENCUESTA
