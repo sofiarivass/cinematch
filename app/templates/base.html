@@ -19,7 +19,7 @@
     <header>
         <nav class="navbar navbar-expand-xl bg-body-tertiary fixed-top">
             <div class="container-fluid">
-                <a class="navbar-brand" href="{{ url_for('peliculas.index') }}">
+                <a class="navbar-brand" href="{{ url_for('cinematch.index') }}">
                     <img id="logo" src="{{ url_for('static', filename='img/logo.svg') }}" alt="Logo CineMatch" height="28">
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCinematch" aria-controls="navbarCinematch" aria-expanded="false" aria-label="Toggle navigation">
@@ -28,13 +28,13 @@
                 <div class="collapse navbar-collapse" id="navbarCinematch">
                     <ul class="navbar-nav mx-auto">
                         <li class="nav-item">
-                            <a href="{{ url_for('peliculas.index') }}" class="nav-link {% if request.endpoint == 'peliculas.index' %}active{% endif %}">Inicio</a>
+                            <a href="{{ url_for('cinematch.index') }}" class="nav-link {% if request.endpoint == 'cinematch.index' %}active{% endif %}">Inicio</a>
                         </li>
                         <li class="nav-item">
                             <a href="{{ url_for('peliculas.explorar') }}" class="nav-link {% if request.endpoint in ['peliculas.explorar', 'peliculas.buscar'] %}active{% endif %}">Explorar</a>
                         </li>
                         <li class="nav-item">
-                            <a href="{{ url_for('peliculas.como_funciona') }}" class="nav-link {% if request.endpoint == 'peliculas.como_funciona' %}active{% endif %}">¿Cómo funciona?</a>
+                            <a href="{{ url_for('cinematch.como_funciona') }}" class="nav-link {% if request.endpoint == 'cinematch.como_funciona' %}active{% endif %}">¿Cómo funciona?</a>
                         </li>
                     </ul>
                     <!-- Botones de inicio de sesión y registro -->
@@ -82,9 +82,9 @@
         </p>
         <span class="atribucion tmdb">Datos provistos por <a class="link-atribucion" href="https://www.themoviedb.org" target="_blank">TMDB</a></span>
         <ul class="nav justify-content-end">
-            <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">Inicio</a></li>
-            <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">Explorar</a></li>
-            <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">¿Cómo funciona?</a></li>
+            <li class="nav-item"><a href="{{ url_for('cinematch.index') }}" class="nav-link px-2 text-body-secondary">Inicio</a></li>
+            <li class="nav-item"><a href="{{ url_for('peliculas.explorar') }}" class="nav-link px-2 text-body-secondary">Explorar</a></li>
+            <li class="nav-item"><a href="{{ url_for('cinematch.como_funciona') }}" class="nav-link px-2 text-body-secondary">¿Cómo funciona?</a></li>
         </ul>
     </footer>
     <script src="{{ url_for('static', filename='js/encuesta.js') }}"></script>

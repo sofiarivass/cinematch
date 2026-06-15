@@ -15,53 +15,6 @@ from flask import render_template
 class PeliculaView:
     """Encapsula el renderizado de todas las vistas de películas."""
 
-    def render_index(self) -> str:
-        return render_template("index.html")
-
-    def render_como_funciona(self) -> str:
-        return render_template("como_funciona.html")
-
-    def render_encuesta_perfil(
-        self,
-        paso: int,
-        providers: list = [],
-        todos_providers: list = [],
-        todos_idiomas: list = [],
-    ) -> str:
-        return render_template(
-            "encuesta_perfil.html",
-            paso=paso,
-            providers=providers,
-            todos_providers=todos_providers,
-            todos_idiomas=todos_idiomas,  # 🟢 Inyectado en el contexto de Jinja2
-        )
-
-    def render_recomendaciones(
-        self,
-        pelicula: dict,
-        credits: dict,
-        keywords: list,
-        providers: dict,
-        clasificacion: str,
-    ) -> str:
-        """
-        Renderiza la vista de recomendaciones de películas.
-
-        Args:
-            pelicula: Dict con todos los datos de la película
-
-        Returns:
-            HTML renderizado como string
-        """
-        return render_template(
-            "recomendaciones.html",
-            pelicula=pelicula,
-            credits=credits,
-            keywords=keywords,
-            providers=providers,
-            clasificacion=clasificacion,
-        )
-
     def render_explorar(
         self,
         peliculas: list,
@@ -92,33 +45,33 @@ class PeliculaView:
             query=query,
         )
 
-    def render_detalle(
-        self,
-        pelicula: dict,
-        credits: dict,
-        keywords: list,
-        providers: dict,
-        clasificacion: str,
-        trailer: str | None = None,
-    ) -> str:
-        """
-        Renderiza la vista de detalle de una película.
+    # def render_detalle(
+    #     self,
+    #     pelicula: dict,
+    #     credits: dict,
+    #     keywords: list,
+    #     providers: dict,
+    #     clasificacion: str,
+    #     trailer: str | None = None,
+    # ) -> str:
+    #     """
+    #     Renderiza la vista de detalle de una película.
 
-        Args:
-            pelicula: Dict con todos los datos de la película
+    #     Args:
+    #         pelicula: Dict con todos los datos de la película
 
-        Returns:
-            HTML renderizado como string
-        """
-        return render_template(
-            "detalle.html",
-            pelicula=pelicula,
-            credits=credits,
-            keywords=keywords,
-            providers=providers,
-            clasificacion=clasificacion,
-            trailer=trailer,
-        )
+    #     Returns:
+    #         HTML renderizado como string
+    #     """
+    #     return render_template(
+    #         "detalle.html",
+    #         pelicula=pelicula,
+    #         credits=credits,
+    #         keywords=keywords,
+    #         providers=providers,
+    #         clasificacion=clasificacion,
+    #         trailer=trailer,
+    #     )
 
     def render_modal_pelicula(self, pelicula, credits, keywords, providers, clasificacion, trailer=None) -> str:
         return render_template(

@@ -415,6 +415,7 @@ footer .nav-link:hover {
     padding: 0.5em 1.25em;
     font-weight: 500;
     font-size: 0.98rem;
+    transition: all 0.2s;
 }
 
 .btn-outline:hover,
@@ -422,6 +423,9 @@ footer .nav-link:hover {
 .btn-outline:focus {
     background-color: #232D3E !important;
     color: #CCCCCC !important;
+    transition: all 0.2s;
+    transform: scale(1.04);
+    box-shadow: 0 0 0.8em rgba(35, 45, 62, 0.5);
 }
 
 .btn-outline:disabled {
@@ -1189,7 +1193,7 @@ footer .nav-link:hover {
 }
 
 
-/* ENCUESTA */
+/* ENCUESTA PERFIL */
 
 #btn-regresar {
     height: 35px;
@@ -1332,6 +1336,13 @@ footer .nav-link:hover {
     margin: 2em 0;
 }
 
+@media (max-width: 500px) {
+    .encuesta-grid-plataformas {
+        grid-template-columns: repeat(2, 1fr) !important;
+        max-width: 100%;
+    }
+}
+
 .encuesta-opcion-logo {
     cursor: pointer;
     border: 2px solid #030E21;
@@ -1389,7 +1400,7 @@ footer .nav-link:hover {
 
 .encuesta-opcion-fila:has(.encuesta-radio-hidden:checked) .encuesta-opcion-icono {
     color: #5B72F5;
-    /* El icono se ilumina si está seleccionado */
+    transition: all 0.2s;
 }
 
 .encuesta-opcion-icono {
@@ -1595,5 +1606,170 @@ footer .nav-link:hover {
     .encuesta-otro {
         flex-direction: row;
         align-items: center;
+    }
+}
+
+/* ENCUESTA RECOMENDACIONES */
+
+.container-icono-encuesta {
+    width: 3.2em;
+    height: 3.2em;
+    min-width: 3.2em;
+    min-height: 3.2em;
+    flex-shrink: 0;
+    border-radius: 50%;
+    background-color: #232D3E;
+    border: none;
+    margin-bottom: 0.75em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.icono-encuesta {
+    width: 2rem;
+    height: 2rem;
+}
+
+.encuesta-opcion-txt {
+    font-size: 0.82rem;
+    font-weight: 700;
+    font-family: 'Montserrat', sans-serif;
+    text-align: center;
+    color: #FFFFFF;
+    margin-bottom: 0.3em;
+    line-height: 1.2;
+}
+
+.encuesta-opcion-desc {
+    font-size: 0.7rem;
+    text-align: center;
+    color: #CCCCCC80;
+    line-height: 1.3;
+}
+
+/* Tarjeta base — rectángulo vertical */
+.encuesta-rec .encuesta-opcion-logo {
+    cursor: pointer;
+    border-radius: 20px;
+    width: 100%;
+    min-height: 170px;
+    padding: 1.4em 0.8em;
+    text-align: center;
+    box-shadow: 0 0 20px 5px #00000050;
+    transition: all 0.2s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+}
+
+.encuesta-rec .encuesta-opcion-logo:has(.encuesta-check-hidden:checked) {
+    border: 2px solid #3A52D6;
+    box-shadow: inset 0 0 30px 5px #3A52D6;
+}
+
+.encuesta-rec .encuesta-opcion-logo:has(.encuesta-check-hidden:checked) .container-icono-encuesta {
+    background-color: rgba(58, 82, 214, 0.2);
+    transition: all 0.2s;
+}
+
+/* Grid genérico: 3 columnas en desktop, 2 en móvil */
+.encuesta-rec .encuesta-grid-plataformas {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    max-width: 560px;
+    width: 100%;
+    margin: 2em auto;
+    gap: 1em;
+}
+
+/* Paso 1: 2 columnas centradas */
+.encuesta-grid-2col {
+    grid-template-columns: repeat(2, 1fr) !important;
+    max-width: 380px !important;
+}
+
+/* Paso 2: tiempo — tarjetas más altas */
+.encuesta-grid-tiempo {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    max-width: 560px;
+    width: 100%;
+    margin: 2em auto;
+    gap: 1em;
+}
+
+.encuesta-grid-tiempo .encuesta-opcion-logo {
+    min-height: 200px;
+}
+
+.encuesta-grid-tiempo .encuesta-opcion-txt {
+    font-size: 0.88rem;
+}
+
+/* Paso 5: clasificación — 2x2 */
+.encuesta-grid-clasificacion {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    max-width: 440px;
+    width: 100%;
+    margin: 2em auto;
+    gap: 1em;
+}
+
+/* ── Responsive ── */
+@media (max-width: 500px) {
+
+    /* Paso 1 (formato) y Paso 4 (época) y Paso 5 (clasificación): 1 columna, fila horizontal */
+    .encuesta-rec .encuesta-grid-plataformas:not(.encuesta-grid-emociones),
+    .encuesta-grid-tiempo,
+    .encuesta-grid-clasificacion {
+        grid-template-columns: 1fr;
+        max-width: 100%;
+    }
+
+    .encuesta-grid-2col {
+        grid-template-columns: 1fr !important;
+        max-width: 100% !important;
+    }
+
+    /* Tarjeta en fila horizontal (icono izquierda, texto derecha) */
+    .encuesta-rec .encuesta-grid-plataformas:not(.encuesta-grid-emociones) .encuesta-opcion-logo,
+    .encuesta-grid-tiempo .encuesta-opcion-logo,
+    .encuesta-grid-clasificacion .encuesta-opcion-logo {
+        min-height: unset;
+        flex-direction: row;
+        justify-content: flex-start;
+        gap: 1em;
+        padding: 1em 1.2em;
+        text-align: left;
+    }
+
+    .encuesta-rec .encuesta-grid-plataformas:not(.encuesta-grid-emociones) .encuesta-opcion-logo .container-icono-encuesta,
+    .encuesta-grid-tiempo .encuesta-opcion-logo .container-icono-encuesta,
+    .encuesta-grid-clasificacion .encuesta-opcion-logo .container-icono-encuesta {
+        margin-bottom: 0;
+        flex-shrink: 0;
+    }
+
+    .encuesta-rec .encuesta-grid-plataformas:not(.encuesta-grid-emociones) .encuesta-opcion-logo .encuesta-opcion-txt,
+    .encuesta-rec .encuesta-grid-plataformas:not(.encuesta-grid-emociones) .encuesta-opcion-logo .encuesta-opcion-desc,
+    .encuesta-grid-tiempo .encuesta-opcion-logo .encuesta-opcion-txt,
+    .encuesta-grid-tiempo .encuesta-opcion-logo .encuesta-opcion-desc,
+    .encuesta-grid-clasificacion .encuesta-opcion-logo .encuesta-opcion-txt,
+    .encuesta-grid-clasificacion .encuesta-opcion-logo .encuesta-opcion-desc {
+        text-align: left;
+    }
+
+    /* Paso 3 (emociones): se mantiene en 2 columnas, tarjetas verticales normales */
+    .encuesta-grid-emociones {
+        grid-template-columns: repeat(2, 1fr) !important;
+        max-width: 100%;
+    }
+
+    .encuesta-grid-emociones .encuesta-opcion-logo {
+        min-height: 140px;
     }
 }

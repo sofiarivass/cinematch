@@ -1,8 +1,8 @@
-{% extends "base.html" %} {% block title %}Encuesta — CineMatch{% endblock %} {% block content %}
+{% extends "base.html" %} {% block title %}Encuesta de personalización — CineMatch{% endblock %} {% block content %}
 <div class="container encuesta-container">
     <!-- BARRA DE PROGRESO -->
     <div class="encuesta-progreso-wrapper d-flex">
-        <span class="encuesta-paso-txt">Paso {{ paso }} de 4</span>
+        <span class="encuesta-paso-txt">Paso {{ paso }} de 6</span>
         <span class="encuesta-titulo-txt">Encuesta de personalización</span>
     </div>
     <div class="encuesta-barra" style="--progreso: {{ ((paso / 4) * 100) | int }}%;">
@@ -11,7 +11,7 @@
     <div class="card encuesta-card margen-footer text-center">
         <!-- ── PASO 0: Introducción ── -->
         {% if paso == 0 %}
-        <form method="POST" action="{{ url_for('peliculas.encuesta_perfil') }}">
+        <form method="POST" action="{{ url_for('cinematch.encuesta_perfil') }}">
             <input type="hidden" name="paso" value="0">
             <h1 class="encuesta-titulo">Personalizemos<br>tu experiencia</h1>
             <p class="encuesta-desc">
@@ -29,9 +29,9 @@
         </form>
         <!-- ── PASO 1: Plataformas ── -->
         {% elif paso == 1 %}
-        <form method="POST" action="{{ url_for('peliculas.encuesta_perfil') }}">
+        <form method="POST" action="{{ url_for('cinematch.encuesta_perfil') }}">
             <input type="hidden" name="paso" value="1">
-            <a href="{{ url_for('peliculas.encuesta_perfil', paso=0) }}" class="encuesta-volver d-block text-start">
+            <a href="{{ url_for('cinematch.encuesta_perfil', paso=0) }}" class="encuesta-volver d-block text-start">
                 <img id="btn-regresar" src="{{ url_for('static', filename='img/botones/btn-regresar.svg') }}"
                     alt="Regresar" height="30">
             </a>
@@ -76,9 +76,9 @@
         </form>
         <!-- ── PASO 2: Disponibilidad ── -->
         {% elif paso == 2 %}
-        <form method="POST" action="{{ url_for('peliculas.encuesta_perfil') }}">
+        <form method="POST" action="{{ url_for('cinematch.encuesta_perfil') }}">
             <input type="hidden" name="paso" value="2">
-            <a href="{{ url_for('peliculas.encuesta_perfil', paso=1) }}" class="encuesta-volver d-block text-start">
+            <a href="{{ url_for('cinematch.encuesta_perfil', paso=1) }}" class="encuesta-volver d-block text-start">
                 <img id="logo" src="{{ url_for('static', filename='img/botones/btn-regresar.svg') }}" alt="Regresar"
                     height="30">
             </a>
@@ -102,9 +102,9 @@
         </form>
         <!-- ── PASO 3: Idiomas ── -->
         {% elif paso == 3 %}
-        <form method="POST" action="{{ url_for('peliculas.encuesta_perfil') }}" id="form-encuesta-idiomas">
+        <form method="POST" action="{{ url_for('cinematch.encuesta_perfil') }}" id="form-encuesta-idiomas">
             <input type="hidden" name="paso" value="3">
-            <a href="{{ url_for('peliculas.encuesta_perfil', paso=2) }}" class="encuesta-volver d-block text-start">
+            <a href="{{ url_for('cinematch.encuesta_perfil', paso=2) }}" class="encuesta-volver d-block text-start">
                 <img id="logo" src="{{ url_for('static', filename='img/botones/btn-regresar.svg') }}" alt="Regresar"
                     height="30">
             </a>
@@ -132,10 +132,10 @@
                     <span class="encuesta-opcion-texto">{{ idioma.texto }}</span>
                 </label> {% endfor %}
             </div>
-            <div class="encuesta-tags-container" id="tags-idiomas-contenedor">
+            <div class="encuesta-tags-container d-flex flex-wrap" id="tags-idiomas-contenedor">
                 {% set fijos = ['es', 'en', 'pt', 'fr', 'ko', 'ja', 'it', 'any'] %} {% for iso in session.get('idiomas',
                 []) %} {% if iso not in fijos %} {% for idioma in todos_idiomas %} {% if idioma.iso == iso %}
-                <div class="encuesta-tag" data-iso="{{ iso }}">
+                <div class="encuesta-tag d-flex align-items-center" data-iso="{{ iso }}">
                     <span>{{ idioma.nombre }}</span>
                     <button type="button" class="encuesta-tag-remove">&times;</button>
                 </div>
@@ -165,9 +165,9 @@
 
         <!-- ── PASO 4: Formato ── -->
         {% elif paso == 4 %}
-        <form method="POST" action="{{ url_for('peliculas.encuesta_perfil') }}">
+        <form method="POST" action="{{ url_for('cinematch.encuesta_perfil') }}">
             <input type="hidden" name="paso" value="4">
-            <a href="{{ url_for('peliculas.encuesta_perfil', paso=3) }}" class="encuesta-volver d-block text-start">
+            <a href="{{ url_for('cinematch.encuesta_perfil', paso=3) }}" class="encuesta-volver d-block text-start">
                 <img id="logo" src="{{ url_for('static', filename='img/botones/btn-regresar.svg') }}" alt="Regresar"
                     height="30">
             </a>

@@ -1,0 +1,326 @@
+{% extends "base.html" %} {% block title %}Encuesta de recomendación — CineMatch{% endblock %} {% block content %}
+<div class="container encuesta-container encuesta-rec">
+    <!-- BARRA DE PROGRESO -->
+    <div class="encuesta-progreso-wrapper d-flex">
+        <span class="encuesta-paso-txt">Paso {{ paso }} de 5</span>
+        <span class="encuesta-titulo-txt">Encuesta de recomendación</span>
+    </div>
+    <div class="encuesta-barra" style="--progreso: {{ ((paso / 5) * 100) | int }}%;">
+        <div class="encuesta-barra-fill"></div>
+    </div>
+    <div class="card encuesta-card margen-footer text-center">
+        <!-- ── PASO 0: Introducción ── -->
+        {% if paso == 0 %}
+        <form method="POST" action="{{ url_for('recomendaciones.encuesta_recomendaciones') }}">
+            <input type="hidden" name="paso" value="0">
+            <h1 class="encuesta-titulo">Recomendaciones<br>a tu medida</h1>
+            <p class="encuesta-desc">
+                Queremos ayudarte a encontrar algo que realmente tengas ganas de ver.
+            </p>
+            <p class="encuesta-desc">
+                Antes de comenzar, te haremos una breve encuesta para entender mejor qué tipo de experiencia buscás en
+                este momento. En base a tus respuestas, <strong><span class="texto-blanco">Cine</span><span
+                        class="texto-color">Match</span></strong> seleccionará recomendaciones personalizadas
+                especialmente para vos.
+            </p>
+            <p class="encuesta-nota"><em>Las recomendaciones cambiarán según tus respuestas, así que podés completar
+                    esta encuesta cada vez que quieras descubrir algo nuevo.</em></p>
+            <div class="encuesta-btn-container d-flex justify-content-center">
+                <button type="submit" class="btn-encuesta">Comenzar</button>
+            </div>
+        </form>
+        <!-- ── PASO 1: Formato ── -->
+        {% elif paso == 1 %}
+        <form method="POST" action="{{ url_for('recomendaciones.encuesta_recomendaciones') }}">
+            <input type="hidden" name="paso" value="1">
+            <a href="{{ url_for('recomendaciones.encuesta_recomendaciones', paso=0) }}"
+                class="encuesta-volver d-block text-start">
+                <img id="btn-regresar" src="{{ url_for('static', filename='img/botones/btn-regresar.svg') }}"
+                    alt="Regresar" height="30">
+            </a>
+            <h1 class="encuesta-titulo">¿Qué formato estás buscando?</h1>
+            <p class="encuesta-desc">Elegí la experiencia que mejor se adapte a tu momento.
+            </p>
+            <div class="encuesta-grid-plataformas encuesta-grid-2col justify-content-center">
+                <label class="encuesta-opcion-logo d-flex align-items-center justify-content-center">
+                    <input type="checkbox" name="formato" value="pelicula" class="encuesta-check-hidden">
+                    <div class="container-icono-encuesta d-flex align-items-center justify-content-center">
+                        <img src="{{ url_for('static', filename='img/iconos/pelicula.svg') }}" alt="Película"
+                            class="icono-encuesta">
+                    </div>
+                    <p class="encuesta-opcion-txt">Películas</p>
+                    <small class="encuesta-opcion-desc">Historias completas en una sola sesión</small>
+                </label>
+                <label class="encuesta-opcion-logo d-flex align-items-center justify-content-center">
+                    <input type="checkbox" name="formato" value="serie" class="encuesta-check-hidden">
+                    <div class="container-icono-encuesta d-flex align-items-center justify-content-center">
+                        <img src="{{ url_for('static', filename='img/iconos/serie.svg') }}" alt="Serie"
+                            class="icono-encuesta">
+                    </div>
+                    <p class="encuesta-opcion-txt">Series</p>
+                    <small class="encuesta-opcion-desc">Historias que se desarrollan capítulo a capítulo</small>
+                </label>
+            </div>
+
+            <div class="encuesta-btn-container">
+                <button type="submit" class="btn-encuesta">Siguiente</button>
+            </div>
+        </form>
+        <!-- ── PASO 2: tiempo ── -->
+        {% elif paso == 2 %}
+        <form method="POST" action="{{ url_for('recomendaciones.encuesta_recomendaciones') }}">
+            <input type="hidden" name="paso" value="2">
+            <a href="{{ url_for('recomendaciones.encuesta_recomendaciones', paso=1) }}"
+                class="encuesta-volver d-block text-start">
+                <img id="btn-regresar" src="{{ url_for('static', filename='img/botones/btn-regresar.svg') }}"
+                    alt="Regresar" height="30">
+            </a>
+            <h1 class="encuesta-titulo">¿Cuánto tiempo querés dedicarle?</h1>
+            <p class="encuesta-desc">Te recomendaremos películas que se ajusten al tiempo que tenés disponible.
+            </p>
+            <div class="encuesta-grid-tiempo justify-content-center">
+                <label class="encuesta-opcion-logo d-flex align-items-center justify-content-center">
+                    <input type="checkbox" name="tiempo" value="menos de 90 minutos" class="encuesta-check-hidden">
+                    <div class="container-icono-encuesta d-flex align-items-center justify-content-center">
+                        <img src="{{ url_for('static', filename='img/iconos/60min.svg') }}" alt="Película"
+                            class="icono-encuesta">
+                    </div>
+                    <p class="encuesta-opcion-txt">Menos de 90 minutos</p>
+                    <small class="encuesta-opcion-desc">Algo rápido y directo</small>
+                </label>
+                <label class="encuesta-opcion-logo d-flex align-items-center justify-content-center">
+                    <input type="checkbox" name="tiempo" value="90-120 minutos" class="encuesta-check-hidden">
+                    <div class="container-icono-encuesta d-flex align-items-center justify-content-center">
+                        <img src="{{ url_for('static', filename='img/iconos/90min.svg') }}" alt="Serie"
+                            class="icono-encuesta">
+                    </div>
+                    <p class="encuesta-opcion-txt">Entre 90 y 120 minutos</p>
+                    <small class="encuesta-opcion-desc">Duración estándar</small>
+                </label>
+                <label class="encuesta-opcion-logo d-flex align-items-center justify-content-center">
+                    <input type="checkbox" name="tiempo" value="más de 2 horas" class="encuesta-check-hidden">
+                    <div class="container-icono-encuesta d-flex align-items-center justify-content-center">
+                        <img src="{{ url_for('static', filename='img/iconos/120min.svg') }}" alt="Serie"
+                            class="icono-encuesta">
+                    </div>
+                    <p class="encuesta-opcion-txt">Más de 2 horas</p>
+                    <small class="encuesta-opcion-desc">Quiero una historia larga</small>
+                </label>
+            </div>
+
+            <div class="encuesta-btn-container">
+                <button type="submit" class="btn-encuesta">Siguiente</button>
+            </div>
+        </form>
+        <!-- ── PASO 3: Emociones ── -->
+        {% elif paso == 3 %}
+        <form method="POST" action="{{ url_for('recomendaciones.encuesta_recomendaciones') }}">
+            <input type="hidden" name="paso" value="3">
+            <a href="{{ url_for('recomendaciones.encuesta_recomendaciones', paso=2) }}"
+                class="encuesta-volver d-block text-start">
+                <img id="btn-regresar" src="{{ url_for('static', filename='img/botones/btn-regresar.svg') }}"
+                    alt="Regresar" height="30">
+            </a>
+            <h1 class="encuesta-titulo">¿Cómo querés sentirte?</h1>
+            <p class="encuesta-desc">Elegí las emociones que querés vivir y encontraremos la película ideal para vos.
+            </p>
+            <div class="encuesta-grid-plataformas encuesta-grid-emociones justify-content-center">
+                <label class="encuesta-opcion-logo d-flex align-items-center justify-content-center">
+                    <input type="checkbox" name="emociones" value="tension" class="encuesta-check-hidden">
+                    <div class="container-icono-encuesta d-flex align-items-center justify-content-center">
+                        <img src="{{ url_for('static', filename='img/iconos/tension.svg') }}" alt="Emoji tensión"
+                            class="icono-encuesta">
+                    </div>
+                    <p class="encuesta-opcion-txt">Quiero tensión</p>
+                    <small class="encuesta-opcion-desc">Suspenso, Terror y Crimen</small>
+                </label>
+
+                <label class="encuesta-opcion-logo d-flex align-items-center justify-content-center">
+                    <input type="checkbox" name="emociones" value="emocionarme" class="encuesta-check-hidden">
+                    <div class="container-icono-encuesta d-flex align-items-center justify-content-center">
+                        <img src="{{ url_for('static', filename='img/iconos/emocion.svg') }}" alt="Emoji emoción"
+                            class="icono-encuesta">
+                    </div>
+                    <p class="encuesta-opcion-txt">Quiero emocionarme</p>
+                    <small class="encuesta-opcion-desc">Drama, Romance e Historia</small>
+                </label>
+
+                <label class="encuesta-opcion-logo d-flex align-items-center justify-content-center">
+                    <input type="checkbox" name="emociones" value="reirme" class="encuesta-check-hidden">
+                    <div class="container-icono-encuesta d-flex align-items-center justify-content-center">
+                        <img src="{{ url_for('static', filename='img/iconos/risa.svg') }}" alt="Emoji sonrisa"
+                            class="icono-encuesta">
+                    </div>
+                    <p class="encuesta-opcion-txt">Quiero reírme</p>
+                    <small class="encuesta-opcion-desc">Comedia y Animación</small>
+                </label>
+
+                <label class="encuesta-opcion-logo d-flex align-items-center justify-content-center">
+                    <input type="checkbox" name="emociones" value="sorprenderme" class="encuesta-check-hidden">
+                    <div class="container-icono-encuesta d-flex align-items-center justify-content-center">
+                        <img src="{{ url_for('static', filename='img/iconos/sorpresa.svg') }}" alt="Emoji sorpresa"
+                            class="icono-encuesta">
+                    </div>
+                    <p class="encuesta-opcion-txt">Quiero sorprenderme</p>
+                    <small class="encuesta-opcion-desc">Misterio, Fantasía y Ciencia ficción</small>
+                </label>
+
+                <label class="encuesta-opcion-logo d-flex align-items-center justify-content-center">
+                    <input type="checkbox" name="emociones" value="adrenalina" class="encuesta-check-hidden">
+                    <div class="container-icono-encuesta d-flex align-items-center justify-content-center">
+                        <img src="{{ url_for('static', filename='img/iconos/adrenalina.svg') }}" alt="Emoji adrenalina"
+                            class="icono-encuesta">
+                    </div>
+                    <p class="encuesta-opcion-txt">Quiero adrenalina</p>
+                    <small class="encuesta-opcion-desc">Acción, Aventura y Bélica</small>
+                </label>
+
+                <label class="encuesta-opcion-logo d-flex align-items-center justify-content-center">
+                    <input type="checkbox" name="emociones" value="familia" class="encuesta-check-hidden">
+                    <div class="container-icono-encuesta d-flex align-items-center justify-content-center">
+                        <img src="{{ url_for('static', filename='img/iconos/familia.svg') }}" alt="Emoji familia"
+                            class="icono-encuesta">
+                    </div>
+                    <p class="encuesta-opcion-txt">Quiero ver algo en familia</p>
+                    <small class="encuesta-opcion-desc">Familia y Animación</small>
+                </label>
+
+                <label class="encuesta-opcion-logo d-flex align-items-center justify-content-center">
+                    <input type="checkbox" name="emociones" value="aprender" class="encuesta-check-hidden">
+                    <div class="container-icono-encuesta d-flex align-items-center justify-content-center">
+                        <img src="{{ url_for('static', filename='img/iconos/aprender.svg') }}" alt="Emoji aprender"
+                            class="icono-encuesta">
+                    </div>
+                    <p class="encuesta-opcion-txt">Quiero aprender algo nuevo</p>
+                    <small class="encuesta-opcion-desc">Documental e Historia</small>
+                </label>
+
+                <label class="encuesta-opcion-logo d-flex align-items-center justify-content-center">
+                    <input type="checkbox" name="emociones" value="nostalgia" class="encuesta-check-hidden">
+                    <div class="container-icono-encuesta d-flex align-items-center justify-content-center">
+                        <img src="{{ url_for('static', filename='img/iconos/nostalgia.svg') }}" alt="Emoji nostalgia"
+                            class="icono-encuesta">
+                    </div>
+                    <p class="encuesta-opcion-txt">Quiero sentir nostalgia</p>
+                    <small class="encuesta-opcion-desc">Clásicos, Western e Historia</small>
+                </label>
+
+                <label class="encuesta-opcion-logo d-flex align-items-center justify-content-center">
+                    <input type="checkbox" name="emociones" value="inspiracion" class="encuesta-check-hidden">
+                    <div class="container-icono-encuesta d-flex align-items-center justify-content-center">
+                        <img src="{{ url_for('static', filename='img/iconos/inspiracion.svg') }}"
+                            alt="Emoji inspiración" class="icono-encuesta">
+                    </div>
+                    <p class="encuesta-opcion-txt">Quiero inspiración</p>
+                    <small class="encuesta-opcion-desc">Música, Historia y Drama</small>
+                </label>
+            </div>
+            <div class="encuesta-btn-container">
+                <button type="submit" class="btn-encuesta">Siguiente</button>
+            </div>
+        </form>
+        <!-- ── PASO 4: epoca ── -->
+        {% elif paso == 4 %}
+        <form method="POST" action="{{ url_for('recomendaciones.encuesta_recomendaciones') }}">
+            <input type="hidden" name="paso" value="4">
+            <a href="{{ url_for('recomendaciones.encuesta_recomendaciones', paso=3) }}"
+                class="encuesta-volver d-block text-start">
+                <img id="btn-regresar" src="{{ url_for('static', filename='img/botones/btn-regresar.svg') }}"
+                    alt="Regresar" height="30">
+            </a>
+            <h1 class="encuesta-titulo">¿De qué época disfrutas más el cine?</h1>
+            <p class="encuesta-desc">Desde clásicos inolvidables hasta los últimos estrenos.
+            </p>
+            <div class="encuesta-grid-plataformas justify-content-center">
+                <label class="encuesta-opcion-logo d-flex align-items-center justify-content-center">
+                    <input type="checkbox" name="epoca" value="estrenos" class="encuesta-check-hidden">
+                    <div class="container-icono-encuesta d-flex align-items-center justify-content-center">
+                        <img src="{{ url_for('static', filename='img/iconos/estrenos.svg') }}" alt="Estrenos y tendencias actuales"
+                            class="icono-encuesta">
+                    </div>
+                    <p class="encuesta-opcion-txt">Estrenos y tendencias actuales</p>
+                    <small class="encuesta-opcion-desc">Lo último en taquilla</small>
+                </label>
+                <label class="encuesta-opcion-logo d-flex align-items-center justify-content-center">
+                    <input type="checkbox" name="epoca" value="modernas" class="encuesta-check-hidden">
+                    <div class="container-icono-encuesta d-flex align-items-center justify-content-center">
+                        <img src="{{ url_for('static', filename='img/iconos/pelicula.svg') }}" alt="Películas modernas"
+                            class="icono-encuesta">
+                    </div>
+                    <p class="encuesta-opcion-txt">Películas modernas</p>
+                    <small class="encuesta-opcion-desc">Producciones de las últimas décadas</small>
+                </label>
+                <label class="encuesta-opcion-logo d-flex align-items-center justify-content-center">
+                    <input type="checkbox" name="epoca" value="clasicos" class="encuesta-check-hidden">
+                    <div class="container-icono-encuesta d-flex align-items-center justify-content-center">
+                        <img src="{{ url_for('static', filename='img/iconos/clasicos.svg') }}" alt="Clásicos nostálgicos"
+                            class="icono-encuesta">
+                    </div>
+                    <p class="encuesta-opcion-txt">Clásicos nostálgicos</p>
+                    <small class="encuesta-opcion-desc">Joyas del cine de otras épocas</small>
+                </label>
+            </div>
+
+            <div class="encuesta-btn-container">
+                <button type="submit" class="btn-encuesta">Siguiente</button>
+            </div>
+        </form>
+        <!-- ── PASO 5: clasificación ── -->
+        {% elif paso == 5 %}
+        <form method="POST" action="{{ url_for('recomendaciones.encuesta_recomendaciones') }}">
+            <input type="hidden" name="paso" value="5">
+            <a href="{{ url_for('recomendaciones.encuesta_recomendaciones', paso=4) }}"
+                class="encuesta-volver d-block text-start">
+                <img id="btn-regresar" src="{{ url_for('static', filename='img/botones/btn-regresar.svg') }}"
+                    alt="Regresar" height="30">
+            </a>
+            <h1 class="encuesta-titulo">¿Qué clasificación preferís?</h1>
+            <p class="encuesta-desc">Elegí el rango de edad del contenido que te gustaría ver.
+            </p>
+            <div class="encuesta-grid-clasificacion justify-content-center">
+                <label class="encuesta-opcion-logo d-flex align-items-center justify-content-center">
+                    <input type="checkbox" name="formato" value="pelicula" class="encuesta-check-hidden">
+                    <div class="container-icono-encuesta d-flex align-items-center justify-content-center">
+                        <img src="{{ url_for('static', filename='img/iconos/atp.svg') }}" alt="ATP"
+                            class="icono-encuesta">
+                    </div>
+                    <p class="encuesta-opcion-txt">ATP - Familiar</p>
+                    <small class="encuesta-opcion-desc">Contenido apto para todo público. Historias mágicas y seguras.</small>
+                </label>
+                <label class="encuesta-opcion-logo d-flex align-items-center justify-content-center">
+                    <input type="checkbox" name="formato" value="pelicula" class="encuesta-check-hidden">
+                    <div class="container-icono-encuesta d-flex align-items-center justify-content-center">
+                        <img src="{{ url_for('static', filename='img/iconos/+13.svg') }}" alt="+13"
+                            class="icono-encuesta">
+                    </div>
+                    <p class="encuesta-opcion-txt">+13 - Acción</p>
+                    <small class="encuesta-opcion-desc">Aventuras emocionantes con intensidad moderada para adolescentes.</small>
+                </label>
+                <label class="encuesta-opcion-logo d-flex align-items-center justify-content-center">
+                    <input type="checkbox" name="formato" value="pelicula" class="encuesta-check-hidden">
+                    <div class="container-icono-encuesta d-flex align-items-center justify-content-center">
+                        <img src="{{ url_for('static', filename='img/iconos/+16.svg') }}" alt="+16"
+                            class="icono-encuesta">
+                    </div>
+                    <p class="encuesta-opcion-txt">+16 - Intenso</p>
+                    <small class="encuesta-opcion-desc">Tramas complejas, suspenso y temas maduros.</small>
+                </label>
+                <label class="encuesta-opcion-logo d-flex align-items-center justify-content-center">
+                    <input type="checkbox" name="formato" value="pelicula" class="encuesta-check-hidden">
+                    <div class="container-icono-encuesta d-flex align-items-center justify-content-center">
+                        <img src="{{ url_for('static', filename='img/iconos/+18.svg') }}" alt="+18"
+                            class="icono-encuesta">
+                    </div>
+                    <p class="encuesta-opcion-txt">+18 - Adulto</p>
+                    <small class="encuesta-opcion-desc">Contenido explícito y visceral para una audiencia adulta.</small>
+                </label>
+            </div>
+            <div class="encuesta-btn-container">
+                <button type="submit" class="btn-encuesta">Siguiente</button>
+            </div>
+        </form>
+        {% endif %}
+    </div>
+</div>
+
+{% endblock %}

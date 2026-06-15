@@ -10,8 +10,10 @@ Uso:
 from flask import Flask
 from config.config import Config
 
+from app.controller.controlador import cinematch_bp
 from app.controller.controlador_peliculas import peliculas_bp
 from app.controller.controlador_series import series_bp
+from app.controller.controlador_rec import recomendaciones_bp
 from app.controller.controlador_usuarios import usuarios_bp
 
 from app.services.google_oauth import init_oauth
@@ -35,8 +37,10 @@ def create_app() -> Flask:
     init_oauth(app)
 
     # Registrar blueprints del controlador
+    app.register_blueprint(cinematch_bp)
     app.register_blueprint(peliculas_bp)
     app.register_blueprint(series_bp)
+    app.register_blueprint(recomendaciones_bp)
     app.register_blueprint(usuarios_bp)
 
     return app
