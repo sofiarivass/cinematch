@@ -72,45 +72,7 @@ def buscar():
         )
     except Exception as e:
         return vista.render_error(str(e))
-
-
-# # RUTA RECOMENDACIONES
-# @peliculas_bp.route("/recomendacion/<int:pelicula_id>")
-# def recomendacion(pelicula_id: int):
-#     try:
-#         pelicula = modelo.obtener_detalle(pelicula_id)
-#         credits = modelo.obtener_credits(pelicula_id)
-#         keywords = modelo.obtener_keywords(pelicula_id)
-
-#         # 🟢 CAMBIADO: usar obtener_providers para la película individual
-#         providers = modelo.obtener_providers(pelicula_id)
-
-#         clasificacion = modelo.obtener_clasificacion(pelicula_id)
-#         return vista.render_recomendaciones(
-#             pelicula, credits, keywords, providers, clasificacion
-#         )
-#     except Exception as e:
-#         return vista.render_error(str(e))
-
-
-# # RUTA DETALLE DE PELÍCULA
-# @peliculas_bp.route("/pelicula/<int:pelicula_id>")
-# def detalle(pelicula_id: int):
-#     try:
-#         pelicula = modelo.obtener_detalle(pelicula_id)
-#         credits = modelo.obtener_credits(pelicula_id)
-#         keywords = modelo.obtener_keywords(pelicula_id)
-#         trailer = modelo.obtener_trailer(pelicula_id)
-
-#         # 🟢 CAMBIADO: usar obtener_providers para la película individual
-#         providers = modelo.obtener_providers(pelicula_id)
-
-#         clasificacion = modelo.obtener_clasificacion(pelicula_id)
-#         return vista.render_detalle(
-#             pelicula, credits, keywords, providers, clasificacion, trailer
-#         )
-#     except Exception as e:
-#         return vista.render_error(str(e))
+    
 
 # RUTA CONTENIDO MODAL DETALLE PELIS
 @peliculas_bp.route("/pelicula/<int:pelicula_id>/modal")

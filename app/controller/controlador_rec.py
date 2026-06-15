@@ -54,7 +54,7 @@ def encuesta_recomendaciones():
                 "clasificacion": session.get("clasificacion", []),
             }
 
-            return redirect(url_for("peliculas.index"))
+            return redirect(url_for("cinematch.index"))
 
         siguiente_paso = paso + 1
     else:
