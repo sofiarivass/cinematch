@@ -15,6 +15,57 @@ from flask import render_template
 class PeliculaView:
     """Encapsula el renderizado de todas las vistas de películas."""
 
+    def render_index(self, peliculas: list = [], secciones: list = [], usuario: dict = None) -> str:            
+        return render_template(
+            "index.html", 
+            peliculas=peliculas, 
+            secciones=secciones, 
+            usuario=usuario
+        )
+    # def render_index(self, peliculas: list = []) -> str:
+    #     return render_template("index.html", peliculas=peliculas)
+
+    def render_encuesta_perfil(
+        self,
+        paso: int,
+        providers: list = [],
+        todos_providers: list = [],
+        todos_idiomas: list = [],
+    ) -> str:
+        return render_template(
+            "encuesta_perfil.html",
+            paso=paso,
+            providers=providers,
+            todos_providers=todos_providers,
+            todos_idiomas=todos_idiomas,  # 🟢 Inyectado en el contexto de Jinja2
+        )
+
+    def render_recomendaciones(
+        self,
+        pelicula: dict,
+        credits: dict,
+        keywords: list,
+        providers: dict,
+        clasificacion: str,
+    ) -> str:
+        """
+        Renderiza la vista de recomendaciones de películas.
+
+        Args:
+            pelicula: Dict con todos los datos de la película
+
+        Returns:
+            HTML renderizado como string
+        """
+        return render_template(
+            "recomendaciones.html",
+            pelicula=pelicula,
+            credits=credits,
+            keywords=keywords,
+            providers=providers,
+            clasificacion=clasificacion,
+        )
+
     def render_explorar(
         self,
         peliculas: list,
