@@ -82,7 +82,7 @@ def registro():
                 return jsonify({
                     "exito": True,
                     "mensaje": resultado["mensaje"],
-                    "redirigir": url_for("peliculas.encuesta_perfil")
+                    "redirigir": url_for("cinematch.encuesta_perfil")
                 }), 201
 
     except Exception as e:
@@ -129,7 +129,7 @@ def login():
                 return jsonify({
                     "exito": True,
                     "mensaje": resultado["mensaje"],
-                    "redirigir": url_for("peliculas.index")
+                    "redirigir": url_for("cinematch.index")
                 }), 200
             else:
                 return jsonify({
@@ -148,7 +148,7 @@ def login():
 @usuarios_bp.route("/logout")
 def logout():
     session.clear()
-    return redirect(url_for('peliculas.index'))
+    return redirect(url_for('cinematch.index'))
 
 # Ruta para login con Google
 @usuarios_bp.route("/login/google")
@@ -198,13 +198,13 @@ def google_callback():
             session["usuario_id"] = resultado["usuario_id"]
             session["nombre_usuario"] = nombre_usuario
 
-            return redirect(url_for("peliculas.encuesta_perfil"))
+            return redirect(url_for("cinematch.encuesta_perfil"))
 
         # Si ya existe
         session["usuario_id"] = str(usuario["_id"])
         session["nombre_usuario"] = usuario["nombre_usuario"]
 
-        return redirect(url_for("peliculas.index"))
+        return redirect(url_for("cinematch.index"))
 
     except Exception as e:
         import traceback

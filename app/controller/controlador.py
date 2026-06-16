@@ -28,13 +28,64 @@ modelo_peliculas = PeliculaModel()
 # RUTA INICIO
 @cinematch_bp.route("/")
 def index():
-    return vista.render_index()
+    # 1. Verificar si hay una sesión activa de usuario
+    nombre_usuario = session.get("nombre_usuario")
+    
+    if nombre_usuario:
+        # Buscamos los datos del usuario en MongoDB
+        usuario = modelo_usuario.obtener_por_nombre(nombre_usuario)
+        
+        if usuario and "preferencias" in usuario:
+            preferencias = usuario["preferencias"]
+            
+            # Traemos el mix de películas que cumplen con sus gustos combinados
+            peliculas_mix = modelo_peliculas.obtener_por_preferencias(preferencias)
+            
+            # Armamos las filas independientes por cada plataforma que el usuario posee
+            secciones_por_plataforma = []
+            
+            # Obtenemos los nombres reales mapeando los providers disponibles en tu modelo
+            todos_los_providers = modelo_peliculas.obtener_providers_ar()
+            mapa_nombres = {p["id"]: p["nombre"] for p in todos_los_providers}
+
+            for p_id in preferencias.get("plataformas", []):
+                nombre_stream = mapa_nombres.get(p_id, f"Servicio {p_id}")
+                movies_plataforma = modelo_peliculas.obtener_por_plataforma_individual(
+                    plataforma_id=p_id, 
+                    idiomas=preferencias.get("idiomas", [])
+                )
+                
+                if movies_plataforma:
+                    secciones_por_plataforma.append({
+                        "nombre_plataforma": nombre_stream,
+                        "peliculas": movies_plataforma[:6] # Mandamos las 6 primeras para el feed
+                    })
+
+            # Renderizamos usando tu vista adaptada
+            return vista.render_index(
+                peliculas=peliculas_mix,
+                secciones=secciones_por_plataforma,
+                usuario=usuario
+            )
+
+    # ── CASO ANÓNIMO O DEFAULT ─────────────────────────────────────────────
+    # Si no inició sesión, corre tu lógica base original limpia
+    data_populares = modelo_peliculas.obtener_populares(1)
+    peliculas_anonimas = data_populares.get("peliculas", [])[:18]
+    
+    return vista.render_index(
+        peliculas=peliculas_anonimas, 
+        secciones=[], 
+        usuario=None
+    )
+
+
 
 # RUTA COMO FUNCIONA
-@cinematch_bp.route("/como-funciona")
-def como_funciona():
-    """Muestra la página de información."""
-    return vista.render_como_funciona()
+# @cinematch_bp.route("/como-funciona")
+# def como_funciona():
+#     """Muestra la página de información."""
+#     return vista.render_como_funciona()
 
 # SESIÓN DE USUARIO Y RUTA DE ENCUESTA
 @cinematch_bp.route("/encuesta-perfil", methods=["GET", "POST"])

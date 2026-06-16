@@ -15,8 +15,13 @@ from flask import render_template
 class View:
     """Encapsula el renderizado de todas las vistas de películas."""
 
-    def render_index(self) -> str:
-        return render_template("index.html")
+    def render_index(self, peliculas: list = [], secciones: list = [], usuario: dict = None) -> str:            
+        return render_template(
+            "index.html", 
+            peliculas=peliculas, 
+            secciones=secciones, 
+            usuario=usuario
+        )
 
     def render_como_funciona(self) -> str:
         return render_template("como_funciona.html")

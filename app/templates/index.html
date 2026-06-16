@@ -14,7 +14,7 @@
             Recomendaciones personalizadas según tus gustos y preferencias. Sin listas interminables, solo películas que realmente te van a gustar.
           </p>
           <div class="cm-hero__ctas">
-            <a href="#" class="btn-hero-primary">
+            <a href="{{ url_for('recomendaciones.encuesta_recomendaciones') }}" class="btn-hero-primary">
               ✦ Realizar encuesta
             </a>
             <a href="#" class="btn-hero-secondary">
@@ -39,7 +39,8 @@
                 <div class="row g-3">
                   {% for pelicula in peliculas[i:i+6] %}
                     <div class="col-2">
-                      <a href="{{ url_for('peliculas.detalle', pelicula_id=pelicula.id) }}" class="cm-movie-card text-decoration-none" title="{{ pelicula.titulo}}">
+                      <a data-pelicula-id="{{ pelicula.id }}" data-bs-toggle="modal"
+            data-bs-target="#modal-info-pelicula" class="cm-movie-card text-decoration-none" title="{{ pelicula.titulo}}">
                         <div class="cm-movie-card__poster">
                           {% if pelicula.poster %}
                             <img src="https://image.tmdb.org/t/p/w300{{ pelicula.poster }}" alt="{{ pelicula.titulo }}" class="img-fluid rounded" loading="lazy" />
@@ -74,7 +75,8 @@
         <div class="d-flex d-md-none flex-nowrap overflow-auto g-3 px-1 pb-2 cm-mobile-scroll">
           {% for pelicula in peliculas %}
             <div class="flex-shrink-0" style="width: 140px; margin-right: 1rem;">
-              <a href="{{ url_for('peliculas.detalle', pelicula_id=pelicula.id) }}" class="cm-movie-card text-decoration-none" title="{{ pelicula.titulo }}">
+              <a data-pelicula-id="{{ pelicula.id }}" data-bs-toggle="modal"
+            data-bs-target="#modal-info-pelicula" class="cm-movie-card text-decoration-none" title="{{ pelicula.titulo }}">
                 <div class="cm-movie-card__poster">
                   {% if pelicula.poster %}
                     <img src="https://image.tmdb.org/t/p/w300{{ pelicula.poster }}" alt="{{ pelicula.titulo }}" class="img-fluid rounded" loading="lazy" />
@@ -114,7 +116,8 @@
                   <div class="row g-3">
                     {% for pelicula in seccion.peliculas[i:i+6] %}
                       <div class="col-2">
-                        <a href="{{ url_for('peliculas.detalle', pelicula_id=pelicula.id) }}" class="cm-movie-card text-decoration-none" title="{{ pelicula.titulo }}">
+                        <a data-pelicula-id="{{ pelicula.id }}" data-bs-toggle="modal"
+            data-bs-target="#modal-info-pelicula" class="cm-movie-card text-decoration-none" title="{{ pelicula.titulo }}">
                           <div class="cm-movie-card__poster">
                             {% if pelicula.poster %}
                               <img src="{{ pelicula.poster }}" alt="{{ pelicula.titulo }}" class="img-fluid rounded" loading="lazy" />
@@ -151,7 +154,8 @@
         <div class="d-flex d-md-none flex-nowrap overflow-auto g-3 px-1 pb-3 cm-mobile-scroll mb-4"> 
           {% for pelicula in seccion.peliculas %}
             <div class="flex-shrink-0" style="width: 140px; margin-right: 1rem;">
-              <a href="{{ url_for('peliculas.detalle', pelicula_id=pelicula.id) }}" class="cm-movie-card text-decoration-none" title="{{ pelicula.titulo }}">
+              <a data-pelicula-id="{{ pelicula.id }}" data-bs-toggle="modal"
+            data-bs-target="#modal-info-pelicula" class="cm-movie-card text-decoration-none" title="{{ pelicula.titulo }}">
                 <div class="cm-movie-card__poster">
                   {% if pelicula.poster %}
                     <img src="{{ pelicula.poster }}" alt="{{ pelicula.titulo }}" class="img-fluid rounded shadow-sm" loading="lazy" />
@@ -217,7 +221,8 @@
                 <div class="row g-3">
                   {% for pelicula in peliculas[i:i+6] %}
                     <div class="col-2">
-                      <a href="{{ url_for('peliculas.detalle', pelicula_id=pelicula.id) }}" class="cm-movie-card text-decoration-none" title="{{ pelicula.titulo}}">
+                      <a data-pelicula-id="{{ pelicula.id }}" data-bs-toggle="modal"
+            data-bs-target="#modal-info-pelicula" class="cm-movie-card text-decoration-none" title="{{ pelicula.titulo}}">
                         <div class="cm-movie-card__poster">
                           {% if pelicula.poster %}
                             <img src="https://image.tmdb.org/t/p/w300{{ pelicula.poster }}" alt="{{ pelicula.titulo }}" class="img-fluid rounded" loading="lazy" />
@@ -252,7 +257,8 @@
         <div class="d-flex d-md-none flex-nowrap overflow-auto g-3 px-1 pb-2 cm-mobile-scroll">
           {% for pelicula in peliculas %}
             <div class="flex-shrink-0" style="width: 140px; margin-right: 1rem;">
-              <a href="{{ url_for('peliculas.detalle', pelicula_id=pelicula.id) }}" class="cm-movie-card text-decoration-none" title="{{ pelicula.titulo }}">
+              <a data-pelicula-id="{{ pelicula.id }}" data-bs-toggle="modal"
+            data-bs-target="#modal-info-pelicula" class="cm-movie-card text-decoration-none" title="{{ pelicula.titulo }}">
                 <div class="cm-movie-card__poster">
                   {% if pelicula.poster %}
                     <img src="https://image.tmdb.org/t/p/w300{{ pelicula.poster }}" alt="{{ pelicula.titulo }}" class="img-fluid rounded" loading="lazy" />
@@ -348,4 +354,22 @@
     </div>
   {% endif %}
 </div>
+<div class="modal modal-xl fade" id="modal-info-pelicula" data-footer="true" data-bs-keyboard="true" tabindex="-1"
+    aria-labelledby="modal-info-pelicula-label" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content" id="modal-contenido">
+            <div class="d-flex justify-content-center p-5">
+                <div class="spinner-border text-light" role="status"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    const carousel = document.getElementById('explorar-carousel');
+    document.querySelectorAll('[data-scroll-dir]').forEach((button) => {
+        button.addEventListener('click', () => {
+            carousel.scrollBy({ left: Number(button.dataset.scrollDir) * 340, behavior: 'smooth' });
+        });
+    });
+</script>
 {% endblock %}

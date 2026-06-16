@@ -34,7 +34,7 @@
                             <a href="{{ url_for('peliculas.explorar') }}" class="nav-link {% if request.endpoint in ['peliculas.explorar', 'peliculas.buscar'] %}active{% endif %}">Explorar</a>
                         </li>
                         <li class="nav-item">
-                            <a href="{{ url_for('cinematch.como_funciona') }}" class="nav-link {% if request.endpoint == 'cinematch.como_funciona' %}active{% endif %}">¿Cómo funciona?</a>
+                            <a href="{{ url_for('cinematch.index') }}#scf" class="nav-link {% if request.endpoint == 'cinematch.index#scf' %}active{% endif %}">¿Cómo funciona?</a>
                         </li>
                     </ul>
                     <!-- Botones de inicio de sesión y registro -->
@@ -84,7 +84,7 @@
         <ul class="nav justify-content-end">
             <li class="nav-item"><a href="{{ url_for('cinematch.index') }}" class="nav-link px-2 text-body-secondary">Inicio</a></li>
             <li class="nav-item"><a href="{{ url_for('peliculas.explorar') }}" class="nav-link px-2 text-body-secondary">Explorar</a></li>
-            <li class="nav-item"><a href="{{ url_for('cinematch.como_funciona') }}" class="nav-link px-2 text-body-secondary">¿Cómo funciona?</a></li>
+            <li class="nav-item"><a href="{{ url_for('cinematch.index') }}#scf" class="nav-link px-2 text-body-secondary">¿Cómo funciona?</a></li>
         </ul>
     </footer>
     <script src="{{ url_for('static', filename='js/encuesta.js') }}"></script>
