@@ -50,7 +50,7 @@
                         <div class="cm-movie-card__info">
                           <div class="cm-movie-card__title">{{ pelicula.titulo }}</div>
                           <div class="cm-movie-card__meta d-flex align-items-center justify-content-between">
-                            <span style="color: #f5c518;">★ {{ pelicula.puntuacion }}</span>
+                            <span style="color: #f5c518;">★ {{ pelicula.puntuacion | round(1) }}</span>
                             <span>{{ pelicula.fecha[:4] if pelicula.fecha else "----" }}</span>
                           </div>
                         </div>
