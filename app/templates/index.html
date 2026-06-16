@@ -284,6 +284,7 @@
     </section>
   
     <!-- CÓMO FUNCIONA (mini strip) -->
+     <section class="scf">
     <div style="max-width:1100px; margin:0 auto; padding:0 2rem 32px;" id="scf">
       <div class="cm-how-strip">
         <div class="cm-how-strip__head">¿Cómo funciona CineMatch?</div>
@@ -311,13 +312,13 @@
         </div>
       </div>
     </div>
-  
+  </section>
   
     <!-- AHORA EN TENDENCIA -->
     <section class="cm-section">
       <div class="cm-section__head">
         <h4 class="text-white-50">Ahora en tendencia</h4>
-        <a href="{{ url_for('peliculas.explorar') }}" class="cm-section__link">Ver todas →</a>
+        <a href="{{ url_for('cinematch.explorar') }}" class="cm-section__link">Ver todas →</a>
       </div>
       <div class="cm-trend-row">
         {% set trending = [

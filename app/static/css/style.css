@@ -103,6 +103,7 @@ main {
 
 .btn-crear-cuenta:hover {
     background-color: #192fa3;
+    color: #FFFFFF;
     border-color: #192fa3;
     transition: all 0.2s;
     transform: scale(1.04);
@@ -1791,5 +1792,611 @@ footer .nav-link:hover {
 
     .encuesta-grid-emociones .encuesta-opcion-logo {
         min-height: 140px;
+    }
+}
+
+
+/* ────────────────────────────────────────────────────────────────
+   explorar.css — Estilos exclusivos para la página Explorar
+   Usa las mismas variables CSS de la paleta global de CineMatch
+   ──────────────────────────────────────────────────────────────── */
+
+/* ── PÁGINA CONTENEDORA ── */
+.ex-page {
+    min-height: 100vh;
+}
+
+/* ── HERO EXPLORAR ── */
+.ex-hero {
+    padding: 64px 0 40px;
+    position: relative;
+    overflow: hidden;
+    background-image:
+        linear-gradient(to bottom, rgba(10, 14, 35, 0) 40%, rgba(10, 14, 35, 1) 100%),
+        linear-gradient(to right, rgba(10, 14, 35, 1) 0%, rgba(10, 14, 35, 0) 20%),
+        linear-gradient(to left, rgba(10, 14, 35, 1) 0%, rgba(10, 14, 35, 0) 20%),
+        url('../img/fondos/fondo_explorar.svg');
+    background-position: 50% 30%;
+    background-size: cover;
+}
+
+.ex-hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+        radial-gradient(ellipse 50% 60% at 50% 0%, rgba(59, 130, 246, 0.10) 0%, transparent 70%);
+    pointer-events: none;
+}
+
+.ex-hero__inner {
+    position: relative;
+    max-width: 95%;
+    margin: 0 auto;
+    padding: 0 2rem;
+    text-align: center;
+}
+
+.ex-hero__title {
+    font-size: clamp(28px, 4vw, 46px);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+}
+
+.ex-hero__sub {
+    font-size: 15px;
+    color: var(--text-muted);
+    margin-bottom: 32px;
+}
+
+/* ── BUSCADOR ── */
+.ex-search-wrap {
+    max-width: 720px;
+    margin: 0 auto;
+}
+
+.ex-search-form {
+    position: relative;
+    display: flex;
+    align-items: center;
+    background: rgba(15, 26, 46, 0.85);
+    border: 0.5px solid rgba(59, 130, 246, 0.30);
+    border-radius: 14px;
+    padding: 0 8px 0 16px;
+    backdrop-filter: blur(8px);
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.ex-search-form:focus-within {
+    border-color: rgba(59, 130, 246, 0.6);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.08);
+}
+
+.ex-search-icon {
+    color: var(--text-dim);
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    margin-right: 10px;
+}
+
+.ex-search-input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    font-size: 15px;
+    color: var(--text-primary);
+    padding: 14px 0;
+    min-width: 0;
+}
+
+.ex-search-input::placeholder {
+    color: var(--text-dim);
+}
+
+.ex-search-clear {
+    color: var(--text-dim);
+    font-size: 13px;
+    padding: 6px 10px;
+    text-decoration: none;
+    transition: color 0.15s;
+    flex-shrink: 0;
+}
+
+.ex-search-clear:hover {
+    color: var(--text-muted);
+}
+
+.ex-search-btn {
+    flex-shrink: 0;
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: 9px;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 9px 20px;
+    cursor: pointer;
+    transition: background 0.15s, transform 0.1s;
+    margin: 5px 0;
+}
+
+.ex-search-btn:hover {
+    background: var(--accent-glow);
+    transform: translateY(-1px);
+}
+
+/* ── SECCIÓN DE FILTROS ── */
+.ex-filters-section {
+    padding: 0 0 20px;
+}
+
+.ex-filters-inner {
+    max-width: 95%;
+    margin: 0 auto;
+    padding: 0 2rem;
+}
+
+.ex-filters-bar {
+    background: var(--bg-card);
+    border: 0.5px solid var(--border-soft);
+    border-radius: 14px;
+    padding: 18px 20px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: 16px;
+}
+
+.ex-filters-label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-muted);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    padding-bottom: 2px;
+    min-width: 60px;
+}
+
+.ex-filters-grid {
+    flex: 1;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.ex-filter-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    min-width: 130px;
+    flex: 1;
+}
+
+.ex-filter-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    padding-left: 2px;
+}
+
+.ex-select-wrap {
+    position: relative;
+}
+
+.ex-select {
+    width: 100%;
+    appearance: none;
+    -webkit-appearance: none;
+    background: var(--bg-card2);
+    border: 0.5px solid var(--border-soft);
+    border-radius: 9px;
+    color: var(--text-primary);
+    font-size: 13px;
+    padding: 8px 32px 8px 12px;
+    cursor: pointer;
+    transition: border-color 0.15s, background 0.15s;
+    outline: none;
+}
+
+.ex-select:focus,
+.ex-select:hover {
+    border-color: rgba(59, 130, 246, 0.35);
+    background: rgba(17, 29, 51, 0.9);
+}
+
+.ex-select option {
+    background: #0f1a2e;
+    color: var(--text-primary);
+}
+
+.ex-select-arrow {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-dim);
+    pointer-events: none;
+    display: flex;
+    align-items: center;
+}
+
+/* Botón limpiar filtros */
+.ex-clear-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 12px;
+    color: var(--text-dim);
+    background: transparent;
+    border: 0.5px solid var(--border-soft);
+    border-radius: 8px;
+    padding: 8px 14px;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: color 0.15s, border-color 0.15s;
+    align-self: flex-end;
+    height: fit-content;
+}
+
+.ex-clear-btn:hover {
+    color: var(--text-muted);
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+/* ── SECCIÓN DE RESULTADOS ── */
+.ex-results-section {
+    padding: 8px 0 60px;
+}
+
+.ex-results-inner {
+    max-width: 95%;
+    margin: 0 auto;
+    padding: 0 2rem;
+}
+
+.ex-results-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.ex-results-count {
+    font-size: 13px;
+    color: var(--text-dim);
+    margin-left: auto;
+    /* empuja el count a la derecha si las pills no ocupan todo */
+}
+
+.ex-results-count em {
+    color: var(--text-muted);
+    font-style: normal;
+}
+
+/* ── GRID DE PELÍCULAS ── */
+.ex-movies-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 14px;
+}
+
+.ex-movie-card {
+    background: var(--bg-card);
+    border: 0.5px solid var(--border-soft);
+    border-radius: 10px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: border-color 0.15s, transform 0.15s;
+    display: block;
+}
+
+.ex-movie-card:hover {
+    border-color: var(--border);
+    transform: translateY(-3px);
+}
+
+.ex-movie-card__poster {
+    aspect-ratio: 2/3;
+    background: var(--bg-card2);
+    position: relative;
+    overflow: hidden;
+}
+
+.ex-movie-card__poster img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.3s;
+}
+
+.ex-movie-card:hover .ex-movie-card__poster img {
+    transform: scale(1.04);
+}
+
+.ex-movie-card__no-poster {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-dim);
+}
+
+.ex-movie-card__overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 20px 8px 6px;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.75) 0%, transparent 100%);
+    display: flex;
+    justify-content: flex-end;
+}
+
+.ex-movie-card__rating {
+    font-size: 11px;
+    font-weight: 600;
+    color: #f5c518;
+}
+
+.ex-movie-card__info {
+    padding: 8px 10px 10px;
+}
+
+.ex-movie-card__title {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-bottom: 3px;
+}
+
+.ex-movie-card__meta {
+    font-size: 11px;
+    color: var(--text-dim);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.ex-movie-card__dot {
+    opacity: 0.5;
+}
+
+/* ── ESTADO VACÍO ── */
+.ex-empty {
+    text-align: center;
+    padding: 80px 20px;
+}
+
+.ex-empty__icon {
+    font-size: 48px;
+    margin-bottom: 16px;
+    opacity: 0.5;
+}
+
+.ex-empty__title {
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+}
+
+.ex-empty__sub {
+    font-size: 14px;
+    color: var(--text-muted);
+    max-width: 400px;
+    margin: 0 auto;
+    line-height: 1.6;
+}
+
+.ex-empty__sub em {
+    color: var(--text-primary);
+    font-style: normal;
+}
+
+/* ── PAGINACIÓN ── */
+.ex-pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    margin-top: 48px;
+    flex-wrap: wrap;
+}
+
+.ex-page-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 36px;
+    height: 36px;
+    padding: 0 10px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-muted);
+    background: var(--bg-card);
+    border: 0.5px solid var(--border-soft);
+    text-decoration: none;
+    transition: color 0.15s, border-color 0.15s, background 0.15s;
+}
+
+.ex-page-btn:hover {
+    color: var(--text-primary);
+    border-color: rgba(59, 130, 246, 0.3);
+    background: var(--bg-card2);
+}
+
+.ex-page-btn--active {
+    color: #fff;
+    background: var(--accent);
+    border-color: var(--accent);
+    pointer-events: none;
+}
+
+.ex-page-ellipsis {
+    font-size: 13px;
+    color: var(--text-dim);
+    padding: 0 4px;
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 768px) {
+    .ex-hero {
+        padding: 48px 0 28px;
+        background-image:
+            linear-gradient(to bottom, rgba(10, 14, 35, 0) 40%, rgba(10, 14, 35, 1) 100%),
+            url('../img/fondos/fondo_explorar.svg');
+        background-position: center;
+    }
+
+    .ex-hero__inner,
+    .ex-filters-inner,
+    .ex-results-inner {
+        padding: 0 1rem;
+    }
+
+    .ex-filters-bar {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .ex-filters-label {
+        margin-bottom: 4px;
+    }
+
+    .ex-filters-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+    }
+
+    .ex-filter-group {
+        min-width: unset;
+        flex: unset;
+    }
+
+    .ex-movies-grid {
+        grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+        gap: 10px;
+    }
+
+    .ex-movie-card {
+        border: none;
+    }
+}
+
+@media (max-width: 480px) {
+
+    .ex-hero__inner,
+    .ex-filters-inner,
+    .ex-results-inner {
+        padding: 0 0.75rem;
+    }
+
+    .ex-filters-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .ex-movies-grid {
+        grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+        gap: 8px;
+    }
+
+    .ex-search-btn {
+        display: none;
+        /* en mobile el submit lo hace el Enter o el cambio de filtro */
+    }
+
+    .ex-search-form {
+        padding-right: 14px;
+    }
+}
+
+/* ── SELECTOR TIPO ── */
+.ex-tipo-wrap {
+    max-width: 95%;
+    margin: 0 auto;
+    padding: 0 2rem 16px;
+}
+
+.ex-tipo-bar {
+    display: inline-flex;
+    background: var(--bg-card);
+    border: 0.5px solid var(--border-soft);
+    border-radius: 12px;
+    padding: 4px;
+    gap: 2px;
+    flex-shrink: 0;
+}
+
+.ex-tipo-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 16px;
+    border-radius: 9px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-muted);
+    text-decoration: none;
+    transition: color 0.15s, background 0.15s;
+    white-space: nowrap;
+}
+
+.ex-tipo-btn:hover {
+    color: var(--text-primary);
+    background: var(--bg-card2);
+}
+
+.ex-tipo-btn--active {
+    background: var(--accent);
+    color: #fff;
+}
+
+.ex-tipo-btn--active:hover {
+    background: var(--accent-glow);
+    color: #fff;
+}
+
+@media (max-width: 768px) {
+    .ex-results-head {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .ex-tipo-wrap {
+        padding: 0 1rem 14px;
+    }
+
+    .ex-results-count {
+        margin-left: 0;
+    }
+
+    .ex-tipo-bar {
+        width: 100%;
+    }
+
+    .ex-tipo-btn {
+        flex: 1;
+        justify-content: center;
+        padding: 8px 10px;
     }
 }

@@ -1,75 +1,348 @@
-{% extends "base.html" %} {% block title %}{{ titulo_seccion }} — CineMatch{% endblock %} {% block content %}
-<h1 class="section-titlev margen-nav">{{ titulo_seccion }}</h1>
+{% extends "base.html" %}
+{% block title %}Explorar — CineMatch{% endblock %}
+{% block content %}
 
-<!-- BUSCADOR -->
-<form class="navbar__search" action="{{ url_for('peliculas.buscar') }}" method="get">
-    <input type="text" name="q" placeholder="Buscar película..." value="{{ query if query else '' }}"
-        class="navbar__input" />
-    <button type="submit" class="navbar__btn">Buscar</button>
-</form>
-{% if peliculas %}
-<style>
-    #explorar-carousel {
-        scroll-behavior: smooth;
-        scrollbar-width: none;
-    }
+<div class="ex-page">
 
-    #explorar-carousel::-webkit-scrollbar {
-        display: none;
-    }
-</style>
-<div class="d-flex align-items-center gap-2 mt-4">
-    <button type="button" class="btn btn-outline-light flex-shrink-0" data-scroll-dir="-1" aria-label="Anterior"
-        style="width: 2.5rem; height: 2.5rem; padding: 0;">
-        <i class="bi bi-chevron-left"></i>
-    </button>
+    <!-- ── HERO EXPLORAR ── -->
+    <section class="ex-hero mt-5">
+        <div class="ex-hero__inner">
+            <h1 class="ex-hero__title">Explorá el catálogo</h1>
+            <p class="ex-hero__sub">Encontrá tu próxima película o serie entre miles de títulos</p>
 
-    <div id="explorar-carousel" class="d-flex flex-nowrap gap-3 overflow-auto pb-2">
-        {% for pelicula in peliculas %}
-        <div class="card flex-shrink-0" data-pelicula-id="{{ pelicula.id }}" data-bs-toggle="modal"
-            data-bs-target="#modal-info-pelicula" style="width: 17rem; cursor: pointer;">
-            <div class="card__img-wrapper">
-                {% if pelicula.poster %}
-                <img src="{{ pelicula.poster }}" alt="{{ pelicula.titulo }}" class="card__img" loading="lazy" />
-                {% else %}
-                <div class="card__no-img">Sin imagen</div>
-                {% endif %}
-                <span class="card__score">⭐ {{ "%.1f"|format(pelicula.puntuacion) }}</span>
-            </div>
-            <div class="card__body">
-                <h2 class="card__title">{{ pelicula.titulo }}</h2>
-                <p class="card__date">📅 {{ pelicula.fecha if pelicula.fecha else "Fecha desconocida" }}</p>
-                <p class="card__desc">{{ pelicula.descripcion[:120] }}{% if pelicula.descripcion|length > 120 %}...{%
-                    endif %}</p>
+            <!-- Buscador -->
+            <div class="ex-search-wrap">
+                <form method="GET" action="{{ url_for('cinematch.explorar') }}" class="ex-search-form">
+                    <span class="ex-search-icon">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="11" cy="11" r="8" />
+                            <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                        </svg>
+                    </span>
+                    <input type="text" name="q" class="ex-search-input"
+                        placeholder="Buscá por título, actor, director, género…" value="{{ request.args.get('q', '') }}"
+                        autocomplete="off" />
+                    {% if request.args.get('q') %}
+                    <a href="{{ url_for('cinematch.explorar') }}" class="ex-search-clear" title="Limpiar búsqueda">✕</a>
+                    {% endif %}
+                    <button type="submit" class="ex-search-btn">Buscar</button>
+                </form>
             </div>
         </div>
-        {% endfor %}
-    </div>
+    </section>
 
-    <button type="button" class="btn btn-outline-light flex-shrink-0" data-scroll-dir="1" aria-label="Siguiente"
-        style="width: 2.5rem; height: 2.5rem; padding: 0;">
-        <i class="bi bi-chevron-right"></i>
-    </button>
+    <!-- ── FILTROS ── -->
+    <section class="ex-filters-section">
+        <div class="ex-filters-inner">
+            <form method="GET" action="{{ url_for('cinematch.explorar') }}" id="filters-form">
+                <!-- Mantener búsqueda activa si hay -->
+                {% if request.args.get('q') %}
+                <input type="hidden" name="q" value="{{ request.args.get('q') }}">
+                {% endif %}
+
+                <div class="ex-filters-bar">
+                    <div class="ex-filters-label">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3" />
+                        </svg>
+                        Filtros
+                    </div>
+
+                    <div class="ex-filters-grid">
+
+                        <!-- Género -->
+                        <div class="ex-filter-group">
+                            <label class="ex-filter-label" for="f-genero">Género</label>
+                            <div class="ex-select-wrap">
+                                <select name="genero" id="f-genero" class="ex-select" onchange="this.form.submit()">
+                                    <option value="">Todos</option>
+                                    {% for g in generos %}
+                                    <option value="{{ g.id }}" {% if request.args.get('genero')|string==g.id|string
+                                        %}selected{% endif %}>{{ g.nombre }}</option>
+                                    {% endfor %}
+                                </select>
+                                <span class="ex-select-arrow">
+                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="2.5">
+                                        <polyline points="6 9 12 15 18 9" />
+                                    </svg>
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- Año -->
+                        <div class="ex-filter-group">
+                            <label class="ex-filter-label" for="f-anio">Año</label>
+                            <div class="ex-select-wrap">
+                                <select name="anio" id="f-anio" class="ex-select" onchange="this.form.submit()">
+                                    <option value="">Todos</option>
+                                    {% for anio in anios %}
+                                    <option value="{{ anio }}" {% if request.args.get('anio')|string==anio|string
+                                        %}selected{% endif %}>{{ anio }}</option>
+                                    {% endfor %}
+                                </select>
+                                <span class="ex-select-arrow">
+                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="2.5">
+                                        <polyline points="6 9 12 15 18 9" />
+                                    </svg>
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- Plataforma -->
+                        <div class="ex-filter-group">
+                            <label class="ex-filter-label" for="f-plataforma">Plataforma</label>
+                            <div class="ex-select-wrap">
+                                <select name="plataforma" id="f-plataforma" class="ex-select"
+                                    onchange="this.form.submit()">
+                                    <option value="">Todas</option>
+                                    {% for p in plataformas %}
+                                    <option value="{{ p.id }}" {% if request.args.get('plataforma')|string==p.id|string
+                                        %}selected{% endif %}>{{ p.nombre }}</option>
+                                    {% endfor %}
+                                </select>
+                                <span class="ex-select-arrow">
+                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="2.5">
+                                        <polyline points="6 9 12 15 18 9" />
+                                    </svg>
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- Puntaje mínimo -->
+                        <div class="ex-filter-group">
+                            <label class="ex-filter-label" for="f-puntaje">Puntaje mínimo</label>
+                            <div class="ex-select-wrap">
+                                <select name="puntaje" id="f-puntaje" class="ex-select" onchange="this.form.submit()">
+                                    <option value="">Cualquiera</option>
+                                    <option value="9" {% if request.args.get('puntaje')=='9' %}selected{% endif %}>9+
+                                    </option>
+                                    <option value="8" {% if request.args.get('puntaje')=='8' %}selected{% endif %}>8+
+                                    </option>
+                                    <option value="7" {% if request.args.get('puntaje')=='7' %}selected{% endif %}>7+
+                                    </option>
+                                    <option value="6" {% if request.args.get('puntaje')=='6' %}selected{% endif %}>6+
+                                    </option>
+                                </select>
+                                <span class="ex-select-arrow">
+                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="2.5">
+                                        <polyline points="6 9 12 15 18 9" />
+                                    </svg>
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- Ordenar por -->
+                        <div class="ex-filter-group">
+                            <label class="ex-filter-label" for="f-orden">Ordenar por</label>
+                            <div class="ex-select-wrap">
+                                <select name="orden" id="f-orden" class="ex-select" onchange="this.form.submit()">
+                                    <option value="popularidad" {% if request.args.get('orden', 'popularidad'
+                                        )=='popularidad' %}selected{% endif %}>Popularidad</option>
+                                    <option value="puntaje" {% if request.args.get('orden')=='puntaje' %}selected{%
+                                        endif %}>Mejor puntaje</option>
+                                    <option value="fecha_desc" {% if request.args.get('orden')=='fecha_desc'
+                                        %}selected{% endif %}>Más recientes</option>
+                                    <option value="fecha_asc" {% if request.args.get('orden')=='fecha_asc' %}selected{%
+                                        endif %}>Más antiguas</option>
+                                    <option value="titulo" {% if request.args.get('orden')=='titulo' %}selected{% endif
+                                        %}>Título A–Z</option>
+                                </select>
+                                <span class="ex-select-arrow">
+                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="2.5">
+                                        <polyline points="6 9 12 15 18 9" />
+                                    </svg>
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- Duración -->
+                        <div class="ex-filter-group">
+                            <label class="ex-filter-label" for="f-duracion">Duración</label>
+                            <div class="ex-select-wrap">
+                                <select name="duracion" id="f-duracion" class="ex-select" onchange="this.form.submit()">
+                                    <option value="">Cualquiera</option>
+                                    <option value="corta" {% if request.args.get('duracion')=='corta' %}selected{% endif
+                                        %}>Menos de 90 min</option>
+                                    <option value="media" {% if request.args.get('duracion')=='media' %}selected{% endif
+                                        %}>90 – 120 min</option>
+                                    <option value="larga" {% if request.args.get('duracion')=='larga' %}selected{% endif
+                                        %}>Más de 120 min</option>
+                                </select>
+                                <span class="ex-select-arrow">
+                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="2.5">
+                                        <polyline points="6 9 12 15 18 9" />
+                                    </svg>
+                                </span>
+                            </div>
+                        </div>
+
+                    </div><!-- /ex-filters-grid -->
+
+                    <!-- Limpiar filtros -->
+                    {% set hay_filtros = request.args.get('q') or request.args.get('genero') or request.args.get('anio')
+                    or request.args.get('plataforma') or request.args.get('puntaje') or request.args.get('duracion')
+                    or (request.args.get('tipo') and request.args.get('tipo') != 'todo')
+                    or (request.args.get('orden') and request.args.get('orden') != 'popularidad') %}
+                    {% if hay_filtros %}
+                    <a href="{{ url_for('cinematch.explorar') }}" class="ex-clear-btn">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.5">
+                            <line x1="18" y1="6" x2="6" y2="18" />
+                            <line x1="6" y1="6" x2="18" y2="18" />
+                        </svg>
+                        Limpiar filtros
+                    </a>
+                    {% endif %}
+
+                </div><!-- /ex-filters-bar -->
+            </form>
+        </div>
+    </section>
+
+    <!-- ── RESULTADOS ── -->
+    <section class="ex-results-section">
+        <div class="ex-results-inner">
+
+            <!-- Cabecera de resultados + selector tipo -->
+            <div class="ex-results-head">
+                <div class="ex-tipo-bar">
+                    <a href="{{ url_tipo_todo }}"
+                        class="ex-tipo-btn {% if filtros.tipo == 'todo' %}ex-tipo-btn--active{% endif %}">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <rect x="2" y="2" width="9" height="9" rx="1" />
+                            <rect x="13" y="2" width="9" height="9" rx="1" />
+                            <rect x="2" y="13" width="9" height="9" rx="1" />
+                            <rect x="13" y="13" width="9" height="9" rx="1" />
+                        </svg>
+                        Todo
+                    </a>
+                    <a href="{{ url_tipo_pelicula }}"
+                        class="ex-tipo-btn {% if filtros.tipo == 'pelicula' %}ex-tipo-btn--active{% endif %}">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <rect x="2" y="2" width="20" height="20" rx="3" />
+                            <path d="M7 2v20M17 2v20M2 12h20M2 7h5M2 17h5M17 7h5M17 17h5" />
+                        </svg>
+                        Películas
+                    </a>
+                    <a href="{{ url_tipo_serie }}"
+                        class="ex-tipo-btn {% if filtros.tipo == 'serie' %}ex-tipo-btn--active{% endif %}">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <rect x="2" y="7" width="20" height="15" rx="2" />
+                            <path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+                            <line x1="12" y1="12" x2="12" y2="16" />
+                            <line x1="10" y1="14" x2="14" y2="14" />
+                        </svg>
+                        Series
+                    </a>
+                </div>
+
+                {% if request.args.get('q') %}
+                <span class="ex-results-count">
+                    Resultados para <em>"{{ request.args.get('q') }}"</em>
+                    {% if peliculas %}&nbsp;·&nbsp;{{ total }} títulos{% endif %}
+                </span>
+                {% else %}
+                <span class="ex-results-count">
+                    {% if total %}{{ total }} títulos{% else %}Catálogo completo{% endif %}
+                </span>
+                {% endif %}
+            </div>
+
+            <!-- Grid de películas -->
+            {% if peliculas %}
+            <div class="ex-movies-grid">
+                {% for pelicula in peliculas %}
+                <a data-pelicula-id="{{ pelicula.id }}" data-bs-toggle="modal" data-bs-target="#modal-info-pelicula"
+                    class="ex-movie-card text-decoration-none" title="{{ pelicula.titulo }}">
+                    <div class="ex-movie-card__poster">
+                        {% if pelicula.poster %}
+                        <img src="https://image.tmdb.org/t/p/w300{{ pelicula.poster }}" alt="{{ pelicula.titulo }}"
+                            loading="lazy" />
+                        {% else %}
+                        <div class="ex-movie-card__no-poster">
+                            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="1.5" opacity="0.3">
+                                <rect x="2" y="2" width="20" height="20" rx="3" />
+                                <path d="M7 8h10M7 12h6" />
+                            </svg>
+                        </div>
+                        {% endif %}
+                        <div class="ex-movie-card__overlay">
+                            <span class="ex-movie-card__rating">★ {{ pelicula.puntuacion | round(1) }}</span>
+                        </div>
+                    </div>
+                    <div class="ex-movie-card__info">
+                        <div class="ex-movie-card__title">{{ pelicula.titulo }}</div>
+                        <div class="ex-movie-card__meta">
+                            <span>{{ pelicula.fecha[:4] if pelicula.fecha else "----" }}</span>
+                            {% if pelicula.genero %}
+                            <span class="ex-movie-card__dot">·</span>
+                            <span>{{ pelicula.genero }}</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </a>
+                {% endfor %}
+            </div>
+
+            <!-- Paginación -->
+            {% if paginas_info and paginas > 1 %}
+            <div class="ex-pagination">
+                {% if url_anterior %}
+                <a href="{{ url_anterior }}" class="ex-page-btn">← Anterior</a>
+                {% endif %}
+
+                {% for p in paginas_info %}
+                {% if p.tipo == 'ellipsis' %}
+                <span class="ex-page-ellipsis">…</span>
+                {% elif p.num == pagina_actual %}
+                <span class="ex-page-btn ex-page-btn--active">{{ p.num }}</span>
+                {% else %}
+                <a href="{{ p.url }}" class="ex-page-btn">{{ p.num }}</a>
+                {% endif %}
+                {% endfor %}
+
+                {% if url_siguiente %}
+                <a href="{{ url_siguiente }}" class="ex-page-btn">Siguiente →</a>
+                {% endif %}
+            </div>
+            {% endif %}
+
+            {% else %}
+            <!-- Estado vacío -->
+            <div class="ex-empty">
+                <div class="ex-empty__icon">🎬</div>
+                <div class="ex-empty__title">Sin resultados</div>
+                <div class="ex-empty__sub">
+                    {% if request.args.get('q') %}
+                    No encontramos títulos para <em>"{{ request.args.get('q') }}"</em>. Probá con otra búsqueda o cambiá
+                    los filtros.
+                    {% else %}
+                    No hay películas que coincidan con los filtros aplicados.
+                    {% endif %}
+                </div>
+                <a href="{{ url_for('cinematch.explorar') }}" class="btn-hero-primary"
+                    style="margin-top: 20px; display:inline-flex;">Ver todo el catálogo</a>
+            </div>
+            {% endif %}
+
+        </div>
+    </section>
+
 </div>
 
-<!-- PAGINACIÓN -->
-{% if total_paginas > 1 %}
-<nav class="pagination margen-footer">
-    {% if pagina_actual > 1 %}
-    <a href="?{% if query %}q={{ query }}&{% endif %}page={{ pagina_actual - 1 }}" class="pagination__btn">←
-        Anterior</a> {% endif %}
-
-    <span class="pagination__info">Página {{ pagina_actual }} de {{ total_paginas }}</span> {% if pagina_actual
-    < total_paginas %} <a href="?{% if query %}q={{ query }}&{% endif %}page={{ pagina_actual + 1 }}"
-        class="pagination__btn">Siguiente →</a>
-        {% endif %}
-</nav>
-{% endif %} {% else %}
-<div class="empty">
-    <p class="empty__text">😕 No se encontraron resultados para "<strong>{{ query }}</strong>".</p>
-    <a href="{{ url_for('peliculas.index') }}" class="btn">Volver al inicio</a>
-</div>
-{% endif %}
+<!-- Modal reutilizado del inicio -->
 <div class="modal modal-xl fade" id="modal-info-pelicula" data-footer="true" data-bs-keyboard="true" tabindex="-1"
     aria-labelledby="modal-info-pelicula-label" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
@@ -80,12 +353,5 @@
         </div>
     </div>
 </div>
-<script>
-    const carousel = document.getElementById('explorar-carousel');
-    document.querySelectorAll('[data-scroll-dir]').forEach((button) => {
-        button.addEventListener('click', () => {
-            carousel.scrollBy({ left: Number(button.dataset.scrollDir) * 340, behavior: 'smooth' });
-        });
-    });
-</script>
+
 {% endblock %}
