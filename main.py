@@ -1,12 +1,3 @@
-"""
-main.py
-───────
-Punto de entrada de la aplicación.
-
-Uso:
-    python main.py
-"""
-
 from flask import Flask
 from config.config import Config
 
@@ -18,25 +9,22 @@ from app.controller.controlador_usuarios import usuarios_bp
 
 from app.services.google_oauth import init_oauth
 
-def create_app() -> Flask:
-    """
-    Crea y configura la instancia de Flask.
 
-    Returns:
-        Flask: Aplicación lista para correr.
-    """
+def create_app() -> Flask:
+
     app = Flask(
         __name__,
-        template_folder="app/templates",  # Jinja2 buscará los templates aquí
-        static_folder="app/static",       # Archivos estáticos (CSS, JS, img)
+        template_folder="app/templates",
+        static_folder="app/static",
     )
 
-    # Cargar configuración desde config/config.py
+    # Cargar configuración
     app.config.from_object(Config)
 
+    # Inicializar OAuth
     init_oauth(app)
 
-    # Registrar blueprints del controlador
+    # Registrar blueprints
     app.register_blueprint(cinematch_bp)
     app.register_blueprint(peliculas_bp)
     app.register_blueprint(series_bp)
@@ -46,9 +34,11 @@ def create_app() -> Flask:
     return app
 
 
-# ── Inicio ────────────────────────────────────────────────────────────────
+# ← ESTO ES LO NUEVO
+app = create_app()
+
+
 if __name__ == "__main__":
-    app = create_app()
     app.run(
         debug=Config.DEBUG,
         host="0.0.0.0",
