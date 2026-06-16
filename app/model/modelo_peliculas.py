@@ -322,3 +322,70 @@ class PeliculaModel:
             "pagina_actual": pagina,
             "query": query,
         }
+
+    # Métodos para recomendaciones personalizadas segun preferencias del usuario (plataformas e idiomas)
+    def obtener_por_preferencias(self, preferencias: dict, pagina: int = 1) -> list:
+            """
+            Consulta las películas recomendadas cruzando las plataformas e idiomas del usuario.
+            """
+            plataformas = preferencias.get("plataformas", [])
+            idiomas = preferencias.get("idiomas", [])
+
+            # TMDB une filtros OR con el pipe "|"
+            providers_str = "|".join(map(str, plataformas))
+            idiomas_str = "|".join(idiomas)
+
+            params = {
+                "sort_by": "popularity.desc",
+                "page": pagina,
+                "watch_region": "AR"  # Región fija en Argentina
+            }
+
+            if providers_str:
+                params["with_watch_providers"] = providers_str
+            if idiomas_str:
+                params["with_original_language"] = idiomas_str
+
+            # Usamos tu método privado nativo _get mapeando al endpoint discover
+            data = self._get("/discover/movie", params)
+
+            return [
+                {
+                    "id": p["id"],
+                    "titulo": p.get("title", "Sin título"),
+                    "descripcion": p.get("overview", "Sin descripción disponible."),
+                    "puntuacion": p.get("vote_average", 0),
+                    "poster": self.construir_url_imagen(p.get("poster_path")),
+                    "fecha": p.get("release_date", ""),
+                }
+                for p in data.get("results", [])
+            ]
+
+    def obtener_por_plataforma_individual(self, plataforma_id: int, idiomas: list) -> list:
+        """
+        Trae películas populares exclusivamente de una plataforma (ej: Solo Netflix) 
+        respetando los filtros de idioma del usuario.
+        """
+        idiomas_str = "|".join(idiomas)
+
+        params = {
+            "sort_by": "popularity.desc",
+            "page": 1,
+            "watch_region": "AR",
+            "with_watch_providers": plataforma_id
+        }
+        
+        if idiomas_str:
+            params["with_original_language"] = idiomas_str
+
+        data = self._get("/discover/movie", params)
+
+        return [
+            {
+                "id": p["id"],
+                "titulo": p.get("title", "Sin título"),
+                "poster": self.construir_url_imagen(p.get("poster_path")),
+                "puntuacion": p.get("vote_average", 0),
+            }
+            for p in data.get("results", [])
+        ]

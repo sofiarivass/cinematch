@@ -567,7 +567,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   .cm-section {
     max-width: 95%;
     margin: 0 auto;
-    padding: 0 2rem 60px;
+    padding: 0 2rem 30px;
   }
 
   .cm-section__head {
@@ -599,6 +599,15 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   }
 
   .cm-section__link:hover { text-decoration: underline; }
+
+  .cm-mobile-scroll {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  .cm-mobile-scroll::-webkit-scrollbar {
+    display: none;
+  }
 
   /* ── CARRUSEL DE PELÍCULAS ── */
   .cm-movies-row {
@@ -773,7 +782,11 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     margin: 0 auto 60px;
   }
 
-  .cm-quiz-banner__left {}
+  .cm-quiz-banner__left {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
 
   .cm-quiz-banner__title {
     font-size: 17px;
@@ -821,14 +834,15 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 
   /* ── RESPONSIVE ── */
   @media (max-width: 768px) {
-    .cm-hero__inner { grid-template-columns: 1fr; }
+    .cm-hero__inner { grid-template-columns: 1fr; padding: 0 1rem; }
+    .cm-section { padding: 0 1rem 20px; }
     .cm-hero__visual { display: none; }
     .cm-how-strip__steps { grid-template-columns: 1fr; gap: 16px; }
     .cm-how-arrow { display: none; }
     .cm-quiz-banner { flex-direction: column; text-align: center; }
-  }
-
-  @media (max-width: 480px) {
+    .cm-movie-card {
+      border: none;
+    }
     .cm-hero { 
       width: 100%; padding: 10px 0px 15px; background-image: 
         linear-gradient(to bottom, rgba(10, 14, 35, 0) 50%, rgba(10, 14, 35, 1) 100%),
@@ -838,7 +852,24 @@ input[type="date"]::-webkit-calendar-picker-indicator {
       background-position: 50% 85%;
       background-size: cover; 
     }
-    .cm-hero__inner { width: 100%; padding: 0 1rem; }
-    .cm-section { padding: 0 0.5rem 60px; }   
-    .cm-section {width: 100%; padding: 0 1rem 60px; }
+  }
+
+  @media (max-width: 480px) {
+    /* .cm-hero { 
+      width: 100%; padding: 10px 0px 15px; background-image: 
+        linear-gradient(to bottom, rgba(10, 14, 35, 0) 50%, rgba(10, 14, 35, 1) 100%),
+        linear-gradient(to right, rgba(10, 14, 35, 1) 0%, rgba(10, 14, 35, 0) 15%),
+        linear-gradient(to left, rgba(10, 14, 35, 1) 0%, rgba(10, 14, 35, 0) 15%), 
+        url('../img/fondos/fondo_inicio_mobil.png');
+      background-position: 50% 85%;
+      background-size: cover; 
+    } */
+    .cm-hero__inner { 
+      width: 100%; 
+      padding: 0 0.5rem; 
+    }
+    .cm-section { 
+      padding: 0 0.5rem 20px; 
+      width: 100%;
+    }   
   }
