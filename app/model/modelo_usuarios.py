@@ -257,26 +257,39 @@ class UsuarioModel:
             return {
                 "exito": True,
                 "mensaje": f"Bienvenido, {usuario['nombre_usuario']}",
+                "usuario": usuario  # Agregamos el objeto usuario para que el controlador lo lea cómodamente
             }
         except Exception as e:
             return {"exito": False, "mensaje": f"Error al autenticar: {str(e)}"}
 
-    def guardar_preferencias(self, nombre_usuario, preferencias_dict):
+    def guardar_preferencias(self, identificador, preferencias_dict):
         """
-        Guarda el objeto/diccionario de preferencias consolidado dentro del usuario.
+        🟢 MÉTODO OPTIMIZADO: Guarda las preferencias del usuario.
+        Acepta tanto un string de ObjectId (usuario_id) como un nombre de usuario (nombre_usuario).
         """
-        # Usamos el método actualizar que ya tenías programado
-        return self.actualizar(nombre_usuario, {"preferencias": preferencias_dict})
-    
-    # Método adicional para generar un nombre de usuario único a partir del email
+        try:
+            # 1. Intentamos determinar si el identificador es un ObjectId válido de 24 caracteres hex
+            if isinstance(identificador, str) and len(identificador) == 24 and all(c in "0123456789abcdefABCDEF" for c in identificador):
+                criterio = {"_id": ObjectId(identificador)}
+            else:
+                # 2. Si no cumple las características de un ID, asumimos que es el nombre_usuario string tradicional
+                criterio = {"nombre_usuario": identificador}
+
+            resultado = self.usuarios.update_one(
+                criterio, 
+                {"$set": {"preferencias": preferencias_dict}}
+            )
+            return resultado.modified_count > 0 or resultado.matched_count > 0
+        except Exception as e:
+            print(f"Error al guardar preferencias en MongoDB: {e}")
+            return False
+
     def generar_nombre_usuario_unico(self, email):
         """
         Genera un nombre de usuario único a partir del email.
         """
-
         base = email.split("@")[0]
         nombre_usuario = base
-
         contador = 1
 
         while self.obtener_por_nombre(nombre_usuario):

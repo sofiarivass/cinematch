@@ -36,7 +36,12 @@ def index():
         # Buscamos los datos del usuario en MongoDB
         usuario = modelo_usuario.obtener_por_nombre(nombre_usuario)
 
-        if usuario and "preferencias" in usuario:
+        if usuario:
+            # 🟢 CONTROL DE SEGURIDAD: Si está logueado pero no completó la encuesta,
+            # lo redirigimos obligatoriamente para que configure su perfil.
+            if not usuario.get("preferencias") or not usuario["preferencias"].get("plataformas"):
+                return redirect(url_for("cinematch.encuesta_perfil", paso=1))
+
             preferencias = usuario["preferencias"]
 
             # Traemos el mix de películas que cumplen con sus gustos combinados
@@ -46,8 +51,11 @@ def index():
             secciones_por_plataforma = []
 
             # Obtenemos los nombres reales mapeando los providers disponibles en tu modelo
-            todos_los_providers = modelo_peliculas.obtener_providers_ar()
-            mapa_nombres = {p["id"]: p["nombre"] for p in todos_los_providers}
+            principales = modelo_peliculas.obtener_providers_ar()
+            otras = modelo_peliculas.obtener_todos_providers_ar()
+            catálogo_completo = principales + otras
+
+            mapa_nombres = {p["id"]: p["nombre"] for p in catálogo_completo}
 
             for p_id in preferencias.get("plataformas", []):
                 nombre_stream = mapa_nombres.get(p_id, f"Servicio {p_id}")
@@ -59,9 +67,7 @@ def index():
                     secciones_por_plataforma.append(
                         {
                             "nombre_plataforma": nombre_stream,
-                            "peliculas": movies_plataforma[
-                                :6
-                            ],  # Mandamos las 6 primeras para el feed
+                            "peliculas": movies_plataforma[:6],  # Mandamos las 6 primeras para el feed
                         }
                     )
 
@@ -81,8 +87,6 @@ def index():
 
 
 # ── BUSCAR (redirige a explorar con q=) ───────────────────────────────────────
-
-
 @cinematch_bp.route("/buscar")
 def buscar():
     query = request.args.get("q", "").strip()
@@ -184,16 +188,19 @@ def explorar():
 # SESIÓN DE USUARIO Y RUTA DE ENCUESTA
 @cinematch_bp.route("/encuesta-perfil", methods=["GET", "POST"])
 def encuesta_perfil():
+    # 🟢 CONTROL DE ACCESO: Si no hay usuario en sesión, no puede hacer la encuesta
+    if not session.get("usuario_id"):
+        flash("Debes iniciar sesión para personalizar tu perfil.", "warning")
+        return redirect(url_for("usuarios.login"))
+
     if request.method == "POST":
         paso = int(request.form.get("paso", 0))
-        error = False # 🟢 NUEVO: Bandera para controlar si hay error
+        error = False 
 
-        # Validación y guardado según el paso
         if paso == 1:
             plataformas = request.form.getlist("plataformas")
             otras = request.form.get("plataformas_otras", "")
             
-            # Validamos que haya seleccionado al menos una o escrito otra
             if not plataformas and not otras:
                 error = True
             else:
@@ -210,7 +217,6 @@ def encuesta_perfil():
 
         elif paso == 3:
             idiomas = request.form.getlist("idiomas")
-            # Podrías tener idiomas en inputs ocultos si usan la opción "Otro"
             if not idiomas:
                 error = True
             else:
@@ -223,7 +229,7 @@ def encuesta_perfil():
             else:
                 session["formato"] = formato
 
-                # 🟢 ENCUESTA FINALIZADA
+                # ENCUESTA FINALIZADA - Recopilación
                 preferencias_finales = {
                     "plataformas": session.get("plataformas", []),
                     "disponibilidad": session.get("disponibilidad", "any"),
@@ -231,23 +237,27 @@ def encuesta_perfil():
                     "formato": session.get("formato", "any"),
                 }
 
-                usuario_actual = session.get("nombre_usuario")
-                if usuario_actual:
-                    modelo_usuario.guardar_preferencias(usuario_actual, preferencias_finales)
+                # 🟢 Guardamos usando el ID de usuario único que es más consistente
+                usuario_id = session.get("usuario_id")
+                if usuario_id:
+                    modelo_usuario.guardar_preferencias(usuario_id, preferencias_finales)
+                
+                # Limpiamos las variables de la encuesta de la sesión para no sobrecargarla
+                for key in ["plataformas", "plataformas_otras_ids", "disponibilidad", "idiomas", "formato"]:
+                    session.pop(key, None)
 
+                flash("¡Tu experiencia ha sido personalizada con éxito!", "success")
                 return redirect(url_for("cinematch.index"))
 
-        # 🟢 NUEVO: Decidimos qué paso sigue
         if error:
             flash("Por favor, seleccioná al menos una opción para continuar.", "danger")
-            siguiente_paso = paso # Se queda en el mismo paso
+            siguiente_paso = paso 
         else:
             siguiente_paso = paso + 1
 
     else:
         siguiente_paso = request.args.get("paso", 0, type=int)
 
-    # Solo hace la llamada a la API cuando es necesario
     providers = modelo_peliculas.obtener_providers_ar() if siguiente_paso == 1 else []
     todos_providers = modelo_peliculas.obtener_todos_providers_ar() if siguiente_paso == 1 else []
     todos_idiomas = modelo_peliculas.obtener_todos_idiomas() if siguiente_paso == 3 else []

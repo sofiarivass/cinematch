@@ -389,3 +389,40 @@ class PeliculaModel:
             }
             for p in data.get("results", [])
         ]
+
+    # Método para obtener el nombre real de una plataforma a partir de su ID, con un mapeo local y fallback a TMDB
+    def obtener_nombre_plataforma(self, plataforma_id: int) -> str:
+        """
+        Devuelve el nombre real de una plataforma a partir de su ID.
+        Busca primero en los principales y si no, consulta la lista completa de TMDB.
+        """
+        # 1. Mapeo rápido manual para las principales si querés hardcodearlas
+        nombres_locales = {
+            8: "Netflix",
+            1899: "HBO Max",
+            119: "Amazon Prime Video",
+            337: "Disney+",
+            350: "Apple TV+",
+            531: "Paramount+"
+        }
+        
+        id_int = int(plataforma_id)
+        if id_int in nombres_locales:
+            return nombres_locales[id_int]
+            
+        # 2. Si es una plataforma buscada ("otra"), consultamos a TMDB
+        try:
+            data = self._get(
+                "/watch/providers/movie",
+                {
+                    "watch_region": "AR",
+                    "language": "es-AR",
+                },
+            )
+            for p in data.get("results", []):
+                if p.get("provider_id") == id_int:
+                    return p.get("provider_name", f"Servicio {id_int}")
+        except Exception:
+            pass
+            
+        return f"Servicio {id_int}"
