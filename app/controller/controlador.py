@@ -186,19 +186,23 @@ def explorar():
 def encuesta_perfil():
     if request.method == "POST":
         paso = int(request.form.get("paso", 0))
-        error = False # 🟢 NUEVO: Bandera para controlar si hay error
+        error = False  # 🟢 NUEVO: Bandera para controlar si hay error
 
         # Validación y guardado según el paso
         if paso == 1:
             plataformas = request.form.getlist("plataformas")
             otras = request.form.get("plataformas_otras", "")
-            
+
             # Validamos que haya seleccionado al menos una o escrito otra
             if not plataformas and not otras:
                 error = True
             else:
-                plataformas_otras = [int(x) for x in otras.split(",") if x.strip().isdigit()]
-                session["plataformas"] = list(set([int(p) for p in plataformas] + plataformas_otras))
+                plataformas_otras = [
+                    int(x) for x in otras.split(",") if x.strip().isdigit()
+                ]
+                session["plataformas"] = list(
+                    set([int(p) for p in plataformas] + plataformas_otras)
+                )
                 session["plataformas_otras_ids"] = plataformas_otras
 
         elif paso == 2:
@@ -233,14 +237,16 @@ def encuesta_perfil():
 
                 usuario_actual = session.get("nombre_usuario")
                 if usuario_actual:
-                    modelo_usuario.guardar_preferencias(usuario_actual, preferencias_finales)
+                    modelo_usuario.guardar_preferencias(
+                        usuario_actual, preferencias_finales
+                    )
 
                 return redirect(url_for("cinematch.index"))
 
         # 🟢 NUEVO: Decidimos qué paso sigue
         if error:
             flash("Por favor, seleccioná al menos una opción para continuar.", "danger")
-            siguiente_paso = paso # Se queda en el mismo paso
+            siguiente_paso = paso  # Se queda en el mismo paso
         else:
             siguiente_paso = paso + 1
 
@@ -249,8 +255,12 @@ def encuesta_perfil():
 
     # Solo hace la llamada a la API cuando es necesario
     providers = modelo_peliculas.obtener_providers_ar() if siguiente_paso == 1 else []
-    todos_providers = modelo_peliculas.obtener_todos_providers_ar() if siguiente_paso == 1 else []
-    todos_idiomas = modelo_peliculas.obtener_todos_idiomas() if siguiente_paso == 3 else []
+    todos_providers = (
+        modelo_peliculas.obtener_todos_providers_ar() if siguiente_paso == 1 else []
+    )
+    todos_idiomas = (
+        modelo_peliculas.obtener_todos_idiomas() if siguiente_paso == 3 else []
+    )
 
     return vista.render_encuesta_perfil(
         paso=siguiente_paso,

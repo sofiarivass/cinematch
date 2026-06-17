@@ -2400,3 +2400,426 @@ footer .nav-link:hover {
         padding: 8px 10px;
     }
 }
+
+/* PERFIL */
+/* ────────────────────────────────────────────────────────────────
+   perfil.css — Estilos exclusivos para la página de Perfil
+   Valores de color hardcodeados con prefijo "pf-" para no pisar
+   variables globales del resto del sitio.
+   ──────────────────────────────────────────────────────────────── */
+
+.perfil-container {
+    --pf-bg-dark: #070B19;
+    --pf-card-bg: #0C1327;
+    --pf-box-bg: #070B19;
+    --pf-accent-blue: #4F46E5;
+    --pf-accent-blue-hover: #4338CA;
+    --pf-text-main: #FFFFFF;
+    --pf-text-muted: #8B949E;
+    --pf-border-color: #1F2937;
+    --pf-gold: #FACC15;
+
+    max-width: 1100px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    color: var(--pf-text-main);
+    font-family: 'Inter', system-ui, sans-serif;
+}
+
+/* ── TARJETAS GENERALES ── */
+.perfil-container .card {
+    background-color: var(--pf-card-bg);
+    border-radius: 16px;
+    padding: 2rem;
+    border: 1px solid var(--pf-border-color);
+    position: relative;
+}
+
+/* ── HEADER ── */
+.perfil-container .header-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 2rem;
+}
+
+.perfil-container .icon-settings {
+    position: absolute;
+    top: 1.5rem;
+    left: 1.5rem;
+    color: var(--pf-text-muted);
+    cursor: pointer;
+    font-size: 1.2rem;
+    text-decoration: none;
+    transition: color 0.15s;
+}
+
+.perfil-container .icon-settings:hover {
+    color: var(--pf-text-main);
+}
+
+.perfil-container .user-info {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    margin-left: 2rem;
+}
+
+.perfil-container .avatar-circle {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    border: 1px solid var(--pf-border-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    color: var(--pf-text-main);
+    flex-shrink: 0;
+}
+
+.perfil-container .user-text h1 {
+    font-size: 1.8rem;
+    margin-bottom: 0.2rem;
+    color: var(--pf-text-main);
+}
+
+.perfil-container .user-text p {
+    color: var(--pf-text-muted);
+    font-size: 0.85rem;
+}
+
+.perfil-container .stats-grid {
+    display: flex;
+    gap: 1rem;
+}
+
+.perfil-container .stat-box {
+    background-color: var(--pf-box-bg);
+    border: 1px solid var(--pf-border-color);
+    border-radius: 12px;
+    padding: 1rem 1.5rem;
+    text-align: center;
+    min-width: 110px;
+}
+
+.perfil-container .stat-box .icon-stat {
+    color: var(--pf-accent-blue);
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+    display: block;
+}
+
+.perfil-container .stat-box h2 {
+    font-size: 1.5rem;
+    margin-bottom: 0.2rem;
+    color: var(--pf-text-main);
+}
+
+.perfil-container .stat-box p {
+    color: var(--pf-text-muted);
+    font-size: 0.75rem;
+}
+
+/* ── TABS (subrayado, no pills) ── */
+.perfil-container .tabs-container {
+    display: flex;
+    gap: 2rem;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+    border-bottom: 1px solid var(--pf-border-color);
+}
+
+.perfil-container .tab-btn {
+    background-color: transparent;
+    color: var(--pf-text-muted);
+    border: none;
+    border-bottom: 2px solid transparent;
+    padding: 0 0 0.9rem 0;
+    font-size: 0.95rem;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: color 0.15s, border-color 0.15s;
+    margin-bottom: -1px;
+    /* alinea el subrayado sobre el borde del contenedor */
+}
+
+.perfil-container .tab-btn:hover:not(.active) {
+    color: var(--pf-text-main);
+}
+
+.perfil-container .tab-btn.active {
+    color: var(--pf-text-main);
+    border-bottom-color: var(--pf-accent-blue);
+}
+
+/* ── GRID DE MEDIA ── */
+.perfil-container .media-grid {
+    display: flex;
+    gap: 1.5rem;
+    overflow-x: auto;
+    padding-bottom: 1rem;
+}
+
+.perfil-container .media-grid::-webkit-scrollbar {
+    height: 6px;
+}
+
+.perfil-container .media-grid::-webkit-scrollbar-thumb {
+    background: var(--pf-border-color);
+    border-radius: 4px;
+}
+
+.perfil-container .media-item {
+    min-width: 160px;
+    width: 160px;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    flex-shrink: 0;
+}
+
+.perfil-container .media-poster {
+    width: 100%;
+    height: 240px;
+    border-radius: 12px;
+    background-size: cover;
+    background-position: center;
+    background-color: var(--pf-box-bg);
+    position: relative;
+    box-shadow: inset 0 -40px 40px -10px rgba(0, 0, 0, 0.7);
+    cursor: pointer;
+    transition: transform 0.15s;
+}
+
+.perfil-container .media-item a:hover .media-poster {
+    transform: translateY(-3px);
+}
+
+.perfil-container .media-badges {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    padding: 0.5rem;
+    position: absolute;
+    top: 0;
+}
+
+.perfil-container .badge-type,
+.perfil-container .badge-rating {
+    background-color: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(4px);
+    padding: 0.2rem 0.5rem;
+    border-radius: 6px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: var(--pf-text-main);
+}
+
+.perfil-container .badge-rating i {
+    color: var(--pf-gold);
+}
+
+.perfil-container .media-info h3 {
+    font-size: 0.95rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: var(--pf-text-main);
+}
+
+.perfil-container .media-info p {
+    color: var(--pf-text-muted);
+    font-size: 0.8rem;
+}
+
+.perfil-container .ver-todas-container {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 1rem;
+}
+
+.perfil-container .link-ver-todas {
+    color: var(--pf-accent-blue);
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: color 0.15s;
+}
+
+.perfil-container .link-ver-todas:hover {
+    color: var(--pf-accent-blue-hover);
+}
+
+/* ── ESTADO VACÍO ── */
+.perfil-container .lista-vacia {
+    padding: 2rem 0;
+    text-align: center;
+    color: var(--pf-text-muted);
+}
+
+.perfil-container .lista-vacia i {
+    font-size: 2rem;
+    margin-bottom: 0.75rem;
+    display: block;
+    opacity: 0.5;
+}
+
+.perfil-container .lista-vacia p:first-of-type {
+    font-size: 0.95rem;
+    margin-bottom: 0.3rem;
+    color: var(--pf-text-main);
+}
+
+.perfil-container .lista-vacia p:last-of-type {
+    font-size: 0.8rem;
+}
+
+/* ── GRÁFICOS ── */
+.perfil-container .charts-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+}
+
+.perfil-container .chart-card {
+    display: flex;
+    flex-direction: column;
+}
+
+.perfil-container .chart-title {
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--pf-text-main);
+}
+
+.perfil-container .icon-blue {
+    color: var(--pf-accent-blue);
+}
+
+.perfil-container .chart-subtitle {
+    color: var(--pf-text-muted);
+    font-size: 0.85rem;
+    margin-bottom: 2rem;
+    font-style: italic;
+}
+
+/* Barras CSS — géneros */
+
+.perfil-container .genre-bars {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    margin-top: 1rem;
+    margin-bottom: 2rem;
+}
+
+.perfil-container .genre-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.perfil-container .genre-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.9rem;
+    color: var(--pf-text-muted);
+}
+
+.perfil-container .progress-bg {
+    width: 100%;
+    height: 6px;
+    background-color: var(--pf-border-color);
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.perfil-container .progress-fill {
+    height: 100%;
+    background-color: var(--pf-accent-blue);
+    border-radius: 4px;
+    width: var(--pf-width, 0%);
+}
+
+.perfil-container .mt-auto {
+    margin-top: auto;
+}
+
+/* Contenedor matplotlib */
+.perfil-container .matplotlib-container {
+    width: 100%;
+    height: 250px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.perfil-container .matplotlib-container img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+
+.perfil-container .placeholder-chart {
+    width: 100%;
+    height: 100%;
+    border: 1px dashed var(--pf-border-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--pf-text-muted);
+    font-size: 0.9rem;
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 768px) {
+    .perfil-container {
+        padding: 0 0.5rem;
+    }
+
+    .perfil-container .charts-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .perfil-container .stats-grid {
+        flex-wrap: wrap;
+        width: 100%;
+    }
+
+    .perfil-container .stat-box {
+        flex: 1;
+        min-width: 90px;
+    }
+
+    .perfil-container .user-info {
+        margin-left: 0;
+    }
+
+    .perfil-container .header-card {
+        padding-top: 3rem;
+        /* deja espacio al ícono de settings */
+    }
+
+    .perfil-container .tabs-container {
+        gap: 1.2rem;
+        overflow-x: auto;
+        flex-wrap: nowrap;
+    }
+
+    .perfil-container .tab-btn {
+        white-space: nowrap;
+    }
+}

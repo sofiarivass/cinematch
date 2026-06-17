@@ -34,9 +34,38 @@ class UsuarioView:
     # Agregado método para renderizar login
     def render_login(self):
         """
-            Renderiza el formulario de inicio de sesión.
+        Renderiza el formulario de inicio de sesión.
 
-            Returns:
-                str: HTML del formulario de login.
+        Returns:
+            str: HTML del formulario de login.
         """
         return render_template("login.html")
+
+
+# VISTA DE PERFIL DE USUARIO
+
+
+class VistaPerfil:
+
+    def render_perfil(
+        self,
+        usuario: dict,
+        conteos: dict,
+        matchlist: list,
+        favoritos: list,
+        peliculas_vistas: list,
+        series_vistas: list,
+        generos: list,
+        plot_url: str,
+    ) -> str:
+        return render_template(
+            "perfil.html",
+            usuario=usuario,
+            conteos=conteos,
+            matchlist=matchlist,
+            favoritos=favoritos,
+            peliculas_vistas=peliculas_vistas,
+            series_vistas=series_vistas,
+            generos=generos,
+            plot_url=plot_url,
+        )
