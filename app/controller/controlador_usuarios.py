@@ -4,7 +4,7 @@ app/controller/controlador_usuarios.py
 Controlador para gestionar rutas de usuarios (registro, login, etc.)
 """
 
-from flask import Blueprint, request, redirect, url_for, flash, jsonify, session
+from flask import Blueprint, request, redirect, url_for, flash, jsonify, session, make_response
 from app.services.google_oauth import oauth
 from app.model.modelo_usuarios import UsuarioModel
 from app.views.vista_usuarios import UsuarioView
@@ -74,7 +74,6 @@ def registro():
                 nombre_usuario, email, contraseña, fecha_nacimiento, preferencias={}
             )
 
-            
             # Si el registro fue exitoso, iniciar sesión automáticamente
             if resultado["exito"]:
                 session['usuario_id'] = resultado['usuario_id'] 
@@ -92,7 +91,7 @@ def registro():
             "mensaje": "Ocurrió un error al procesar tu solicitud"
         }), 500
 
-# login, logout y otras rutas de usuario se implementarían aquí siguiendo un patrón similar
+
 @usuarios_bp.route("/login", methods=["GET", "POST"])
 def login():
     """
@@ -122,7 +121,7 @@ def login():
                     "mensaje": "La contraseña debe tener al menos 6 caracteres"
                 }), 400
 
-            # Autenticar usuario
+            # Autenticar usuario (El modelo guarda los datos en session internamente)
             resultado = usuario_modelo.autenticar(email, contraseña)
 
             if resultado["exito"]:
@@ -144,11 +143,24 @@ def login():
             "mensaje": "Ocurrió un error al procesar tu solicitud"
         }), 500
 
-# logout para cerrar sesión del usuario
+
 @usuarios_bp.route("/logout")
 def logout():
+    """
+    Limpia las variables de sesión del servidor y destruye las cookies
+    del navegador para evitar estados 'bugeados' o heredados.
+    """
+    # 1. Limpiar por completo el diccionario de sesión del lado del servidor
     session.clear()
-    return redirect(url_for('cinematch.index'))
+    
+    # 2. Crear respuesta para redireccionar al index/inicio
+    response = make_response(redirect(url_for('cinematch.index')))
+    
+    # 3. Forzar al navegador a destruir la cookie de sesión de Flask
+    response.set_cookie('session', '', expires=0)
+    
+    return response
+
 
 # Ruta para login con Google
 @usuarios_bp.route("/login/google")
@@ -157,8 +169,8 @@ def login_google():
         "usuarios.google_callback",
         _external=True
     )
-
     return oauth.google.authorize_redirect(redirect_uri)
+
 
 @usuarios_bp.route("/google/callback")
 def google_callback():

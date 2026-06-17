@@ -1,4 +1,6 @@
-{% extends "base.html" %} {% block title %}Encuesta de recomendación — CineMatch{% endblock %} {% block content %}
+{% extends "base.html" %} 
+{% block title %}Encuesta de recomendación — CineMatch{% endblock %} 
+{% block content %}
 <div class="container encuesta-container encuesta-rec">
     <!-- BARRA DE PROGRESO -->
     <div class="encuesta-progreso-wrapper d-flex">
@@ -8,6 +10,7 @@
     <div class="encuesta-barra" style="--progreso: {{ ((paso / 5) * 100) | int }}%;">
         <div class="encuesta-barra-fill"></div>
     </div>
+    
     {% with messages = get_flashed_messages(with_categories=true) %}
     {% if messages %}
     {% for category, message in messages %}
@@ -17,6 +20,7 @@
     {% endfor %}
     {% endif %}
     {% endwith %}
+
     <div class="card encuesta-card margen-footer text-center">
         <!-- ── PASO 0: Introducción ── -->
         {% if paso == 0 %}
@@ -38,6 +42,7 @@
                 <button type="submit" class="btn-encuesta">Comenzar</button>
             </div>
         </form>
+
         <!-- ── PASO 1: Formato ── -->
         {% elif paso == 1 %}
         <form method="POST" action="{{ url_for('recomendaciones.encuesta_recomendaciones') }}">
@@ -48,8 +53,7 @@
                     alt="Regresar" height="30">
             </a>
             <h1 class="encuesta-titulo">¿Qué formato estás buscando?</h1>
-            <p class="encuesta-desc">Elegí la experiencia que mejor se adapte a tu momento.
-            </p>
+            <p class="encuesta-desc">Elegí la experiencia que mejor se adapte a tu momento.</p>
             <div class="encuesta-grid-plataformas encuesta-grid-2col justify-content-center">
                 <label class="encuesta-opcion-logo d-flex align-items-center justify-content-center">
                     <input type="radio" name="formato" value="pelicula" class="encuesta-check-hidden" {% if
@@ -72,12 +76,12 @@
                     <small class="encuesta-opcion-desc">Historias que se desarrollan capítulo a capítulo</small>
                 </label>
             </div>
-
             <div class="encuesta-btn-container">
                 <button type="submit" class="btn-encuesta">Siguiente</button>
             </div>
         </form>
-        <!-- ── PASO 2: tiempo ── -->
+
+        <!-- ── PASO 2: Tiempo (Dinámico según Formato) ── -->
         {% elif paso == 2 %}
         <form method="POST" action="{{ url_for('recomendaciones.encuesta_recomendaciones') }}">
             <input type="hidden" name="paso" value="2">
@@ -86,15 +90,53 @@
                 <img id="btn-regresar" src="{{ url_for('static', filename='img/botones/btn-regresar.svg') }}"
                     alt="Regresar" height="30">
             </a>
+
+            {% if session.get('formato') == 'serie' %}
+            <!-- 📺 FLUJO SERIES -->
+            <h1 class="encuesta-titulo">¿Qué tipo de serie tenés ganas de arrancar?</h1>
+            <p class="encuesta-desc">Te recomendaremos producciones que se ajusten a tu ritmo actual.</p>
+            <div class="encuesta-grid-tiempo justify-content-center">
+                <label class="encuesta-opcion-logo d-flex align-items-center justify-content-center">
+                    <input type="radio" name="tiempo" value="miniserie" class="encuesta-check-hidden" {% if
+                        session.get('tiempo')=='miniserie' %}checked{% endif %}>
+                    <div class="container-icono-encuesta d-flex align-items-center justify-content-center">
+                        <img src="{{ url_for('static', filename='img/iconos/60min.svg') }}" alt="Miniserie"
+                            class="icono-encuesta">
+                    </div>
+                    <p class="encuesta-opcion-txt">Miniserie o Serie Corta</p>
+                    <small class="encuesta-opcion-desc">Una sola temporada para maratonear rápido</small>
+                </label>
+                <label class="encuesta-opcion-logo d-flex align-items-center justify-content-center">
+                    <input type="radio" name="tiempo" value="media" class="encuesta-check-hidden" {% if
+                        session.get('tiempo')=='media' %}checked{% endif %}>
+                    <div class="container-icono-encuesta d-flex align-items-center justify-content-center">
+                        <img src="{{ url_for('static', filename='img/iconos/90min.svg') }}" alt="Duración media"
+                            class="icono-encuesta">
+                    </div>
+                    <p class="encuesta-opcion-txt">Duración estándar</p>
+                    <small class="encuesta-opcion-desc">Entre 2 y 4 temporadas sólidas</small>
+                </label>
+                <label class="encuesta-opcion-logo d-flex align-items-center justify-content-center">
+                    <input type="radio" name="tiempo" value="larga" class="encuesta-check-hidden" {% if
+                        session.get('tiempo')=='larga' %}checked{% endif %}>
+                    <div class="container-icono-encuesta d-flex align-items-center justify-content-center">
+                        <img src="{{ url_for('static', filename='img/iconos/120min.svg') }}" alt="Serie larga"
+                            class="icono-encuesta">
+                    </div>
+                    <p class="encuesta-opcion-txt">Un buen viaje largo</p>
+                    <small class="encuesta-opcion-desc">Series extensas con muchos capítulos y temporadas</small>
+                </label>
+            </div>
+            {% else %}
+            <!-- 🎬 FLUJO PELÍCULAS (Original) -->
             <h1 class="encuesta-titulo">¿Cuánto tiempo querés dedicarle?</h1>
-            <p class="encuesta-desc">Te recomendaremos películas que se ajusten al tiempo que tenés disponible.
-            </p>
+            <p class="encuesta-desc">Te recomendaremos películas que se ajusten al tiempo que tenés disponible.</p>
             <div class="encuesta-grid-tiempo justify-content-center">
                 <label class="encuesta-opcion-logo d-flex align-items-center justify-content-center">
                     <input type="radio" name="tiempo" value="menos de 90 minutos" class="encuesta-check-hidden" {% if
                         session.get('tiempo')=='menos de 90 minutos' %}checked{% endif %}>
                     <div class="container-icono-encuesta d-flex align-items-center justify-content-center">
-                        <img src="{{ url_for('static', filename='img/iconos/60min.svg') }}" alt="Película"
+                        <img src="{{ url_for('static', filename='img/iconos/60min.svg') }}" alt="Película corta"
                             class="icono-encuesta">
                     </div>
                     <p class="encuesta-opcion-txt">Menos de 90 minutos</p>
@@ -104,7 +146,7 @@
                     <input type="radio" name="tiempo" value="90-120 minutos" class="encuesta-check-hidden" {% if
                         session.get('tiempo')=='90-120 minutos' %}checked{% endif %}>
                     <div class="container-icono-encuesta d-flex align-items-center justify-content-center">
-                        <img src="{{ url_for('static', filename='img/iconos/90min.svg') }}" alt="Serie"
+                        <img src="{{ url_for('static', filename='img/iconos/90min.svg') }}" alt="Película estándar"
                             class="icono-encuesta">
                     </div>
                     <p class="encuesta-opcion-txt">Entre 90 y 120 minutos</p>
@@ -114,19 +156,21 @@
                     <input type="radio" name="tiempo" value="más de 2 horas" class="encuesta-check-hidden" {% if
                         session.get('tiempo')=='más de 2 horas' %}checked{% endif %}>
                     <div class="container-icono-encuesta d-flex align-items-center justify-content-center">
-                        <img src="{{ url_for('static', filename='img/iconos/120min.svg') }}" alt="Serie"
+                        <img src="{{ url_for('static', filename='img/iconos/120min.svg') }}" alt="Película larga"
                             class="icono-encuesta">
                     </div>
                     <p class="encuesta-opcion-txt">Más de 2 horas</p>
                     <small class="encuesta-opcion-desc">Quiero una historia larga</small>
                 </label>
             </div>
+            {% endif %}
 
             <div class="encuesta-btn-container">
                 <button type="submit" class="btn-encuesta">Siguiente</button>
             </div>
         </form>
-        <!-- ── PASO 3: Emociones ── -->
+
+        <!-- ── PASO 3: Emociones (Textos Adaptables) ── -->
         {% elif paso == 3 %}
         <form method="POST" action="{{ url_for('recomendaciones.encuesta_recomendaciones') }}">
             <input type="hidden" name="paso" value="3">
@@ -136,7 +180,9 @@
                     alt="Regresar" height="30">
             </a>
             <h1 class="encuesta-titulo">¿Cómo querés sentirte?</h1>
-            <p class="encuesta-desc">Elegí las emociones que querés vivir y encontraremos la película ideal para vos.
+            <p class="encuesta-desc">
+                Elegí las emociones que querés vivir y encontraremos la 
+                {{ 'serie' if session.get('formato') == 'serie' else 'película' }} ideal para vos.
             </p>
             <div class="encuesta-grid-plataformas encuesta-grid-emociones justify-content-center">
                 <label class="encuesta-opcion-logo d-flex align-items-center justify-content-center">
@@ -242,7 +288,8 @@
                 <button type="submit" class="btn-encuesta">Siguiente</button>
             </div>
         </form>
-        <!-- ── PASO 4: epoca ── -->
+
+        <!-- ── PASO 4: Época (Textos Adaptables) ── -->
         {% elif paso == 4 %}
         <form method="POST" action="{{ url_for('recomendaciones.encuesta_recomendaciones') }}">
             <input type="hidden" name="paso" value="4">
@@ -251,9 +298,10 @@
                 <img id="btn-regresar" src="{{ url_for('static', filename='img/botones/btn-regresar.svg') }}"
                     alt="Regresar" height="30">
             </a>
-            <h1 class="encuesta-titulo">¿De qué época disfrutas más el cine?</h1>
-            <p class="encuesta-desc">Desde clásicos inolvidables hasta los últimos estrenos.
-            </p>
+            <h1 class="encuesta-titulo">
+                ¿De qué época disfrutás más las {{ 'series' if session.get('formato') == 'serie' else 'producciones' }}?
+            </h1>
+            <p class="encuesta-desc">Desde clásicos inolvidables hasta los últimos estrenos.</p>
             <div class="encuesta-grid-plataformas justify-content-center">
                 <label class="encuesta-opcion-logo d-flex align-items-center justify-content-center">
                     <input type="radio" name="epoca" value="estrenos" class="encuesta-check-hidden" {% if
@@ -263,17 +311,17 @@
                             alt="Estrenos y tendencias actuales" class="icono-encuesta">
                     </div>
                     <p class="encuesta-opcion-txt">Estrenos y tendencias actuales</p>
-                    <small class="encuesta-opcion-desc">Lo último en taquilla</small>
+                    <small class="encuesta-opcion-desc">Lo último en emisión y novedades</small>
                 </label>
                 <label class="encuesta-opcion-logo d-flex align-items-center justify-content-center">
                     <input type="radio" name="epoca" value="modernas" class="encuesta-check-hidden" {% if
                         session.get('epoca')=='modernas' %}checked{% endif %}>
                     <div class="container-icono-encuesta d-flex align-items-center justify-content-center">
-                        <img src="{{ url_for('static', filename='img/iconos/pelicula.svg') }}" alt="Películas modernas"
+                        <img src="{{ url_for('static', filename='img/iconos/pelicula.svg') }}" alt="Producciones modernas"
                             class="icono-encuesta">
                     </div>
-                    <p class="encuesta-opcion-txt">Películas modernas</p>
-                    <small class="encuesta-opcion-desc">Producciones de las últimas décadas</small>
+                    <p class="encuesta-opcion-txt">Producciones modernas</p>
+                    <small class="encuesta-opcion-desc">Lanzamientos de las últimas décadas</small>
                 </label>
                 <label class="encuesta-opcion-logo d-flex align-items-center justify-content-center">
                     <input type="radio" name="epoca" value="clasicos" class="encuesta-check-hidden" {% if
@@ -282,16 +330,16 @@
                         <img src="{{ url_for('static', filename='img/iconos/clasicos.svg') }}"
                             alt="Clásicos nostálgicos" class="icono-encuesta">
                     </div>
-                    <p class="encuesta-opcion-txt">Clásicos nostálgicos</p>
-                    <small class="encuesta-opcion-desc">Joyas del cine de otras épocas</small>
+                    <p class="encuesta-opcion-txt">Clásicos de culto</p>
+                    <small class="encuesta-opcion-desc">Joyas televisivas y cinematográficas de la historia</small>
                 </label>
             </div>
-
             <div class="encuesta-btn-container">
                 <button type="submit" class="btn-encuesta">Siguiente</button>
             </div>
         </form>
-        <!-- ── PASO 5: clasificación ── -->
+
+        <!-- ── PASO 5: Clasificación ── -->
         {% elif paso == 5 %}
         <form method="POST" action="{{ url_for('recomendaciones.encuesta_recomendaciones') }}">
             <input type="hidden" name="paso" value="5">
@@ -301,8 +349,7 @@
                     alt="Regresar" height="30">
             </a>
             <h1 class="encuesta-titulo">¿Qué clasificación preferís?</h1>
-            <p class="encuesta-desc">Elegí el rango de edad del contenido que te gustaría ver.
-            </p>
+            <p class="encuesta-desc">Elegí el rango de edad del contenido que te gustaría ver.</p>
             <div class="encuesta-grid-clasificacion justify-content-center">
                 <label class="encuesta-opcion-logo d-flex align-items-center justify-content-center">
                     <input type="radio" name="clasificacion" value="atp" class="encuesta-check-hidden" {% if
@@ -323,8 +370,7 @@
                             class="icono-encuesta">
                     </div>
                     <p class="encuesta-opcion-txt">+13 - Acción</p>
-                    <small class="encuesta-opcion-desc">Aventuras emocionantes con intensidad moderada para
-                        adolescentes.</small>
+                    <small class="encuesta-opcion-desc">Aventuras emocionantes con intensidad moderada.</small>
                 </label>
                 <label class="encuesta-opcion-logo d-flex align-items-center justify-content-center">
                     <input type="radio" name="clasificacion" value="+16" class="encuesta-check-hidden" {% if
@@ -349,11 +395,10 @@
                 </label>
             </div>
             <div class="encuesta-btn-container">
-                <button type="submit" class="btn-encuesta">Siguiente</button>
+                <button type="submit" class="btn-encuesta">Finalizar y Matchear</button>
             </div>
         </form>
         {% endif %}
     </div>
 </div>
-
 {% endblock %}
