@@ -10,7 +10,7 @@ Responsabilidades:
   - Pasar los datos a la Vista para renderizar.
 """
 
-from flask import Blueprint, request, redirect, url_for, session
+from flask import Blueprint, flash, request, redirect, url_for, session
 from app.model.modelo import Model
 from app.views.vista import View
 from app.model.modelo_usuarios import UsuarioModel
@@ -186,61 +186,71 @@ def explorar():
 def encuesta_perfil():
     if request.method == "POST":
         paso = int(request.form.get("paso", 0))
+        error = False # 🟢 NUEVO: Bandera para controlar si hay error
 
-        # Guardar respuesta del paso actual en session
+        # Validación y guardado según el paso
         if paso == 1:
+            plataformas = request.form.getlist("plataformas")
             otras = request.form.get("plataformas_otras", "")
-            plataformas_otras = [
-                int(x) for x in otras.split(",") if x.strip().isdigit()
-            ]
-            session["plataformas"] = list(
-                set(
-                    [int(p) for p in request.form.getlist("plataformas")]
-                    + plataformas_otras
-                )
-            )
-            session["plataformas_otras_ids"] = plataformas_otras
+            
+            # Validamos que haya seleccionado al menos una o escrito otra
+            if not plataformas and not otras:
+                error = True
+            else:
+                plataformas_otras = [int(x) for x in otras.split(",") if x.strip().isdigit()]
+                session["plataformas"] = list(set([int(p) for p in plataformas] + plataformas_otras))
+                session["plataformas_otras_ids"] = plataformas_otras
+
         elif paso == 2:
-            session["disponibilidad"] = request.form.get("disponibilidad")
+            disponibilidad = request.form.get("disponibilidad")
+            if not disponibilidad:
+                error = True
+            else:
+                session["disponibilidad"] = disponibilidad
+
         elif paso == 3:
-            session["idiomas"] = request.form.getlist("idiomas")
+            idiomas = request.form.getlist("idiomas")
+            # Podrías tener idiomas en inputs ocultos si usan la opción "Otro"
+            if not idiomas:
+                error = True
+            else:
+                session["idiomas"] = idiomas
+
         elif paso == 4:
-            session["formato"] = request.form.get("formato")
+            formato = request.form.get("formato")
+            if not formato:
+                error = True
+            else:
+                session["formato"] = formato
 
-            # 🟢 ENCUESTA FINALIZADA: Armamos el objeto JSON estructurado
-            preferencias_finales = {
-                "plataformas": session.get("plataformas", []),
-                "disponibilidad": session.get("disponibilidad", "any"),
-                "idiomas": session.get("idiomas", []),
-                "formato": session.get("formato", "any"),
-            }
+                # 🟢 ENCUESTA FINALIZADA
+                preferencias_finales = {
+                    "plataformas": session.get("plataformas", []),
+                    "disponibilidad": session.get("disponibilidad", "any"),
+                    "idiomas": session.get("idiomas", []),
+                    "formato": session.get("formato", "any"),
+                }
 
-            # Recuperamos el usuario actual de la sesión (ej: session.get("usuario"))
-            # Si no manejás sesión con ese nombre, cambialo por la variable correspondiente
-            usuario_actual = session.get("nombre_usuario")
+                usuario_actual = session.get("nombre_usuario")
+                if usuario_actual:
+                    modelo_usuario.guardar_preferencias(usuario_actual, preferencias_finales)
 
-            if usuario_actual:
-                # Guardamos en MongoDB vía Pymongo
-                modelo_usuario.guardar_preferencias(
-                    usuario_actual, preferencias_finales
-                )
+                return redirect(url_for("cinematch.index"))
 
-            return redirect(url_for("cinematch.index"))
+        # 🟢 NUEVO: Decidimos qué paso sigue
+        if error:
+            flash("Por favor, seleccioná al menos una opción para continuar.", "danger")
+            siguiente_paso = paso # Se queda en el mismo paso
+        else:
+            siguiente_paso = paso + 1
 
-        siguiente_paso = paso + 1
     else:
         siguiente_paso = request.args.get("paso", 0, type=int)
 
     # Solo hace la llamada a la API cuando es necesario
     providers = modelo_peliculas.obtener_providers_ar() if siguiente_paso == 1 else []
-    todos_providers = (
-        modelo_peliculas.obtener_todos_providers_ar() if siguiente_paso == 1 else []
-    )
-
-    # 🟢 NUEVO: Si estamos en el paso 3, obtenemos todos los idiomas de TMDB
-    todos_idiomas = (
-        modelo_peliculas.obtener_todos_idiomas() if siguiente_paso == 3 else []
-    )
+    todos_providers = modelo_peliculas.obtener_todos_providers_ar() if siguiente_paso == 1 else []
+    todos_idiomas = modelo_peliculas.obtener_todos_idiomas() if siguiente_paso == 3 else []
 
     return vista.render_encuesta_perfil(
         paso=siguiente_paso,

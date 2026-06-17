@@ -10,7 +10,7 @@ Responsabilidades:
   - Pasar los datos a la Vista para renderizar.
 """
 
-from flask import Blueprint, request, redirect, url_for, session
+from flask import Blueprint, request, redirect, url_for, session, flash
 from app.model.modelo_rec import RecomendacionesModel
 from app.views.vista_rec import RecomendacionesView
 from app.model.modelo_peliculas import PeliculaModel
@@ -27,40 +27,72 @@ vista_pelicula = PeliculaView()
 modelo_usuario = UsuarioModel()
 vista = RecomendacionesView()
 
+
 # SESIÓN DE USUARIO Y RUTA DE ENCUESTA
 @recomendaciones_bp.route("/encuesta-recomendaciones", methods=["GET", "POST"])
 def encuesta_recomendaciones():
     if request.method == "POST":
         paso = int(request.form.get("paso", 0))
+        error = False  # 🟢 Bandera para controlar si hay error
 
         # Guardar respuesta del paso actual en session
         if paso == 1:
-            session["formato"] = request.form.get("formato")
+            formato = request.form.get("formato")
+            if not formato:
+                error = True
+            else:
+                session["formato"] = formato
+
         elif paso == 2:
-            session["tiempo"] = request.form.get("tiempo")
+            tiempo = request.form.get("tiempo")
+            if not tiempo:
+                error = True
+            else:
+                session["tiempo"] = tiempo
+
         elif paso == 3:
-            session["emociones"] = request.form.getlist("emociones")
+            emociones = request.form.getlist("emociones")
+            if not emociones:
+                error = True
+            else:
+                session["emociones"] = emociones
+
         elif paso == 4:
-            session["epoca"] = request.form.get("epoca")
+            epoca = request.form.get("epoca")
+            if not epoca:
+                error = True
+            else:
+                session["epoca"] = epoca
+
         elif paso == 5:
-            session["clasificacion"] = request.form.get("clasificacion")
+            clasificacion = request.form.get("clasificacion")
+            if not clasificacion:
+                error = True
+            else:
+                session["clasificacion"] = clasificacion
 
-            # 🟢 ENCUESTA FINALIZADA: Armamos el objeto JSON estructurado
-            preferencias_finales = {
-                "formato": session.get("formato", []),
-                "tiempo": session.get("tiempo", []),
-                "emociones": session.get("emociones", []),
-                "epoca": session.get("epoca", []),
-                "clasificacion": session.get("clasificacion", []),
-            }
+                # 🟢 ENCUESTA FINALIZADA: Armamos el objeto JSON estructurado
+                preferencias_finales = {
+                    "formato": session.get("formato", ""),
+                    "tiempo": session.get("tiempo", ""),
+                    "emociones": session.get("emociones", []),
+                    "epoca": session.get("epoca", ""),
+                    "clasificacion": session.get("clasificacion", ""),
+                }
 
-            return redirect(url_for("cinematch.index"))
+                # Acá iría la lógica para guardar en la BD si hace falta
+                return redirect(url_for("cinematch.index"))
 
-        siguiente_paso = paso + 1
+        # 🟢 Evaluamos si avanzamos o nos quedamos mostrando el error
+        if error:
+            flash("Por favor, seleccioná al menos una opción para continuar.", "danger")
+            siguiente_paso = paso
+        else:
+            siguiente_paso = paso + 1
+
     else:
         siguiente_paso = request.args.get("paso", 0, type=int)
 
-   
     return vista.render_encuesta_rec(
         paso=siguiente_paso,
     )
@@ -79,6 +111,6 @@ def recomendacion(pelicula_id: int):
         return vista.render_recomendaciones(
             pelicula, credits, keywords, providers, clasificacion
         )
-    
+
     except Exception as e:
         return vista.render_error(str(e))

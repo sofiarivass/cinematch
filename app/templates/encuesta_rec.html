@@ -8,6 +8,15 @@
     <div class="encuesta-barra" style="--progreso: {{ ((paso / 5) * 100) | int }}%;">
         <div class="encuesta-barra-fill"></div>
     </div>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    {% for category, message in messages %}
+    <div class="alert alert-{{ category }} text-center mt-3 mx-4" role="alert">
+        {{ message }}
+    </div>
+    {% endfor %}
+    {% endif %}
+    {% endwith %}
     <div class="card encuesta-card margen-footer text-center">
         <!-- ── PASO 0: Introducción ── -->
         {% if paso == 0 %}
@@ -43,7 +52,8 @@
             </p>
             <div class="encuesta-grid-plataformas encuesta-grid-2col justify-content-center">
                 <label class="encuesta-opcion-logo d-flex align-items-center justify-content-center">
-                    <input type="checkbox" name="formato" value="pelicula" class="encuesta-check-hidden">
+                    <input type="radio" name="formato" value="pelicula" class="encuesta-check-hidden" {% if
+                        session.get('formato')=='pelicula' %}checked{% endif %}>
                     <div class="container-icono-encuesta d-flex align-items-center justify-content-center">
                         <img src="{{ url_for('static', filename='img/iconos/pelicula.svg') }}" alt="Película"
                             class="icono-encuesta">
@@ -52,7 +62,8 @@
                     <small class="encuesta-opcion-desc">Historias completas en una sola sesión</small>
                 </label>
                 <label class="encuesta-opcion-logo d-flex align-items-center justify-content-center">
-                    <input type="checkbox" name="formato" value="serie" class="encuesta-check-hidden">
+                    <input type="radio" name="formato" value="serie" class="encuesta-check-hidden" {% if
+                        session.get('formato')=='serie' %}checked{% endif %}>
                     <div class="container-icono-encuesta d-flex align-items-center justify-content-center">
                         <img src="{{ url_for('static', filename='img/iconos/serie.svg') }}" alt="Serie"
                             class="icono-encuesta">
@@ -80,7 +91,8 @@
             </p>
             <div class="encuesta-grid-tiempo justify-content-center">
                 <label class="encuesta-opcion-logo d-flex align-items-center justify-content-center">
-                    <input type="checkbox" name="tiempo" value="menos de 90 minutos" class="encuesta-check-hidden">
+                    <input type="radio" name="tiempo" value="menos de 90 minutos" class="encuesta-check-hidden" {% if
+                        session.get('tiempo')=='menos de 90 minutos' %}checked{% endif %}>
                     <div class="container-icono-encuesta d-flex align-items-center justify-content-center">
                         <img src="{{ url_for('static', filename='img/iconos/60min.svg') }}" alt="Película"
                             class="icono-encuesta">
@@ -89,7 +101,8 @@
                     <small class="encuesta-opcion-desc">Algo rápido y directo</small>
                 </label>
                 <label class="encuesta-opcion-logo d-flex align-items-center justify-content-center">
-                    <input type="checkbox" name="tiempo" value="90-120 minutos" class="encuesta-check-hidden">
+                    <input type="radio" name="tiempo" value="90-120 minutos" class="encuesta-check-hidden" {% if
+                        session.get('tiempo')=='90-120 minutos' %}checked{% endif %}>
                     <div class="container-icono-encuesta d-flex align-items-center justify-content-center">
                         <img src="{{ url_for('static', filename='img/iconos/90min.svg') }}" alt="Serie"
                             class="icono-encuesta">
@@ -98,7 +111,8 @@
                     <small class="encuesta-opcion-desc">Duración estándar</small>
                 </label>
                 <label class="encuesta-opcion-logo d-flex align-items-center justify-content-center">
-                    <input type="checkbox" name="tiempo" value="más de 2 horas" class="encuesta-check-hidden">
+                    <input type="radio" name="tiempo" value="más de 2 horas" class="encuesta-check-hidden" {% if
+                        session.get('tiempo')=='más de 2 horas' %}checked{% endif %}>
                     <div class="container-icono-encuesta d-flex align-items-center justify-content-center">
                         <img src="{{ url_for('static', filename='img/iconos/120min.svg') }}" alt="Serie"
                             class="icono-encuesta">
@@ -126,7 +140,8 @@
             </p>
             <div class="encuesta-grid-plataformas encuesta-grid-emociones justify-content-center">
                 <label class="encuesta-opcion-logo d-flex align-items-center justify-content-center">
-                    <input type="checkbox" name="emociones" value="tension" class="encuesta-check-hidden">
+                    <input type="checkbox" name="emociones" value="tension" class="encuesta-check-hidden" {%
+                        if 'tension' in session.get('emociones', []) %}checked{% endif %}>
                     <div class="container-icono-encuesta d-flex align-items-center justify-content-center">
                         <img src="{{ url_for('static', filename='img/iconos/tension.svg') }}" alt="Emoji tensión"
                             class="icono-encuesta">
@@ -136,7 +151,8 @@
                 </label>
 
                 <label class="encuesta-opcion-logo d-flex align-items-center justify-content-center">
-                    <input type="checkbox" name="emociones" value="emocionarme" class="encuesta-check-hidden">
+                    <input type="checkbox" name="emociones" value="emocionarme" class="encuesta-check-hidden" {%
+                        if 'emocionarme' in session.get('emociones', []) %}checked{% endif %}>
                     <div class="container-icono-encuesta d-flex align-items-center justify-content-center">
                         <img src="{{ url_for('static', filename='img/iconos/emocion.svg') }}" alt="Emoji emoción"
                             class="icono-encuesta">
@@ -146,7 +162,8 @@
                 </label>
 
                 <label class="encuesta-opcion-logo d-flex align-items-center justify-content-center">
-                    <input type="checkbox" name="emociones" value="reirme" class="encuesta-check-hidden">
+                    <input type="checkbox" name="emociones" value="reirme" class="encuesta-check-hidden" {% if 'reirme'
+                        in session.get('emociones', []) %}checked{% endif %}>
                     <div class="container-icono-encuesta d-flex align-items-center justify-content-center">
                         <img src="{{ url_for('static', filename='img/iconos/risa.svg') }}" alt="Emoji sonrisa"
                             class="icono-encuesta">
@@ -156,7 +173,8 @@
                 </label>
 
                 <label class="encuesta-opcion-logo d-flex align-items-center justify-content-center">
-                    <input type="checkbox" name="emociones" value="sorprenderme" class="encuesta-check-hidden">
+                    <input type="checkbox" name="emociones" value="sorprenderme" class="encuesta-check-hidden" {%
+                        if 'sorprenderme' in session.get('emociones', []) %}checked{% endif %}>
                     <div class="container-icono-encuesta d-flex align-items-center justify-content-center">
                         <img src="{{ url_for('static', filename='img/iconos/sorpresa.svg') }}" alt="Emoji sorpresa"
                             class="icono-encuesta">
@@ -166,7 +184,8 @@
                 </label>
 
                 <label class="encuesta-opcion-logo d-flex align-items-center justify-content-center">
-                    <input type="checkbox" name="emociones" value="adrenalina" class="encuesta-check-hidden">
+                    <input type="checkbox" name="emociones" value="adrenalina" class="encuesta-check-hidden" {%
+                        if 'adrenalina' in session.get('emociones', []) %}checked{% endif %}>
                     <div class="container-icono-encuesta d-flex align-items-center justify-content-center">
                         <img src="{{ url_for('static', filename='img/iconos/adrenalina.svg') }}" alt="Emoji adrenalina"
                             class="icono-encuesta">
@@ -176,7 +195,8 @@
                 </label>
 
                 <label class="encuesta-opcion-logo d-flex align-items-center justify-content-center">
-                    <input type="checkbox" name="emociones" value="familia" class="encuesta-check-hidden">
+                    <input type="checkbox" name="emociones" value="familia" class="encuesta-check-hidden" {%
+                        if 'familia' in session.get('emociones', []) %}checked{% endif %}>
                     <div class="container-icono-encuesta d-flex align-items-center justify-content-center">
                         <img src="{{ url_for('static', filename='img/iconos/familia.svg') }}" alt="Emoji familia"
                             class="icono-encuesta">
@@ -186,7 +206,8 @@
                 </label>
 
                 <label class="encuesta-opcion-logo d-flex align-items-center justify-content-center">
-                    <input type="checkbox" name="emociones" value="aprender" class="encuesta-check-hidden">
+                    <input type="checkbox" name="emociones" value="aprender" class="encuesta-check-hidden" {%
+                        if 'aprender' in session.get('emociones', []) %}checked{% endif %}>
                     <div class="container-icono-encuesta d-flex align-items-center justify-content-center">
                         <img src="{{ url_for('static', filename='img/iconos/aprender.svg') }}" alt="Emoji aprender"
                             class="icono-encuesta">
@@ -196,7 +217,8 @@
                 </label>
 
                 <label class="encuesta-opcion-logo d-flex align-items-center justify-content-center">
-                    <input type="checkbox" name="emociones" value="nostalgia" class="encuesta-check-hidden">
+                    <input type="checkbox" name="emociones" value="nostalgia" class="encuesta-check-hidden" {%
+                        if 'nostalgia' in session.get('emociones', []) %}checked{% endif %}>
                     <div class="container-icono-encuesta d-flex align-items-center justify-content-center">
                         <img src="{{ url_for('static', filename='img/iconos/nostalgia.svg') }}" alt="Emoji nostalgia"
                             class="icono-encuesta">
@@ -206,7 +228,8 @@
                 </label>
 
                 <label class="encuesta-opcion-logo d-flex align-items-center justify-content-center">
-                    <input type="checkbox" name="emociones" value="inspiracion" class="encuesta-check-hidden">
+                    <input type="checkbox" name="emociones" value="inspiracion" class="encuesta-check-hidden" {%
+                        if 'inspiracion' in session.get('emociones', []) %}checked{% endif %}>
                     <div class="container-icono-encuesta d-flex align-items-center justify-content-center">
                         <img src="{{ url_for('static', filename='img/iconos/inspiracion.svg') }}"
                             alt="Emoji inspiración" class="icono-encuesta">
@@ -233,16 +256,18 @@
             </p>
             <div class="encuesta-grid-plataformas justify-content-center">
                 <label class="encuesta-opcion-logo d-flex align-items-center justify-content-center">
-                    <input type="checkbox" name="epoca" value="estrenos" class="encuesta-check-hidden">
+                    <input type="radio" name="epoca" value="estrenos" class="encuesta-check-hidden" {% if
+                        session.get('epoca')=='estrenos' %}checked{% endif %}>
                     <div class="container-icono-encuesta d-flex align-items-center justify-content-center">
-                        <img src="{{ url_for('static', filename='img/iconos/estrenos.svg') }}" alt="Estrenos y tendencias actuales"
-                            class="icono-encuesta">
+                        <img src="{{ url_for('static', filename='img/iconos/estrenos.svg') }}"
+                            alt="Estrenos y tendencias actuales" class="icono-encuesta">
                     </div>
                     <p class="encuesta-opcion-txt">Estrenos y tendencias actuales</p>
                     <small class="encuesta-opcion-desc">Lo último en taquilla</small>
                 </label>
                 <label class="encuesta-opcion-logo d-flex align-items-center justify-content-center">
-                    <input type="checkbox" name="epoca" value="modernas" class="encuesta-check-hidden">
+                    <input type="radio" name="epoca" value="modernas" class="encuesta-check-hidden" {% if
+                        session.get('epoca')=='modernas' %}checked{% endif %}>
                     <div class="container-icono-encuesta d-flex align-items-center justify-content-center">
                         <img src="{{ url_for('static', filename='img/iconos/pelicula.svg') }}" alt="Películas modernas"
                             class="icono-encuesta">
@@ -251,10 +276,11 @@
                     <small class="encuesta-opcion-desc">Producciones de las últimas décadas</small>
                 </label>
                 <label class="encuesta-opcion-logo d-flex align-items-center justify-content-center">
-                    <input type="checkbox" name="epoca" value="clasicos" class="encuesta-check-hidden">
+                    <input type="radio" name="epoca" value="clasicos" class="encuesta-check-hidden" {% if
+                        session.get('epoca')=='clasicos' %}checked{% endif %}>
                     <div class="container-icono-encuesta d-flex align-items-center justify-content-center">
-                        <img src="{{ url_for('static', filename='img/iconos/clasicos.svg') }}" alt="Clásicos nostálgicos"
-                            class="icono-encuesta">
+                        <img src="{{ url_for('static', filename='img/iconos/clasicos.svg') }}"
+                            alt="Clásicos nostálgicos" class="icono-encuesta">
                     </div>
                     <p class="encuesta-opcion-txt">Clásicos nostálgicos</p>
                     <small class="encuesta-opcion-desc">Joyas del cine de otras épocas</small>
@@ -279,25 +305,30 @@
             </p>
             <div class="encuesta-grid-clasificacion justify-content-center">
                 <label class="encuesta-opcion-logo d-flex align-items-center justify-content-center">
-                    <input type="checkbox" name="formato" value="pelicula" class="encuesta-check-hidden">
+                    <input type="radio" name="clasificacion" value="atp" class="encuesta-check-hidden" {% if
+                        session.get('clasificacion')=='atp' %}checked{% endif %}>
                     <div class="container-icono-encuesta d-flex align-items-center justify-content-center">
                         <img src="{{ url_for('static', filename='img/iconos/atp.svg') }}" alt="ATP"
                             class="icono-encuesta">
                     </div>
                     <p class="encuesta-opcion-txt">ATP - Familiar</p>
-                    <small class="encuesta-opcion-desc">Contenido apto para todo público. Historias mágicas y seguras.</small>
+                    <small class="encuesta-opcion-desc">Contenido apto para todo público. Historias mágicas y
+                        seguras.</small>
                 </label>
                 <label class="encuesta-opcion-logo d-flex align-items-center justify-content-center">
-                    <input type="checkbox" name="formato" value="pelicula" class="encuesta-check-hidden">
+                    <input type="radio" name="clasificacion" value="+13" class="encuesta-check-hidden" {% if
+                        session.get('clasificacion')=='+13' %}checked{% endif %}>
                     <div class="container-icono-encuesta d-flex align-items-center justify-content-center">
                         <img src="{{ url_for('static', filename='img/iconos/+13.svg') }}" alt="+13"
                             class="icono-encuesta">
                     </div>
                     <p class="encuesta-opcion-txt">+13 - Acción</p>
-                    <small class="encuesta-opcion-desc">Aventuras emocionantes con intensidad moderada para adolescentes.</small>
+                    <small class="encuesta-opcion-desc">Aventuras emocionantes con intensidad moderada para
+                        adolescentes.</small>
                 </label>
                 <label class="encuesta-opcion-logo d-flex align-items-center justify-content-center">
-                    <input type="checkbox" name="formato" value="pelicula" class="encuesta-check-hidden">
+                    <input type="radio" name="clasificacion" value="+16" class="encuesta-check-hidden" {% if
+                        session.get('clasificacion')=='+16' %}checked{% endif %}>
                     <div class="container-icono-encuesta d-flex align-items-center justify-content-center">
                         <img src="{{ url_for('static', filename='img/iconos/+16.svg') }}" alt="+16"
                             class="icono-encuesta">
@@ -306,13 +337,15 @@
                     <small class="encuesta-opcion-desc">Tramas complejas, suspenso y temas maduros.</small>
                 </label>
                 <label class="encuesta-opcion-logo d-flex align-items-center justify-content-center">
-                    <input type="checkbox" name="formato" value="pelicula" class="encuesta-check-hidden">
+                    <input type="radio" name="clasificacion" value="+18" class="encuesta-check-hidden" {% if
+                        session.get('clasificacion')=='+18' %}checked{% endif %}>
                     <div class="container-icono-encuesta d-flex align-items-center justify-content-center">
                         <img src="{{ url_for('static', filename='img/iconos/+18.svg') }}" alt="+18"
                             class="icono-encuesta">
                     </div>
                     <p class="encuesta-opcion-txt">+18 - Adulto</p>
-                    <small class="encuesta-opcion-desc">Contenido explícito y visceral para una audiencia adulta.</small>
+                    <small class="encuesta-opcion-desc">Contenido explícito y visceral para una audiencia
+                        adulta.</small>
                 </label>
             </div>
             <div class="encuesta-btn-container">

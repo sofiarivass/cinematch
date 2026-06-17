@@ -8,6 +8,15 @@
     <div class="encuesta-barra" style="--progreso: {{ ((paso / 4) * 100) | int }}%;">
         <div class="encuesta-barra-fill"></div>
     </div>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    {% for category, message in messages %}
+    <div class="alert alert-{{ category }} text-center mt-3 mx-4" role="alert">
+        {{ message }}
+    </div>
+    {% endfor %}
+    {% endif %}
+    {% endwith %}
     <div class="card encuesta-card margen-footer text-center">
         <!-- ── PASO 0: Introducción ── -->
         {% if paso == 0 %}
