@@ -32,9 +32,11 @@
                         <span class="barra-detalle">/</span>
                         <span class="votos-detalle"><i class="bi bi-person-fill"></i> {{ serie.votos }}</span>
                         <br class="d-sm-none" />
-                        <span class="anio-detalle"><i class="bi bi-calendar-event"></i> {{ serie.fecha[:4] }}</span>
-                        <span class="duracion-detalle"><i class="bi bi-layer-forward"></i> {{ serie.temporadas }} Temp.</span>
-                        <span class="duracion-detalle"><i class="bi bi-tv"></i> {{ serie.episodios }} Eps.</span>
+                        <!-- <span class="anio-detalle"><i class="bi bi-calendar-event"></i> {{ serie.fecha[:4] }}</span> -->
+                        <!-- <span class="duracion-detalle"><i class="bi bi-layer-forward"></i> {{ serie.temporadas }} Temp.</span> -->
+                        <!-- <span class="duracion-detalle"><i class="bi bi-tv"></i> {{ serie.episodios }} Eps.</span> -->
+                        <span class="duracion-detalle"><img src="{{ url_for('static', filename='img/iconos/temp.svg') }}" width="17" alt="icono temporadas"> {{ serie.temporadas }} Temp.</span>
+                        <span class="duracion-detalle"><img src="{{ url_for('static', filename='img/iconos/ep.svg') }}" width="17" alt="icono episodios"> {{ serie.episodios }} Eps.</span>
                     </p>
                     <div class="botones-detalle d-flex flex-wrap align-items-center">
                         {% if trailer %}
