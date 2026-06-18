@@ -5,7 +5,7 @@
 <!-- ── Macros: deben declararse ANTES de usarse en Jinja2 ── -->
 {% macro _render_media_item(item) %}
 <div class="media-item">
-    <a data-id="{{ item.id }}" data-bs-toggle="modal" data-bs-target="#modal-info-pelicula"
+    <a data-id="{{ item.id }}" data-tipo="{{ item.tipo }}" data-bs-toggle="modal" data-bs-target="#modal-info-pelicula"
         class="text-decoration-none">
         <div class="media-poster" style="background-image: url('https://image.tmdb.org/t/p/w300{{ item.poster }}');">
             <div class="media-badges">

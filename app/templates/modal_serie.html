@@ -179,3 +179,27 @@
         </div>
     </div>
 </div>
+
+<div class="modal-footer-wrapper">
+    <div class="modal-footer justify-content-center gap-3">
+        <a role="button" class="btn-modal-footer btn-toggle-lista d-flex align-items-center justify-content-center"
+            data-lista="matchlist" data-id="{{ serie.id }}" data-tipo="serie" data-titulo="{{ serie.titulo }}"
+            data-poster="{{ serie.poster }}" data-puntuacion="{{ serie.puntuacion }}"
+            data-fecha="{{ serie.fecha }}" data-generos="{{ serie.genero_ids | join(',') }}">
+            <i class="bi {{ 'bi-bookmark-fill' if estados.matchlist else 'bi-bookmark' }} icono-modal-footer"></i>
+        </a>
+        <a role="button" class="btn-modal-footer btn-toggle-lista d-flex align-items-center justify-content-center"
+            data-lista="favoritos" data-id="{{ serie.id }}" data-tipo="serie" data-titulo="{{ serie.titulo }}"
+            data-poster="{{ serie.poster }}" data-puntuacion="{{ serie.puntuacion }}"
+            data-fecha="{{ serie.fecha }}" data-generos="{{ serie.genero_ids | join(',') }}">
+            <i class="bi {{ 'bi-heart-fill' if estados.favoritos else 'bi-heart' }} icono-modal-footer"></i>
+        </a>
+        <a role="button" class="btn-modal-footer btn-toggle-lista d-flex align-items-center justify-content-center"
+            data-lista="series_vistas" data-id="{{ serie.id }}" data-tipo="serie"
+            data-titulo="{{ serie.titulo }}" data-poster="{{ serie.poster }}"
+            data-puntuacion="{{ serie.puntuacion }}" data-fecha="{{ serie.fecha }}"
+            data-generos="{{ serie.genero_ids | join(',') }}">
+            <i class="bi {{ 'bi-eye-fill' if estados.series_vistas else 'bi-eye' }} icono-modal-footer"></i>
+        </a>
+    </div>
+</div>

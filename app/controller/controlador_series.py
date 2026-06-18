@@ -14,6 +14,7 @@ from flask import Blueprint, request, redirect, url_for, session
 from app.model.modelo_series import SerieModel
 from app.views.vista_series import SerieView
 from app.model.modelo_usuarios import UsuarioModel
+from app.model.modelo_usuarios import PerfilModel
 
 # Blueprint principal — todas las rutas de series quedan agrupadas aquí
 series_bp = Blueprint("series", __name__)
@@ -21,6 +22,7 @@ series_bp = Blueprint("series", __name__)
 # Instancias del modelo y la vista de series
 modelo = SerieModel()
 modelo_usuario = UsuarioModel()
+modelo_perfil = PerfilModel()
 vista = SerieView()
 
 
@@ -37,8 +39,27 @@ def modal_serie(serie_id: int):
         trailer = modelo.obtener_trailer(serie_id)
 
         credits["creadores"] = serie.get("creadores_raw", [])
-        
-        # Renderiza usando la vista de series
-        return vista.render_modal_serie(serie, credits, keywords, providers, clasificacion, trailer)
+
+        nombre_usuario = session.get("nombre_usuario")
+        print("NOMBRE USUARIO:", nombre_usuario)
+        print("SERIE ID:", serie_id, type(serie_id))
+
+        estados = {"matchlist": False, "favoritos": False, "series_vistas": False}
+        if nombre_usuario:
+            for lista in estados:
+                resultado = modelo_perfil.esta_en_lista(
+                    nombre_usuario, lista, serie_id, "tv"
+                )
+                estados[lista] = resultado
+        print("ESTADOS FINALES:", estados)
+        return vista.render_modal_serie(
+            serie=serie,
+            credits=credits,
+            keywords=keywords,
+            providers=providers,
+            clasificacion=clasificacion,
+            estados=estados,
+            trailer=trailer,
+        )
     except Exception as e:
         return str(e), 500

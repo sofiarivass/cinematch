@@ -40,7 +40,7 @@
           <div class="row g-3">
             {% for pelicula in peliculas[i:i+6] %}
             <div class="col-2">
-              <a data-pelicula-id="{{ pelicula.id }}" data-bs-toggle="modal" data-bs-target="#modal-info-pelicula"
+              <a data-id="{{ pelicula.id }}" data-bs-toggle="modal" data-bs-target="#modal-info-pelicula"
                 class="cm-movie-card text-decoration-none" title="{{ pelicula.titulo}}">
                 <div class="cm-movie-card__poster">
                   {% if pelicula.poster %}
@@ -79,7 +79,7 @@
     <div class="d-flex d-md-none flex-nowrap overflow-auto g-3 px-1 pb-2 cm-mobile-scroll">
       {% for pelicula in peliculas %}
       <div class="flex-shrink-0" style="width: 140px; margin-right: 1rem;">
-        <a data-pelicula-id="{{ pelicula.id }}" data-bs-toggle="modal" data-bs-target="#modal-info-pelicula"
+        <a data-id="{{ pelicula.id }}" data-bs-toggle="modal" data-bs-target="#modal-info-pelicula"
           class="cm-movie-card text-decoration-none" title="{{ pelicula.titulo }}">
           <div class="cm-movie-card__poster">
             {% if pelicula.poster %}
@@ -123,7 +123,7 @@
           <div class="row g-3">
             {% for pelicula in seccion.peliculas[i:i+6] %}
             <div class="col-2">
-              <a data-pelicula-id="{{ pelicula.id }}" data-bs-toggle="modal" data-bs-target="#modal-info-pelicula"
+              <a data-id="{{ pelicula.id }}" data-bs-toggle="modal" data-bs-target="#modal-info-pelicula"
                 class="cm-movie-card text-decoration-none" title="{{ pelicula.titulo }}">
                 <div class="cm-movie-card__poster">
                   {% if pelicula.poster %}
@@ -168,7 +168,7 @@
     <div class="d-flex d-md-none flex-nowrap overflow-auto g-3 px-1 pb-3 cm-mobile-scroll mb-4">
       {% for pelicula in seccion.peliculas %}
       <div class="flex-shrink-0" style="width: 140px; margin-right: 1rem;">
-        <a data-pelicula-id="{{ pelicula.id }}" data-bs-toggle="modal" data-bs-target="#modal-info-pelicula"
+        <a data-id="{{ pelicula.id }}" data-bs-toggle="modal" data-bs-target="#modal-info-pelicula"
           class="cm-movie-card text-decoration-none" title="{{ pelicula.titulo }}">
           <div class="cm-movie-card__poster">
             {% if pelicula.poster %}
@@ -241,7 +241,7 @@
           <div class="row g-3">
             {% for pelicula in peliculas[i:i+6] %}
             <div class="col-2">
-              <a data-pelicula-id="{{ pelicula.id }}" data-bs-toggle="modal" data-bs-target="#modal-info-pelicula"
+              <a data-id="{{ pelicula.id }}" data-bs-toggle="modal" data-bs-target="#modal-info-pelicula"
                 class="cm-movie-card text-decoration-none" title="{{ pelicula.titulo}}">
                 <div class="cm-movie-card__poster">
                   {% if pelicula.poster %}
@@ -280,7 +280,7 @@
     <div class="d-flex d-md-none flex-nowrap overflow-auto g-3 px-1 pb-2 cm-mobile-scroll">
       {% for pelicula in peliculas %}
       <div class="flex-shrink-0" style="width: 140px; margin-right: 1rem;">
-        <a data-pelicula-id="{{ pelicula.id }}" data-bs-toggle="modal" data-bs-target="#modal-info-pelicula"
+        <a data-id="{{ pelicula.id }}" data-bs-toggle="modal" data-bs-target="#modal-info-pelicula"
           class="cm-movie-card text-decoration-none" title="{{ pelicula.titulo }}">
           <div class="cm-movie-card__poster">
             {% if pelicula.poster %}

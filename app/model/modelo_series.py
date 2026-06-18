@@ -6,6 +6,7 @@ Capa de Modelo (M en MVC).
 
 import requests
 from config.config import Config
+from app.extensions import cache
 
 
 class SerieModel:
@@ -103,8 +104,8 @@ class SerieModel:
 
         return {
             "flatrate": parsear(ar_data.get("flatrate", [])),  # Streaming
-            "rent": parsear(ar_data.get("rent", [])),          # Alquiler
-            "buy": parsear(ar_data.get("buy", [])),            # Compra
+            "rent": parsear(ar_data.get("rent", [])),  # Alquiler
+            "buy": parsear(ar_data.get("buy", [])),  # Compra
         }
 
     def obtener_todos_providers_ar(self) -> list:
@@ -191,7 +192,9 @@ class SerieModel:
 
     def obtener_keywords(self, serie_id: int) -> list:
         data = self._get(f"/tv/{serie_id}/keywords")
-        return [k["name"] for k in data.get("results", [])]  # El array de keywords de series viene en 'results'
+        return [
+            k["name"] for k in data.get("results", [])
+        ]  # El array de keywords de series viene en 'results'
 
     def _obtener_nombres_paises(self) -> dict:
         data = self._get("/configuration/countries", {"language": "es-AR"})
@@ -247,7 +250,7 @@ class SerieModel:
             ),
             idioma_code,
         )
-        
+
         web = data.get("homepage", "")
         if not web:
             data_en = self._get(f"/tv/{serie_id}", {"language": "en-US"})
@@ -263,8 +266,8 @@ class SerieModel:
             "puntuacion": round(data.get("vote_average", 0), 2),
             "votos": (
                 f"{data.get('vote_count', 0) / 1000:.1f}k"
-                if data.get('vote_count', 0) >= 1000
-                else str(data.get('vote_count', 0))
+                if data.get("vote_count", 0) >= 1000
+                else str(data.get("vote_count", 0))
             ),
             "poster": self.construir_url_imagen(data.get("poster_path")),
             "backdrop": self.construir_url_imagen(data.get("backdrop_path")),
@@ -280,10 +283,14 @@ class SerieModel:
             "creadores_raw": [
                 {
                     "nombre": c.get("name", "").split(" ", 1),
-                    "foto": self.construir_url_imagen(c.get("profile_path")) if c.get("profile_path") else None
+                    "foto": (
+                        self.construir_url_imagen(c.get("profile_path"))
+                        if c.get("profile_path")
+                        else None
+                    ),
                 }
                 for c in data.get("created_by", [])
-            ]
+            ],
         }
 
     def buscar(self, query: str, pagina: int = 1) -> dict:
@@ -310,24 +317,36 @@ class SerieModel:
 
     def obtener_por_preferencias(self, preferencias: dict, pagina: int = 1) -> list:
         """
-        Consulta las series recomendadas cruzando las plataformas e idiomas del usuario.
+        Consulta las series recomendadas cruzando plataformas, idiomas,
+        monetización (suscripción/alquiler) y formato (doblado/subtitulado).
         """
         plataformas = preferencias.get("plataformas", [])
         idiomas = preferencias.get("idiomas", [])
-
-        providers_str = "|".join(map(str, plataformas))
-        idiomas_str = "|".join(idiomas)
+        disponibilidad = preferencias.get("disponibilidad", "any")
+        formato = preferencias.get("formato", "any")
 
         params = {
             "sort_by": "popularity.desc",
             "page": pagina,
-            "watch_region": "AR"
+            "watch_region": "AR",
         }
 
+        providers_str = "|".join(map(str, plataformas))
         if providers_str:
             params["with_watch_providers"] = providers_str
-        if idiomas_str:
-            params["with_original_language"] = idiomas_str
+
+        if disponibilidad == "flatrate":
+            params["with_watch_monetization_types"] = "flatrate"
+        elif disponibilidad == "rent_buy":
+            params["with_watch_monetization_types"] = "rent|buy"
+
+        if "any" not in idiomas and idiomas:
+            idiomas_str = "|".join(idiomas)
+
+            if formato == "subtitulado":
+                params["with_original_language"] = idiomas_str
+            else:
+                params["with_languages"] = idiomas_str
 
         data = self._get("/discover/tv", params)
 
@@ -343,23 +362,31 @@ class SerieModel:
             for s in data.get("results", [])
         ]
 
-    def obtener_por_plataforma_individual(self, plataforma_id: int, idiomas: list) -> list:
+    @cache.memoize(timeout=3600)
+    def obtener_por_plataforma_individual(
+        self, plataforma_id: int, idiomas: list
+    ) -> list:
         """
-        Trae series populares exclusivamente de una plataforma respetando los filtros de idioma.
+        Trae series populares exclusivamente de una plataforma, solucionando
+        el bug del idioma 'any' o listas vacías.
         """
-        idiomas_str = "|".join(idiomas)
-
         params = {
             "sort_by": "popularity.desc",
             "page": 1,
             "watch_region": "AR",
-            "with_watch_providers": plataforma_id
+            "with_watch_providers": str(plataforma_id),
         }
-        
-        if idiomas_str:
-            params["with_original_language"] = idiomas_str
+
+        if "any" not in idiomas and idiomas:
+            params["with_languages"] = "|".join(idiomas)
 
         data = self._get("/discover/tv", params)
+        results = data.get("results", [])
+
+        if not results:
+            print(
+                f"DEBUG: API vacía para Plataforma {plataforma_id} con params: {params}"
+            )
 
         return [
             {
@@ -367,8 +394,9 @@ class SerieModel:
                 "titulo": s.get("name", "Sin título"),
                 "poster": self.construir_url_imagen(s.get("poster_path")),
                 "puntuacion": s.get("vote_average", 0),
+                "fecha": s.get("first_air_date", ""),
             }
-            for s in data.get("results", [])
+            for s in results
         ]
 
     def obtener_nombre_plataforma(self, plataforma_id: int) -> str:
@@ -381,13 +409,13 @@ class SerieModel:
             119: "Amazon Prime Video",
             337: "Disney+",
             350: "Apple TV+",
-            531: "Paramount+"
+            531: "Paramount+",
         }
-        
+
         id_int = int(plataforma_id)
         if id_int in nombres_locales:
             return nombres_locales[id_int]
-            
+
         try:
             data = self._get(
                 "/watch/providers/tv",
@@ -401,5 +429,5 @@ class SerieModel:
                     return p.get("provider_name", f"Servicio {id_int}")
         except Exception:
             pass
-            
+
         return f"Servicio {id_int}"

@@ -44,13 +44,9 @@ def modal_pelicula(pelicula_id: int):
         estados = {"matchlist": False, "favoritos": False, "peliculas_vistas": False}
         if nombre_usuario:
             for lista in estados:
-                # estados[lista] = modelo_perfil.esta_en_lista(
-                #     nombre_usuario, lista, pelicula_id, "movie"
-                # )
                 resultado = modelo_perfil.esta_en_lista(
                     nombre_usuario, lista, pelicula_id, "movie"
                 )
-                print(f"esta_en_lista({lista}):", resultado)
                 estados[lista] = resultado
         print("ESTADOS FINALES:", estados)
         return vista.render_modal_pelicula(
