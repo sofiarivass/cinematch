@@ -6,6 +6,7 @@ Capa de Modelo (M en MVC).
 
 import requests
 from config.config import Config
+from app.extensions import cache
 
 
 class PeliculaModel:
@@ -323,60 +324,44 @@ class PeliculaModel:
             "query": query,
         }
 
-    # Métodos para recomendaciones personalizadas segun preferencias del usuario (plataformas e idiomas)
+    # Método clave: obtener recomendaciones cruzando múltiples filtros
     def obtener_por_preferencias(self, preferencias: dict, pagina: int = 1) -> list:
-            """
-            Consulta las películas recomendadas cruzando las plataformas e idiomas del usuario.
-            """
-            plataformas = preferencias.get("plataformas", [])
-            idiomas = preferencias.get("idiomas", [])
-
-            # TMDB une filtros OR con el pipe "|"
-            providers_str = "|".join(map(str, plataformas))
-            idiomas_str = "|".join(idiomas)
-
-            params = {
-                "sort_by": "popularity.desc",
-                "page": pagina,
-                "watch_region": "AR"  # Región fija en Argentina
-            }
-
-            if providers_str:
-                params["with_watch_providers"] = providers_str
-            if idiomas_str:
-                params["with_original_language"] = idiomas_str
-
-            # Usamos tu método privado nativo _get mapeando al endpoint discover
-            data = self._get("/discover/movie", params)
-
-            return [
-                {
-                    "id": p["id"],
-                    "titulo": p.get("title", "Sin título"),
-                    "descripcion": p.get("overview", "Sin descripción disponible."),
-                    "puntuacion": p.get("vote_average", 0),
-                    "poster": self.construir_url_imagen(p.get("poster_path")),
-                    "fecha": p.get("release_date", ""),
-                }
-                for p in data.get("results", [])
-            ]
-
-    def obtener_por_plataforma_individual(self, plataforma_id: int, idiomas: list) -> list:
         """
-        Trae películas populares exclusivamente de una plataforma (ej: Solo Netflix) 
-        respetando los filtros de idioma del usuario.
+        Consulta las películas recomendadas cruzando plataformas, idiomas,
+        monetización (suscripción/alquiler) y formato (doblado/subtitulado).
         """
-        idiomas_str = "|".join(idiomas)
+        plataformas = preferencias.get("plataformas", [])
+        idiomas = preferencias.get("idiomas", [])
+        disponibilidad = preferencias.get("disponibilidad", "any")
+        formato = preferencias.get("formato", "any")
 
         params = {
             "sort_by": "popularity.desc",
-            "page": 1,
+            "page": pagina,
             "watch_region": "AR",
-            "with_watch_providers": plataforma_id
         }
-        
-        if idiomas_str:
-            params["with_original_language"] = idiomas_str
+
+        # 1. Filtro de Plataformas
+        providers_str = "|".join(map(str, plataformas))
+        if providers_str:
+            params["with_watch_providers"] = providers_str
+
+        # 2. Filtro de Disponibilidad (Monetización)
+        if disponibilidad == "flatrate":
+            params["with_watch_monetization_types"] = "flatrate"
+        elif disponibilidad == "rent_buy":
+            params["with_watch_monetization_types"] = "rent|buy"
+
+        # 3. Filtro Combinado: Idiomas y Formato
+        if "any" not in idiomas and idiomas:
+            idiomas_str = "|".join(idiomas)
+
+            if formato == "subtitulado":
+                # Exige que el idioma original de producción sea uno de sus preferidos
+                params["with_original_language"] = idiomas_str
+            else:
+                # Doblado o Indistinto: permite que esté disponible en ese idioma (audio o sub)
+                params["with_languages"] = idiomas_str
 
         data = self._get("/discover/movie", params)
 
@@ -384,10 +369,51 @@ class PeliculaModel:
             {
                 "id": p["id"],
                 "titulo": p.get("title", "Sin título"),
-                "poster": self.construir_url_imagen(p.get("poster_path")),
+                "descripcion": p.get("overview", "Sin descripción disponible."),
                 "puntuacion": p.get("vote_average", 0),
+                "poster": self.construir_url_imagen(p.get("poster_path")),
+                "fecha": p.get("release_date", ""),
             }
             for p in data.get("results", [])
+        ]
+
+    # Método alternativo para obtener por plataforma individual, con corrección del bug de idioma 'any' o listas vacías
+    @cache.memoize(timeout=3600)
+    def obtener_por_plataforma_individual(
+        self, plataforma_id: int, idiomas: list
+    ) -> list:
+        """
+        Trae películas populares exclusivamente de una plataforma, solucionando
+        el bug del idioma 'any' o listas vacías.
+        """
+        params = {
+            "sort_by": "popularity.desc",
+            "page": 1,
+            "watch_region": "AR",
+            "with_watch_providers": str(plataforma_id),
+        }
+
+        # 🟢 CORRECCIÓN DEL BUG: Si es 'any' o está vacío, NO enviamos el filtro de idioma
+        if "any" not in idiomas and idiomas:
+            params["with_languages"] = "|".join(idiomas)
+
+        data = self._get("/discover/movie", params)
+        results = data.get("results", [])
+
+        if not results:
+            print(
+                f"DEBUG: API vacía para Plataforma {plataforma_id} con params: {params}"
+            )
+
+        return [
+            {
+                "id": p["id"],
+                "titulo": p.get("title", "Sin título"),
+                "poster": self.construir_url_imagen(p.get("poster_path")),
+                "puntuacion": p.get("vote_average", 0),
+                "fecha": p.get("release_date", ""),
+            }
+            for p in results
         ]
 
     # Método para obtener el nombre real de una plataforma a partir de su ID, con un mapeo local y fallback a TMDB
@@ -403,13 +429,13 @@ class PeliculaModel:
             119: "Amazon Prime Video",
             337: "Disney+",
             350: "Apple TV+",
-            531: "Paramount+"
+            531: "Paramount+",
         }
-        
+
         id_int = int(plataforma_id)
         if id_int in nombres_locales:
             return nombres_locales[id_int]
-            
+
         # 2. Si es una plataforma buscada ("otra"), consultamos a TMDB
         try:
             data = self._get(
@@ -424,5 +450,5 @@ class PeliculaModel:
                     return p.get("provider_name", f"Servicio {id_int}")
         except Exception:
             pass
-            
+
         return f"Servicio {id_int}"

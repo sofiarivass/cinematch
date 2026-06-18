@@ -1,6 +1,6 @@
-from flask import Flask
+from flask import Flask, app
 from config.config import Config
-
+from app.extensions import cache
 from app.controller.controlador import cinematch_bp
 from app.controller.controlador_peliculas import peliculas_bp
 from app.controller.controlador_series import series_bp
@@ -20,6 +20,8 @@ def create_app() -> Flask:
 
     # Cargar configuración
     app.config.from_object(Config)
+
+    cache.init_app(app)
 
     # Inicializar OAuth
     init_oauth(app)

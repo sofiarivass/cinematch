@@ -57,19 +57,41 @@ def index():
 
             mapa_nombres = {p["id"]: p["nombre"] for p in catálogo_completo}
 
+
             for p_id in preferencias.get("plataformas", []):
                 nombre_stream = mapa_nombres.get(p_id, f"Servicio {p_id}")
-                movies_plataforma = modelo_peliculas.obtener_por_plataforma_individual(
-                    plataforma_id=p_id, idiomas=preferencias.get("idiomas", [])
-                )
-
-                if movies_plataforma:
-                    secciones_por_plataforma.append(
-                        {
-                            "nombre_plataforma": nombre_stream,
-                            "peliculas": movies_plataforma[:6],  # Mandamos las 6 primeras para el feed
-                        }
+                try:
+                    # Aquí llamas a la función que tiene el @cache.memoize
+                    movies = modelo_peliculas.obtener_por_plataforma_individual(
+                        plataforma_id=p_id, 
+                        idiomas=preferencias.get("idiomas", [])
                     )
+                    
+                    if movies:
+                        secciones_por_plataforma.append({
+                            "nombre_plataforma": nombre_stream,
+                            "peliculas": movies[:6]
+                        })
+                    else:
+                        print(f"DEBUG: La API no devolvió peliculas para la plataforma {p_id}")
+                        
+                except Exception as e:
+                    print(f"DEBUG: Error real al llamar a la API para {p_id}: {e}")
+
+
+            # for p_id in preferencias.get("plataformas", []):
+            #     nombre_stream = mapa_nombres.get(p_id, f"Servicio {p_id}")
+            #     movies_plataforma = modelo_peliculas.obtener_por_plataforma_individual(
+            #         plataforma_id=p_id, idiomas=preferencias.get("idiomas", [])
+            #     )
+
+            #     if movies_plataforma:
+            #         secciones_por_plataforma.append(
+            #             {
+            #                 "nombre_plataforma": nombre_stream,
+            #                 "peliculas": movies_plataforma[:6],  # Mandamos las 6 primeras para el feed
+            #             }
+            #         )
 
             # Renderizamos usando tu vista adaptada
             return vista.render_index(
