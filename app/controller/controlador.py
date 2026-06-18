@@ -277,12 +277,17 @@ def encuesta_perfil():
         if paso == 1:
             plataformas = request.form.getlist("plataformas")
             otras = request.form.get("plataformas_otras", "")
-            
+
+            # Validamos que haya seleccionado al menos una o escrito otra
             if not plataformas and not otras:
                 error = True
             else:
-                plataformas_otras = [int(x) for x in otras.split(",") if x.strip().isdigit()]
-                session["plataformas"] = list(set([int(p) for p in plataformas] + plataformas_otras))
+                plataformas_otras = [
+                    int(x) for x in otras.split(",") if x.strip().isdigit()
+                ]
+                session["plataformas"] = list(
+                    set([int(p) for p in plataformas] + plataformas_otras)
+                )
                 session["plataformas_otras_ids"] = plataformas_otras
 
         elif paso == 2:
@@ -314,21 +319,18 @@ def encuesta_perfil():
                     "formato": session.get("formato", "any"),
                 }
 
-                # 🟢 Guardamos usando el ID de usuario único que es más consistente
-                usuario_id = session.get("usuario_id")
-                if usuario_id:
-                    modelo_usuario.guardar_preferencias(usuario_id, preferencias_finales)
-                
-                # Limpiamos las variables de la encuesta de la sesión para no sobrecargarla
-                for key in ["plataformas", "plataformas_otras_ids", "disponibilidad", "idiomas", "formato"]:
-                    session.pop(key, None)
+                usuario_actual = session.get("nombre_usuario")
+                if usuario_actual:
+                    modelo_usuario.guardar_preferencias(
+                        usuario_actual, preferencias_finales
+                    )
 
                 flash("¡Tu experiencia ha sido personalizada con éxito!", "success")
                 return redirect(url_for("cinematch.index"))
 
         if error:
             flash("Por favor, seleccioná al menos una opción para continuar.", "danger")
-            siguiente_paso = paso 
+            siguiente_paso = paso  # Se queda en el mismo paso
         else:
             siguiente_paso = paso + 1
 
@@ -336,8 +338,12 @@ def encuesta_perfil():
         siguiente_paso = request.args.get("paso", 0, type=int)
 
     providers = modelo_peliculas.obtener_providers_ar() if siguiente_paso == 1 else []
-    todos_providers = modelo_peliculas.obtener_todos_providers_ar() if siguiente_paso == 1 else []
-    todos_idiomas = modelo_peliculas.obtener_todos_idiomas() if siguiente_paso == 3 else []
+    todos_providers = (
+        modelo_peliculas.obtener_todos_providers_ar() if siguiente_paso == 1 else []
+    )
+    todos_idiomas = (
+        modelo_peliculas.obtener_todos_idiomas() if siguiente_paso == 3 else []
+    )
 
     return vista.render_encuesta_perfil(
         paso=siguiente_paso,

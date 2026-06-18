@@ -10,10 +10,11 @@ Responsabilidades:
   - Pasar los datos a la Vista para renderizar.
 """
 
-from flask import Blueprint, request, redirect, url_for, session
+from flask import Blueprint, jsonify, request, redirect, url_for, session
 from app.model.modelo_peliculas import PeliculaModel
 from app.views.vista_peliculas import PeliculaView
 from app.model.modelo_usuarios import UsuarioModel
+from app.model.modelo_usuarios import PerfilModel
 
 # Blueprint principal — todas las rutas quedan agrupadas aquí
 peliculas_bp = Blueprint("peliculas", __name__)
@@ -21,8 +22,8 @@ peliculas_bp = Blueprint("peliculas", __name__)
 # Instancias del modelo y la vista
 modelo = PeliculaModel()
 modelo_usuario = UsuarioModel()
+modelo_perfil = PerfilModel()
 vista = PeliculaView()
-
 
 
 # RUTA CONTENIDO MODAL DETALLE PELIS
@@ -35,7 +36,31 @@ def modal_pelicula(pelicula_id: int):
         providers = modelo.obtener_providers(pelicula_id)
         clasificacion = modelo.obtener_clasificacion(pelicula_id)
         trailer = modelo.obtener_trailer(pelicula_id)
-        return vista.render_modal_pelicula(pelicula, credits, keywords, providers, clasificacion, trailer)
+
+        nombre_usuario = session.get("nombre_usuario")
+        print("NOMBRE USUARIO:", nombre_usuario)
+        print("PELICULA ID:", pelicula_id, type(pelicula_id))
+
+        estados = {"matchlist": False, "favoritos": False, "peliculas_vistas": False}
+        if nombre_usuario:
+            for lista in estados:
+                # estados[lista] = modelo_perfil.esta_en_lista(
+                #     nombre_usuario, lista, pelicula_id, "movie"
+                # )
+                resultado = modelo_perfil.esta_en_lista(
+                    nombre_usuario, lista, pelicula_id, "movie"
+                )
+                print(f"esta_en_lista({lista}):", resultado)
+                estados[lista] = resultado
+        print("ESTADOS FINALES:", estados)
+        return vista.render_modal_pelicula(
+            pelicula=pelicula,
+            credits=credits,
+            keywords=keywords,
+            providers=providers,
+            clasificacion=clasificacion,
+            estados=estados,
+            trailer=trailer,
+        )
     except Exception as e:
         return str(e), 500
-
