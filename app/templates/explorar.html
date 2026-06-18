@@ -263,7 +263,7 @@
             {% if peliculas %}
             <div class="ex-movies-grid">
                 {% for pelicula in peliculas %}
-                <a data-pelicula-id="{{ pelicula.id }}" data-bs-toggle="modal" data-bs-target="#modal-info-pelicula"
+                <a data-id="{{ pelicula.id }}" data-bs-toggle="modal" data-bs-target="#modal-info-pelicula"
                     class="ex-movie-card text-decoration-none" title="{{ pelicula.titulo }}">
                     <div class="ex-movie-card__poster">
                         {% if pelicula.poster %}

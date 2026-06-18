@@ -296,6 +296,7 @@ class PeliculaModel:
             "fecha": data.get("release_date", "-"),
             "duracion": f"{data.get('runtime', 0) // 60}h {data.get('runtime', 0) % 60}m",
             "generos": [g["name"] for g in data.get("genres", [])],
+            "genero_ids": [g["id"] for g in data.get("genres", [])],
             "productora": [p["name"] for p in data.get("production_companies", [])],
             "tagline": data.get("tagline", ""),
             "web": web,

@@ -15,7 +15,7 @@ from flask import render_template
 class PeliculaView:
     """Encapsula el renderizado de todas las vistas de películas."""
 
-    def render_modal_pelicula(self, pelicula, credits, keywords, providers, clasificacion, trailer=None) -> str:
+    def render_modal_pelicula(self, pelicula, credits, keywords, providers, clasificacion, trailer=None, estados=None) -> str:
         return render_template(
             "modal_pelicula.html",
             pelicula=pelicula,
@@ -24,7 +24,8 @@ class PeliculaView:
             providers=providers,
             clasificacion=clasificacion,
             trailer=trailer,
-    )
+            estados=estados or {"matchlist": False, "favoritos": False, "peliculas_vistas": False},
+        )
 
     def render_error(self, mensaje: str) -> tuple[str, int]:
         """

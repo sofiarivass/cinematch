@@ -400,11 +400,13 @@ def toggle_lista():
         return jsonify({"error": "No autenticado"}), 401
 
     data = request.get_json()
+    print("DATA RECIBIDA:", data)  # ← agregá esto
     lista = data.get("lista")
     item_id = data.get("id")
     tipo = data.get("tipo")
 
     if not all([lista, item_id, tipo]):
+        print("FALLÓ VALIDACIÓN:", lista, item_id, tipo)  # ← agregá esto
         return jsonify({"error": "Faltan campos"}), 400
 
     ya_estaba = modelo_perfil.esta_en_lista(nombre_usuario, lista, item_id, tipo)

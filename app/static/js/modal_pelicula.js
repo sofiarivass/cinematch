@@ -2,15 +2,13 @@ document.addEventListener("DOMContentLoaded", function () {
     const modalEl = document.getElementById("modal-info-pelicula");
     const modalContenido = document.getElementById("modal-contenido");
 
-    // Si la página no tiene el modal, no hacemos nada
     if (!modalEl || !modalContenido) return;
 
     modalEl.addEventListener("show.bs.modal", function (e) {
         const trigger = e.relatedTarget;
-
         if (!trigger) return;
 
-        const peliculaId = trigger.dataset.peliculaId;
+        const peliculaId = trigger.dataset.id;
 
         if (!peliculaId) {
             modalContenido.innerHTML =
@@ -23,33 +21,67 @@ document.addEventListener("DOMContentLoaded", function () {
                 <div class="spinner-border text-light" role="status"></div>
             </div>`;
 
-        fetch(`/pelicula/${peliculaId}/modal`)
+        fetch(`/pelicula/${peliculaId}/modal`, { cache: "no-store" })
             .then(r => r.text())
             .then(html => {
                 modalContenido.innerHTML = html;
 
-                if (modalEl.dataset.footer === "true") {
-                    modalContenido.insertAdjacentHTML(
-                        "beforeend",
-                        `
-            <div class="modal-footer justify-content-center gap-3">
-                <a role="button" data-bs-toggle="modal" data-bs-target="#modal-info-pelicula" data-pelicula-id="{{ pelicula.id }}" class="btn-modal-footer d-flex align-items-center justify-content-center">
-                    <i class="bi bi-bookmark icono-modal-footer"></i>
-                </a>
-                <a role="button" data-bs-toggle="modal" data-bs-target="#modal-info-pelicula" data-pelicula-id="{{ pelicula.id }}" class="btn-modal-footer d-flex align-items-center justify-content-center">
-                    <i class="bi bi-heart icono-modal-footer"></i>
-                </a>
-                <a role="button" data-bs-toggle="modal" data-bs-target="#modal-info-pelicula" data-pelicula-id="{{ pelicula.id }}" class="btn-modal-footer d-flex align-items-center justify-content-center">
-                    <i class="bi bi-eye icono-modal-footer"></i>
-                </a>
-            </div>
-            `
-                    );
+                if (modalEl.dataset.footer === "false") {
+                    const footerWrapper = modalContenido.querySelector(".modal-footer-wrapper");
+                    if (footerWrapper) footerWrapper.remove();
                 }
             })
             .catch(() => {
                 modalContenido.innerHTML =
                     "<p class='text-center p-4 text-muted'>Error al cargar la información.</p>";
+
             });
+    });
+
+    // Delegación de eventos: como el footer se inyecta dinámicamente,
+    // escuchamos los clicks desde el modal completo
+    modalEl.addEventListener("click", function (e) {
+        const btn = e.target.closest(".btn-toggle-lista");
+        if (!btn) return;
+
+        const lista = btn.dataset.lista;
+        const peliculaId = btn.dataset.id;
+        const tipo = btn.dataset.tipo;
+        const icono = btn.querySelector("i");
+
+        const iconos = {
+            matchlist: ["bi-bookmark", "bi-bookmark-fill"],
+            favoritos: ["bi-heart", "bi-heart-fill"],
+            peliculas_vistas: ["bi-eye", "bi-eye-fill"],
+        };
+
+        const generoIds = (btn.dataset.generos || "")
+            .split(",")
+            .filter(g => g !== "")
+            .map(g => parseInt(g));
+
+        fetch("/perfil/lista/toggle", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                lista: lista,
+                id: parseInt(peliculaId),
+                tipo: tipo,
+                titulo: btn.dataset.titulo || "",
+                poster: btn.dataset.poster || "",
+                puntuacion: parseFloat(btn.dataset.puntuacion) || 0,
+                fecha: btn.dataset.fecha || "",
+                genero_ids: generoIds,
+            }),
+        })
+
+            .then(r => r.json())
+            .then(data => {
+                const [vacio, lleno] = iconos[lista];
+                const agregado = data.accion === "agregado";
+                icono.classList.toggle(vacio, !agregado);
+                icono.classList.toggle(lleno, agregado);
+            })
+            .catch(() => alert("Error al actualizar la lista"));
     });
 });

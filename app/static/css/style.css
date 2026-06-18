@@ -83,9 +83,9 @@ main {
     transition: all 0.2s;
 }
 
-.btn-iniciar-sesion:hover {
-    background-color: #192fa3;
-    border-color: #192fa3;
+.btn-iniciar-sesion:hover, .btn-iniciar-sesion:active, .btn-iniciar-sesion:focus {
+    background-color: #192fa3 !important;
+    border-color: #192fa3 !important;
     transition: all 0.2s;
     transform: scale(1.04);
     box-shadow: 0 0 0.8em 0 #192fa3;
@@ -101,10 +101,10 @@ main {
     transition: all 0.2s;
 }
 
-.btn-crear-cuenta:hover {
-    background-color: #192fa3;
-    color: #FFFFFF;
-    border-color: #192fa3;
+.btn-crear-cuenta:hover, .btn-crear-cuenta:active, .btn-crear-cuenta:focus {
+    background-color: #192fa3 !important;
+    color: #FFFFFF !important;
+    border-color: #192fa3 !important;
     transition: all 0.2s;
     transform: scale(1.04);
     box-shadow: 0 0 0.8em 0 #192fa3;
@@ -2410,28 +2410,29 @@ footer .nav-link:hover {
 
 .perfil-container {
     --pf-bg-dark: #070B19;
-    --pf-card-bg: #0C1327;
-    --pf-box-bg: #070B19;
+    --pf-card-bg: #030E21;
+    --pf-box-bg: #030E21;
     --pf-accent-blue: #4F46E5;
     --pf-accent-blue-hover: #4338CA;
     --pf-text-main: #FFFFFF;
     --pf-text-muted: #8B949E;
-    --pf-border-color: #1F2937;
+    --pf-border-color: #3F4A5C;
     --pf-gold: #FACC15;
 
     max-width: 1100px;
     margin: 0 auto;
+    margin-top: 6em;
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
     color: var(--pf-text-main);
-    font-family: 'Inter', system-ui, sans-serif;
+    font-family: 'Montserrat', sans-serif;
 }
 
 /* ── TARJETAS GENERALES ── */
 .perfil-container .card {
     background-color: var(--pf-card-bg);
-    border-radius: 16px;
+    border-radius: 24px;
     padding: 2rem;
     border: 1px solid var(--pf-border-color);
     position: relative;
@@ -2440,6 +2441,8 @@ footer .nav-link:hover {
 /* ── HEADER ── */
 .perfil-container .header-card {
     display: flex;
+    flex-direction: row;
+    align-content: center;
     justify-content: space-between;
     align-items: center;
     flex-wrap: wrap;
@@ -2469,10 +2472,11 @@ footer .nav-link:hover {
 }
 
 .perfil-container .avatar-circle {
-    width: 80px;
-    height: 80px;
+    width: 4em;
+    height: 4em;
     border-radius: 50%;
-    border: 1px solid var(--pf-border-color);
+    background-color: #010F27;
+    border: 1px solid #213052;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -2489,7 +2493,7 @@ footer .nav-link:hover {
 
 .perfil-container .user-text p {
     color: var(--pf-text-muted);
-    font-size: 0.85rem;
+    font-size: 0.75rem;
 }
 
 .perfil-container .stats-grid {
@@ -2500,21 +2504,22 @@ footer .nav-link:hover {
 .perfil-container .stat-box {
     background-color: var(--pf-box-bg);
     border: 1px solid var(--pf-border-color);
-    border-radius: 12px;
+    border-radius: 20px;
     padding: 1rem 1.5rem;
     text-align: center;
     min-width: 110px;
 }
 
-.perfil-container .stat-box .icon-stat {
+.perfil-container .stat-box .icono-stats {
     color: var(--pf-accent-blue);
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     margin-bottom: 0.5rem;
     display: block;
 }
 
 .perfil-container .stat-box h2 {
     font-size: 1.5rem;
+    margin-top: 0.4rem;
     margin-bottom: 0.2rem;
     color: var(--pf-text-main);
 }
@@ -2522,6 +2527,7 @@ footer .nav-link:hover {
 .perfil-container .stat-box p {
     color: var(--pf-text-muted);
     font-size: 0.75rem;
+    margin-bottom: 0;
 }
 
 /* ── TABS (subrayado, no pills) ── */
@@ -2557,6 +2563,17 @@ footer .nav-link:hover {
 .perfil-container .tab-btn.active {
     color: var(--pf-text-main);
     border-bottom-color: var(--pf-accent-blue);
+}
+
+.bi.bi-gear {
+    color: #232D3E;
+    font-size: 1.5rem;
+}
+
+.bi.bi-person {
+    font-size: 4.5rem;
+    line-height: 1;
+    color: #FFFFFF;
 }
 
 /* ── GRID DE MEDIA ── */
@@ -2628,6 +2645,7 @@ footer .nav-link:hover {
 
 .perfil-container .media-info h3 {
     font-size: 0.95rem;
+    margin-bottom: 0.1rem;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -2717,6 +2735,10 @@ footer .nav-link:hover {
 }
 
 /* Barras CSS — géneros */
+
+.perfil-container .text-muted {
+    color: var(--pf-text-muted) !important;
+}
 
 .perfil-container .genre-bars {
     display: flex;

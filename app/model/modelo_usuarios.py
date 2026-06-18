@@ -405,9 +405,11 @@ class PerfilModel:
             + listas["favoritos"]
         )
 
-        # ── Géneros ──
+        # ── Géneros (solo basados en favoritos) ──
+        favoritos = listas["favoritos"]
+
         contador_generos = Counter()
-        for item in todo:
+        for item in favoritos:
             for gid in item.get("genero_ids", []):
                 nombre = mapa_generos.get(gid)
                 if nombre:
@@ -420,7 +422,7 @@ class PerfilModel:
                 "cantidad": cant,
                 "porcentaje": round(cant / total_generos * 100),
             }
-            for nombre, cant in contador_generos.most_common(6)
+            for nombre, cant in contador_generos.most_common(5)
         ]
 
         # ── Actividad mensual (últimos 12 meses, solo vistas) ──
