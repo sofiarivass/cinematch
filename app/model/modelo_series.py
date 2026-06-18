@@ -276,6 +276,7 @@ class SerieModel:
             "temporadas": data.get("number_of_seasons", 0),
             "episodios": data.get("number_of_episodes", 0),
             "generos": [g["name"] for g in data.get("genres", [])],
+            "genero_ids": [g["id"] for g in data.get("genres", [])],
             "productora": [p["name"] for p in data.get("production_companies", [])],
             "tagline": data.get("tagline", ""),
             "web": web,

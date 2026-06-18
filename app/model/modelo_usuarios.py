@@ -397,10 +397,10 @@ class PerfilModel:
 
     def calcular_estadisticas(self, nombre_usuario: str, mapa_generos: dict) -> dict:
         """
-        Calcula géneros más consumidos y actividad mensual.
+        Calcula géneros más consumidos (basado en favoritos) y actividad mensual.
 
         mapa_generos: {id: nombre} — traído desde modelo.obtener_generos()
-                      para convertir genre_ids a nombres legibles.
+                    para convertir genre_ids a nombres legibles.
 
         Devuelve:
         {
@@ -412,17 +412,19 @@ class PerfilModel:
 
         # Todo el contenido consumido (vistas + matchlist + favoritos)
         todo = (
-            listas["peliculas_vistas"]
-            + listas["series_vistas"]
-            + listas["matchlist"]
-            + listas["favoritos"]
+            listas.get("peliculas_vistas", [])
+            + listas.get("series_vistas", [])
+            + listas.get("matchlist", [])
+            + listas.get("favoritos", [])
         )
 
-        # ── Géneros (solo basados en favoritos) ──
-        favoritos = listas["favoritos"]
+        # ── Géneros (basados en favoritos de películas y series) ──
+        favoritos = listas.get("favoritos", [])
 
         contador_generos = Counter()
         for item in favoritos:
+            # Ahora que 'obtener_detail' en series mapea 'genero_ids', 
+            # funcionará de forma unificada tanto para películas como para series.
             for gid in item.get("genero_ids", []):
                 nombre = mapa_generos.get(gid)
                 if nombre:
@@ -438,7 +440,7 @@ class PerfilModel:
             for nombre, cant in contador_generos.most_common(5)
         ]
 
-        # ── Actividad mensual (últimos 12 meses, solo vistas) ──
+        # ── Actividad mensual (últimos 12 meses, películas + series vistas) ──
         MESES = [
             "Ene",
             "Feb",
@@ -455,7 +457,7 @@ class PerfilModel:
         ]
 
         actividad = defaultdict(int)
-        vistas = listas["peliculas_vistas"] + listas["series_vistas"]
+        vistas = listas.get("peliculas_vistas", []) + listas.get("series_vistas", [])
         for item in vistas:
             fecha_str = item.get("fecha_agregado", "")
             try:

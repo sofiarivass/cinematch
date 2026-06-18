@@ -357,6 +357,7 @@ def _generar_grafico_actividad(actividad_mensual: dict) -> str:
 
 @perfil_bp.route("/perfil")
 def perfil():
+    print("=== ENTRANDO A /PERFIL ===")
     nombre_usuario = _usuario_requerido()
     if not nombre_usuario:
         return redirect(url_for("usuarios.login"))
@@ -368,12 +369,16 @@ def perfil():
 
     # Listas
     listas = modelo_perfil.obtener_listas(nombre_usuario)
+    print("FAVORITOS:", listas["favoritos"])  # ← agregar esto
+
     conteos = modelo_perfil.calcular_conteos(listas)
 
     # Estadísticas — necesitamos el mapa id→nombre de géneros
     generos_tmdb = modelo_explorar.obtener_generos()
     mapa_generos = {g["id"]: g["nombre"] for g in generos_tmdb}
+    print("MAPA GENEROS TIENE", len(mapa_generos), "ENTRADAS")  # ← agregar esto
     stats = modelo_perfil.calcular_estadisticas(nombre_usuario, mapa_generos)
+    print("STATS GENEROS:", stats["generos"])  # ← agregar esto
 
     # Gráfico matplotlib
     plot_url = _generar_grafico_actividad(stats["actividad_mensual"])
