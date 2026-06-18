@@ -258,7 +258,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
    Responsive Design
    ──────────────────────────────────────────────────────────────── */
 
-@media (max-width: 767.98px) {
+/* @media (max-width: 767.98px) {
     .registro-container {
       margin-top: 4rem;
       padding: 1rem 1rem;
@@ -314,6 +314,33 @@ input[type="date"]::-webkit-calendar-picker-indicator {
       width: 1.1rem;
       height: 1.1rem;
     }
+} */
+
+
+@media (max-width: 767.98px) {
+  .fondo {
+    background-attachment: scroll;
+    min-height: 100dvh;
+  }
+
+  .registro-container {
+    margin-top: 0;
+    min-height: 100dvh;
+    align-items: center;
+    padding: 5rem 1rem 2rem; /* 5rem arriba = espacio para el navbar */
+  }
+
+  .registro-card {
+    padding: 1.75rem 1.25rem;
+    border-radius: 16px;
+  }
+}
+
+@media (max-width: 479.98px) {
+  .field-wrap input {
+    font-size: 0.82rem;
+    height: 44px; /* mínimo táctil cómodo */
+  }
 }
 
 
