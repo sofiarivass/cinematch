@@ -5,3 +5,4 @@ python-dotenv==1.0.1
 pymongo==4.6.1
 Authlib==1.7.2
 gunicorn==23.0.0
+matplotlib==3.11.0

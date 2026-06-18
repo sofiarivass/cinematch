@@ -7,6 +7,7 @@ Gestiona registro, búsqueda y validación de usuarios.
 
 from pymongo import MongoClient
 from config.config import Config
+from collections import Counter, defaultdict
 from datetime import datetime
 import hashlib
 import re
@@ -60,7 +61,15 @@ class UsuarioModel:
         patron = r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
         return re.match(patron, email) is not None
 
-    def crear(self, nombre_usuario, email, contraseña, fecha_nacimiento, preferencias, google_auth=False):
+    def crear(
+        self,
+        nombre_usuario,
+        email,
+        contraseña,
+        fecha_nacimiento,
+        preferencias,
+        google_auth=False,
+    ):
         """
         Crea un nuevo usuario.
 
@@ -297,3 +306,176 @@ class UsuarioModel:
             contador += 1
 
         return nombre_usuario
+
+
+# PERFIL USUARIO - gestión de listas y estadísticas
+
+LISTAS = ("favoritos", "matchlist", "peliculas_vistas", "series_vistas")
+
+
+class PerfilModel:
+
+    TMDB_IMG = "https://image.tmdb.org/t/p/w300"
+
+    def __init__(self):
+        self.usuario_model = UsuarioModel()
+        self.col = self.usuario_model.usuarios
+
+    # ── Lectura de listas ──────────────────────────────────────────────────
+
+    def obtener_listas(self, nombre_usuario: str) -> dict:
+        """Devuelve todas las listas del usuario. Si no existen, arrays vacíos."""
+        usuario = self.col.find_one(
+            {"nombre_usuario": nombre_usuario}, {lista: 1 for lista in LISTAS}
+        )
+        if not usuario:
+            return {lista: [] for lista in LISTAS}
+
+        return {lista: usuario.get(lista, []) for lista in LISTAS}
+
+    def obtener_lista(self, nombre_usuario: str, lista: str) -> list:
+        """Devuelve una lista específica del usuario."""
+        if lista not in LISTAS:
+            raise ValueError(f"Lista inválida: {lista}")
+        usuario = self.col.find_one({"nombre_usuario": nombre_usuario}, {lista: 1})
+        return (usuario or {}).get(lista, [])
+
+    # ── Escritura en listas ────────────────────────────────────────────────
+
+    def agregar_a_lista(self, nombre_usuario: str, lista: str, item: dict) -> bool:
+        """
+        Agrega un item a la lista si no existe ya (por id+tipo).
+        Devuelve True si se agregó, False si ya estaba.
+        """
+        if lista not in LISTAS:
+            raise ValueError(f"Lista inválida: {lista}")
+
+        # Verificar si ya existe
+        ya_existe = self.col.find_one(
+            {
+                "nombre_usuario": nombre_usuario,
+                f"{lista}": {"$elemMatch": {"id": item["id"], "tipo": item["tipo"]}},
+            }
+        )
+        if ya_existe:
+            return False
+
+        item["fecha_agregado"] = datetime.utcnow().isoformat()
+
+        self.col.update_one(
+            {"nombre_usuario": nombre_usuario}, {"$push": {lista: item}}, upsert=True
+        )
+        return True
+
+    def quitar_de_lista(
+        self, nombre_usuario: str, lista: str, item_id: int, tipo: str
+    ) -> bool:
+        """Elimina un item de la lista por id y tipo."""
+        if lista not in LISTAS:
+            raise ValueError(f"Lista inválida: {lista}")
+
+        resultado = self.col.update_one(
+            {"nombre_usuario": nombre_usuario},
+            {"$pull": {lista: {"id": item_id, "tipo": tipo}}},
+        )
+        return resultado.modified_count > 0
+
+    def esta_en_lista(
+        self, nombre_usuario: str, lista: str, item_id: int, tipo: str
+    ) -> bool:
+        """Verifica si un item está en la lista."""
+        return bool(
+            self.col.find_one(
+                {
+                    "nombre_usuario": nombre_usuario,
+                    f"{lista}": {"$elemMatch": {"id": item_id, "tipo": tipo}},
+                }
+            )
+        )
+
+    # ── Estadísticas ───────────────────────────────────────────────────────
+
+    def calcular_estadisticas(self, nombre_usuario: str, mapa_generos: dict) -> dict:
+        """
+        Calcula géneros más consumidos y actividad mensual.
+
+        mapa_generos: {id: nombre} — traído desde modelo.obtener_generos()
+                      para convertir genre_ids a nombres legibles.
+
+        Devuelve:
+        {
+            "generos": [{"nombre": str, "cantidad": int, "porcentaje": float}],
+            "actividad_mensual": {"Ene": int, "Feb": int, ...}  (12 meses)
+        }
+        """
+        listas = self.obtener_listas(nombre_usuario)
+
+        # Todo el contenido consumido (vistas + matchlist + favoritos)
+        todo = (
+            listas["peliculas_vistas"]
+            + listas["series_vistas"]
+            + listas["matchlist"]
+            + listas["favoritos"]
+        )
+
+        # ── Géneros (solo basados en favoritos) ──
+        favoritos = listas["favoritos"]
+
+        contador_generos = Counter()
+        for item in favoritos:
+            for gid in item.get("genero_ids", []):
+                nombre = mapa_generos.get(gid)
+                if nombre:
+                    contador_generos[nombre] += 1
+
+        total_generos = sum(contador_generos.values()) or 1
+        generos = [
+            {
+                "nombre": nombre,
+                "cantidad": cant,
+                "porcentaje": round(cant / total_generos * 100),
+            }
+            for nombre, cant in contador_generos.most_common(5)
+        ]
+
+        # ── Actividad mensual (últimos 12 meses, solo vistas) ──
+        MESES = [
+            "Ene",
+            "Feb",
+            "Mar",
+            "Abr",
+            "May",
+            "Jun",
+            "Jul",
+            "Ago",
+            "Sep",
+            "Oct",
+            "Nov",
+            "Dic",
+        ]
+
+        actividad = defaultdict(int)
+        vistas = listas["peliculas_vistas"] + listas["series_vistas"]
+        for item in vistas:
+            fecha_str = item.get("fecha_agregado", "")
+            try:
+                mes = datetime.fromisoformat(fecha_str).month - 1  # 0-indexed
+                actividad[MESES[mes]] += 1
+            except (ValueError, TypeError):
+                pass
+
+        actividad_mensual = {mes: actividad.get(mes, 0) for mes in MESES}
+
+        return {
+            "generos": generos,
+            "actividad_mensual": actividad_mensual,
+        }
+
+    def calcular_conteos(self, listas: dict) -> dict:
+        """Conteos rápidos para los stat-box del header."""
+        return {
+            "matchlist": len(listas["matchlist"]),
+            "favoritos": len(listas["favoritos"]),
+            "peliculas_vistas": len(listas["peliculas_vistas"]),
+            "series_vistas": len(listas["series_vistas"]),
+        }

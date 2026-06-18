@@ -16,10 +16,10 @@
         </p>
         <div class="cm-hero__ctas">
           <a href="{{ url_for('recomendaciones.encuesta_recomendaciones') }}" class="btn-hero-primary">
-            ✦ Realizar encuesta
+            <i class="bi bi-stars"></i> Realizar encuesta
           </a>
           <a href="#" class="btn-hero-secondary">
-            ▶ Recomendacion aleatoria
+            <i class="bi bi-shuffle"></i> Recomendacion aleatoria
           </a>
         </div>
       </div>
@@ -40,7 +40,7 @@
           <div class="row g-3">
             {% for pelicula in peliculas[i:i+6] %}
             <div class="col-2">
-              <a data-pelicula-id="{{ pelicula.id }}" data-bs-toggle="modal" data-bs-target="#modal-info-pelicula"
+              <a data-id="{{ pelicula.id }}" data-bs-toggle="modal" data-bs-target="#modal-info-pelicula"
                 class="cm-movie-card text-decoration-none" title="{{ pelicula.titulo}}">
                 <div class="cm-movie-card__poster">
                   {% if pelicula.poster %}
@@ -79,7 +79,7 @@
     <div class="d-flex d-md-none flex-nowrap overflow-auto g-3 px-1 pb-2 cm-mobile-scroll">
       {% for pelicula in peliculas %}
       <div class="flex-shrink-0" style="width: 140px; margin-right: 1rem;">
-        <a data-pelicula-id="{{ pelicula.id }}" data-bs-toggle="modal" data-bs-target="#modal-info-pelicula"
+        <a data-id="{{ pelicula.id }}" data-bs-toggle="modal" data-bs-target="#modal-info-pelicula"
           class="cm-movie-card text-decoration-none" title="{{ pelicula.titulo }}">
           <div class="cm-movie-card__poster">
             {% if pelicula.poster %}
@@ -123,7 +123,7 @@
           <div class="row g-3">
             {% for pelicula in seccion.peliculas[i:i+6] %}
             <div class="col-2">
-              <a data-pelicula-id="{{ pelicula.id }}" data-bs-toggle="modal" data-bs-target="#modal-info-pelicula"
+              <a data-id="{{ pelicula.id }}" data-bs-toggle="modal" data-bs-target="#modal-info-pelicula"
                 class="cm-movie-card text-decoration-none" title="{{ pelicula.titulo }}">
                 <div class="cm-movie-card__poster">
                   {% if pelicula.poster %}
@@ -168,7 +168,7 @@
     <div class="d-flex d-md-none flex-nowrap overflow-auto g-3 px-1 pb-3 cm-mobile-scroll mb-4">
       {% for pelicula in seccion.peliculas %}
       <div class="flex-shrink-0" style="width: 140px; margin-right: 1rem;">
-        <a data-pelicula-id="{{ pelicula.id }}" data-bs-toggle="modal" data-bs-target="#modal-info-pelicula"
+        <a data-id="{{ pelicula.id }}" data-bs-toggle="modal" data-bs-target="#modal-info-pelicula"
           class="cm-movie-card text-decoration-none" title="{{ pelicula.titulo }}">
           <div class="cm-movie-card__poster">
             {% if pelicula.poster %}
@@ -194,7 +194,37 @@
     {% endfor %}
   </section>
 
-
+<!-- CÓMO FUNCIONA (mini strip) -->
+  <section class="scf">
+    <div style="max-width:1100px; margin:0 auto; padding:0 2rem 32px;" id="scf">
+      <div class="cm-how-strip">
+        <div class="cm-how-strip__head">¿Cómo funciona CineMatch?</div>
+        <div class="cm-how-strip__steps">
+          <div class="cm-how-step">
+            <div class="cm-how-step__num">1</div>
+            <div class="cm-how-step__label">Elegís tus gustos</div>
+            <div class="cm-how-step__desc">Seleccionás géneros, directores y películas que ya viste</div>
+          </div>
+          <div class="cm-how-arrow">→</div>
+          <div class="cm-how-step">
+            <div class="cm-how-step__num">2</div>
+            <div class="cm-how-step__label">El algoritmo analiza</div>
+            <div class="cm-how-step__desc">Comparamos patrones con miles de espectadores similares</div>
+          </div>
+          <div class="cm-how-arrow">→</div>
+          <div class="cm-how-step">
+            <div class="cm-how-step__num">3</div>
+            <div class="cm-how-step__label">Recibís recomendaciones</div>
+            <div class="cm-how-step__desc">Películas que realmente van con vos, no con todo el mundo</div>
+          </div>
+        </div>
+        <div style="text-align:center; margin-top:20px;">
+          <a href="#" style="font-size:13px; color:var(--accent); text-decoration:none;">Ver cómo funciona en detalle
+            →</a>
+        </div>
+      </div>
+    </div>
+  </section>
 
   {# === CASO DE USUARIO ANÓNIMO (no registrado)=== #}
   {% else %}
@@ -212,10 +242,10 @@
         </p>
         <div class="cm-hero__ctas">
           <a href="{{ url_for('usuarios.registro') }}" class="btn-hero-primary">
-            ✦ Crear cuenta gratis
+            <i class="bi bi-stars"></i> Crear cuenta gratis
           </a>
           <a href="#scf" class="btn-hero-secondary">
-            ▶ ¿No sabés qué ver?
+            <i class="bi bi-film"></i> ¿No sabés qué ver?
           </a>
         </div>
       </div>
@@ -241,7 +271,7 @@
           <div class="row g-3">
             {% for pelicula in peliculas[i:i+6] %}
             <div class="col-2">
-              <a data-pelicula-id="{{ pelicula.id }}" data-bs-toggle="modal" data-bs-target="#modal-info-pelicula"
+              <a data-id="{{ pelicula.id }}" data-bs-toggle="modal" data-bs-target="#modal-info-pelicula"
                 class="cm-movie-card text-decoration-none" title="{{ pelicula.titulo}}">
                 <div class="cm-movie-card__poster">
                   {% if pelicula.poster %}
@@ -280,7 +310,7 @@
     <div class="d-flex d-md-none flex-nowrap overflow-auto g-3 px-1 pb-2 cm-mobile-scroll">
       {% for pelicula in peliculas %}
       <div class="flex-shrink-0" style="width: 140px; margin-right: 1rem;">
-        <a data-pelicula-id="{{ pelicula.id }}" data-bs-toggle="modal" data-bs-target="#modal-info-pelicula"
+        <a data-id="{{ pelicula.id }}" data-bs-toggle="modal" data-bs-target="#modal-info-pelicula"
           class="cm-movie-card text-decoration-none" title="{{ pelicula.titulo }}">
           <div class="cm-movie-card__poster">
             {% if pelicula.poster %}

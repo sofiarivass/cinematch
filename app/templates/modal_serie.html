@@ -32,9 +32,11 @@
                         <span class="barra-detalle">/</span>
                         <span class="votos-detalle"><i class="bi bi-person-fill"></i> {{ serie.votos }}</span>
                         <br class="d-sm-none" />
-                        <span class="anio-detalle"><i class="bi bi-calendar-event"></i> {{ serie.fecha[:4] }}</span>
-                        <span class="duracion-detalle"><i class="bi bi-layer-forward"></i> {{ serie.temporadas }} Temp.</span>
-                        <span class="duracion-detalle"><i class="bi bi-tv"></i> {{ serie.episodios }} Eps.</span>
+                        <!-- <span class="anio-detalle"><i class="bi bi-calendar-event"></i> {{ serie.fecha[:4] }}</span> -->
+                        <!-- <span class="duracion-detalle"><i class="bi bi-layer-forward"></i> {{ serie.temporadas }} Temp.</span> -->
+                        <!-- <span class="duracion-detalle"><i class="bi bi-tv"></i> {{ serie.episodios }} Eps.</span> -->
+                        <span class="duracion-detalle"><img src="{{ url_for('static', filename='img/iconos/temp.svg') }}" width="17" alt="icono temporadas"> {{ serie.temporadas }} Temp.</span>
+                        <span class="duracion-detalle"><img src="{{ url_for('static', filename='img/iconos/ep.svg') }}" width="17" alt="icono episodios"> {{ serie.episodios }} Eps.</span>
                     </p>
                     <div class="botones-detalle d-flex flex-wrap align-items-center">
                         {% if trailer %}
@@ -177,5 +179,29 @@
 
             </div>
         </div>
+    </div>
+</div>
+
+<div class="modal-footer-wrapper">
+    <div class="modal-footer justify-content-center gap-3">
+        <a role="button" class="btn-modal-footer btn-toggle-lista d-flex align-items-center justify-content-center"
+            data-lista="matchlist" data-id="{{ serie.id }}" data-tipo="serie" data-titulo="{{ serie.titulo }}"
+            data-poster="{{ serie.poster }}" data-puntuacion="{{ serie.puntuacion }}"
+            data-fecha="{{ serie.fecha }}" data-generos="{{ serie.genero_ids | join(',') }}">
+            <i class="bi {{ 'bi-bookmark-fill' if estados.matchlist else 'bi-bookmark' }} icono-modal-footer"></i>
+        </a>
+        <a role="button" class="btn-modal-footer btn-toggle-lista d-flex align-items-center justify-content-center"
+            data-lista="favoritos" data-id="{{ serie.id }}" data-tipo="serie" data-titulo="{{ serie.titulo }}"
+            data-poster="{{ serie.poster }}" data-puntuacion="{{ serie.puntuacion }}"
+            data-fecha="{{ serie.fecha }}" data-generos="{{ serie.genero_ids | join(',') }}">
+            <i class="bi {{ 'bi-heart-fill' if estados.favoritos else 'bi-heart' }} icono-modal-footer"></i>
+        </a>
+        <a role="button" class="btn-modal-footer btn-toggle-lista d-flex align-items-center justify-content-center"
+            data-lista="series_vistas" data-id="{{ serie.id }}" data-tipo="serie"
+            data-titulo="{{ serie.titulo }}" data-poster="{{ serie.poster }}"
+            data-puntuacion="{{ serie.puntuacion }}" data-fecha="{{ serie.fecha }}"
+            data-generos="{{ serie.genero_ids | join(',') }}">
+            <i class="bi {{ 'bi-eye-fill' if estados.series_vistas else 'bi-eye' }} icono-modal-footer"></i>
+        </a>
     </div>
 </div>

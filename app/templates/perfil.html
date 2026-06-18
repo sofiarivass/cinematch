@@ -1,7 +1,238 @@
-{% extends "base.html" %} {% block title %}Perfil — CineMatch{% endblock %} {% block content %}
+{% extends "base.html" %}
+{% block title %}Perfil — CineMatch{% endblock %}
+{% block content %}
 
-<div class="container margen-nav margen-footer">
-    
+<!-- ── Macros: deben declararse ANTES de usarse en Jinja2 ── -->
+{% macro _render_media_item(item) %}
+<div class="media-item">
+    <a data-id="{{ item.id }}" data-tipo="{{ item.tipo }}" data-bs-toggle="modal" data-bs-target="#modal-info-pelicula"
+        class="text-decoration-none">
+        <div class="media-poster" style="background-image: url('https://image.tmdb.org/t/p/w300{{ item.poster }}');">
+            <div class="media-badges">
+                <span class="badge-type">{{ 'Película' if item.tipo == 'movie' else 'Serie' }}</span>
+                <span class="badge-rating">
+                    <i class="bi bi-star-fill"></i> {{ item.puntuacion | round(1) }}
+                </span>
+            </div>
+        </div>
+        <div class="media-info mt-2">
+            <h3>{{ item.titulo }}</h3>
+            <p>{{ item.fecha[:4] if item.fecha else '—' }}</p>
+        </div>
+    </a>
 </div>
+{% endmacro %}
+
+{% macro _render_lista_vacia(titulo, subtitulo) %}
+<div class="lista-vacia">
+    <i class="fa-regular fa-folder-open"></i>
+    <p>{{ titulo }}</p>
+    <p>{{ subtitulo }}</p>
+</div>
+{% endmacro %}
+
+<div class="perfil-container mb-5">
+
+    <!-- ── HEADER: avatar + stats ── -->
+    <div class="card header-card">
+        <a href="#" class="icon-settings" title="Configuración">
+            <i class="bi bi-gear"></i>
+        </a>
+
+        <div class="user-info">
+            <div class="avatar-circle">
+                <i class="bi bi-person"></i>
+            </div>
+            <div class="user-text">
+                <h1>{{ usuario.nombre_usuario }}</h1>
+                <p>Miembro desde {{ usuario.fecha_registro.strftime('%B %Y') if usuario.fecha_registro else '—' }}</p>
+            </div>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-box">
+                <i class="bi bi-bookmark-fill icono-stats"></i>
+                <h2>{{ conteos.matchlist }}</h2>
+                <p>Mis matches</p>
+            </div>
+            <div class="stat-box">
+                <i class="bi bi-heart-fill icono-stats"></i>
+                <h2>{{ conteos.favoritos }}</h2>
+                <p>Favoritos</p>
+            </div>
+            <div class="stat-box">
+                <i class="bi bi-camera-reels-fill icono-stats"></i>
+                <h2>{{ conteos.peliculas_vistas }}</h2>
+                <p>Películas vistas</p>
+            </div>
+            <div class="stat-box">
+                <i class="bi bi-collection-play-fill icono-stats"></i>
+                <h2>{{ conteos.series_vistas }}</h2>
+                <p>Series vistas</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ── LISTAS CON TABS ── -->
+    <div class="card content-card">
+        <div class="tabs-container">
+            <button class="tab-btn active" data-tab="matchlist">
+                <i class="bi bi-bookmark-fill"></i> Mis matches
+            </button>
+            <button class="tab-btn" data-tab="favoritos">
+                <i class="bi bi-heart-fill"></i> Favoritos
+            </button>
+            <button class="tab-btn" data-tab="peliculas_vistas">
+                <i class="bi bi-camera-reels-fill"></i> Películas vistas
+            </button>
+            <button class="tab-btn" data-tab="series_vistas">
+                <i class="bi bi-collection-play-fill"></i> Series vistas
+            </button>
+        </div>
+
+        <!-- Matchlist -->
+        <div class="tab-content" id="tab-matchlist">
+            {% if matchlist %}
+            <div class="media-grid">
+                {% for item in matchlist %}
+                {{ _render_media_item(item) }}
+                {% endfor %}
+            </div>
+            <div class="ver-todas-container">
+                <a href="{{ url_for('perfil.lista_completa', lista='matchlist') }}" class="link-ver-todas">
+                    Ver todas <i class="bi bi-arrow-right"></i>
+                </a>
+            </div>
+            {% else %}
+            {{ _render_lista_vacia('Tu lista de matches está vacía.', 'Usá la encuesta para recibir recomendaciones.')
+            }}
+            {% endif %}
+        </div>
+
+        <!-- Favoritos -->
+        <div class="tab-content d-none" id="tab-favoritos">
+            {% if favoritos %}
+            <div class="media-grid">
+                {% for item in favoritos %}
+                {{ _render_media_item(item) }}
+                {% endfor %}
+            </div>
+            <div class="ver-todas-container">
+                <a href="{{ url_for('perfil.lista_completa', lista='favoritos') }}" class="link-ver-todas">
+                    Ver todas <i class="bi bi-arrow-right"></i>
+                </a>
+            </div>
+            {% else %}
+            {{ _render_lista_vacia('No tenés favoritos todavía.', 'Marcá películas o series con ❤️ desde su ficha.') }}
+            {% endif %}
+        </div>
+
+        <!-- Películas vistas -->
+        <div class="tab-content d-none" id="tab-peliculas_vistas">
+            {% if peliculas_vistas %}
+            <div class="media-grid">
+                {% for item in peliculas_vistas %}
+                {{ _render_media_item(item) }}
+                {% endfor %}
+            </div>
+            <div class="ver-todas-container">
+                <a href="{{ url_for('perfil.lista_completa', lista='peliculas_vistas') }}" class="link-ver-todas">
+                    Ver todas <i class="bi bi-arrow-right"></i>
+                </a>
+            </div>
+            {% else %}
+            {{ _render_lista_vacia('No marcaste ninguna película como vista.', 'Podés hacerlo desde la ficha de cada
+            película.') }}
+            {% endif %}
+        </div>
+
+        <!-- Series vistas -->
+        <div class="tab-content d-none" id="tab-series_vistas">
+            {% if series_vistas %}
+            <div class="media-grid">
+                {% for item in series_vistas %}
+                {{ _render_media_item(item) }}
+                {% endfor %}
+            </div>
+            <div class="ver-todas-container">
+                <a href="{{ url_for('perfil.lista_completa', lista='series_vistas') }}" class="link-ver-todas">
+                    Ver todas <i class="bi bi-arrow-right"></i>
+                </a>
+            </div>
+            {% else %}
+            {{ _render_lista_vacia('No marcaste ninguna serie como vista.', 'Podés hacerlo desde la ficha de cada
+            serie.') }}
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- ── ESTADÍSTICAS ── -->
+    <div class="charts-grid">
+        <!-- Géneros favoritos -->
+        <div class="card chart-card">
+            <h2 class="chart-title">
+                <i class="bi bi-tags-fill icon-blue"></i> Géneros favoritos
+            </h2>
+            {% if generos %}
+            <div class="genre-bars">
+                {% for g in generos %}
+                <div class="genre-item">
+                    <div class="genre-label">
+                        <span>{{ g.nombre }}</span>
+                        <span>{{ g.porcentaje }}%</span>
+                    </div>
+                    <div class="progress-bg">
+                        <div class="progress-fill" style="--pf-width: {{ g.porcentaje }}%;"></div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <p class="text-muted" style="font-size:0.9rem; margin-top:1rem;">
+                Todavía no hay suficiente actividad para calcular géneros.
+            </p>
+            {% endif %}
+        </div>
+
+        <!-- Actividad mensual -->
+        <div class="card chart-card">
+            <h2 class="chart-title">
+                <i class="bi bi-calendar-week-fill icon-blue"></i> Actividad mensual
+            </h2>
+            <p class="chart-subtitle">Contenido marcado como visto</p>
+            <div class="matplotlib-container">
+                {% if plot_url %}
+                <img src="data:image/png;base64,{{ plot_url }}" alt="Actividad mensual" />
+                {% else %}
+                <div class="placeholder-chart">Sin datos de actividad todavía</div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal reutilizado -->
+<div class="modal modal-xl fade" id="modal-info-pelicula" data-bs-keyboard="true" tabindex="-1"
+    aria-labelledby="modal-info-pelicula-label" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content" id="modal-contenido">
+            <div class="d-flex justify-content-center p-5">
+                <div class="spinner-border text-light" role="status"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Tabs
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.add('d-none'));
+            btn.classList.add('active');
+            document.getElementById('tab-' + btn.dataset.tab).classList.remove('d-none');
+        });
+    });
+</script>
 
 {% endblock %}

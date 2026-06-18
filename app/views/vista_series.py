@@ -15,7 +15,7 @@ from flask import render_template
 class SerieView:
     """Encapsula el renderizado de todas las vistas de series."""
 
-    def render_modal_serie(self, serie, credits, keywords, providers, clasificacion, trailer=None) -> str:
+    def render_modal_serie(self, serie, credits, keywords, providers, clasificacion, trailer=None, estados=None) -> str:
         """
         Renderiza el modal con el detalle de una serie específica.
         """
@@ -27,6 +27,7 @@ class SerieView:
             providers=providers,
             clasificacion=clasificacion,
             trailer=trailer,
+            estados=estados or {"matchlist": False, "favoritos": False, "series_vistas": False},
         )
 
     def render_error(self, mensaje: str) -> tuple[str, int]:
