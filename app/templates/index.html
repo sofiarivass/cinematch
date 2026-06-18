@@ -343,25 +343,43 @@
     <div style="max-width:1100px; margin:0 auto; padding:0 2rem 32px;" id="scf">
       <div class="cm-how-strip">
         <div class="cm-how-strip__head">¿Cómo funciona CineMatch?</div>
+
         <div class="cm-how-strip__steps">
           <div class="cm-how-step">
-            <div class="cm-how-step__num">1</div>
-            <div class="cm-how-step__label">Elegís tus gustos</div>
-            <div class="cm-how-step__desc">Seleccionás géneros, directores y películas que ya viste</div>
+            <div class="cm-how-step__icon-wrap">
+              <img src="{{ url_for('static', filename='img/iconos/checklist.svg') }}" alt="icono checklist">
+            </div>
+            <div class="cm-how-step__header-inline">
+              <span class="cm-how-step__num">1</span>
+              <h3 class="cm-how-step__label">Elegí tus gustos</h3>
+            </div>
+            <p class="cm-how-step__desc">Contanos qué tipo de experiencia querés vivir hoy</p>
           </div>
-          <div class="cm-how-arrow">→</div>
+
           <div class="cm-how-step">
-            <div class="cm-how-step__num">2</div>
-            <div class="cm-how-step__label">El algoritmo analiza</div>
-            <div class="cm-how-step__desc">Comparamos patrones con miles de espectadores similares</div>
+            <div class="cm-how-step__icon-wrap">
+              <img src="{{ url_for('static', filename='img/iconos/brain.svg') }}" alt="icono checklist">
+            </div>
+            <div class="cm-how-step__header-inline">
+              <span class="cm-how-step__num">2</span>
+              <h3 class="cm-how-step__label">El algoritmo analiza</h3>
+            </div>
+            <p class="cm-how-step__desc">Comparamos patrones con miles de espectadores similares</p>
           </div>
-          <div class="cm-how-arrow">→</div>
+
           <div class="cm-how-step">
-            <div class="cm-how-step__num">3</div>
-            <div class="cm-how-step__label">Recibís recomendaciones</div>
-            <div class="cm-how-step__desc">Películas que realmente van con vos, no con todo el mundo</div>
+            <div class="cm-how-step__icon-wrap">
+              <img src="{{ url_for('static', filename='img/iconos/checklist.svg') }}" alt="icono checklist">
+            </div>
+            <div class="cm-how-step__header-inline">
+              <span class="cm-how-step__num">3</span>
+              <h3 class="cm-how-step__label">Recibís recomendaciones</h3>
+            </div>
+            <p class="cm-how-step__desc">Películas que realmente van con vos, no con todo el mundo</p>
           </div>
+
         </div>
+
         <div style="text-align:center; margin-top:20px;">
           <a href="#" style="font-size:13px; color:var(--accent); text-decoration:none;">Ver cómo funciona en detalle
             →</a>
