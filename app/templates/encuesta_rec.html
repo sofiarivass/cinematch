@@ -193,7 +193,7 @@
                             class="icono-encuesta">
                     </div>
                     <p class="encuesta-opcion-txt">Quiero tensión</p>
-                    <small class="encuesta-opcion-desc">Suspenso, Terror y Crimen</small>
+                    <small class="encuesta-opcion-desc">{{ 'Crimen, Misterio y Drama' if session.get('formato') == 'serie' else 'Suspenso, Terror y Crimen' }} </small>
                 </label>
 
                 <label class="encuesta-opcion-logo d-flex align-items-center justify-content-center">
@@ -204,7 +204,7 @@
                             class="icono-encuesta">
                     </div>
                     <p class="encuesta-opcion-txt">Quiero emocionarme</p>
-                    <small class="encuesta-opcion-desc">Drama, Romance e Historia</small>
+                    <small class="encuesta-opcion-desc">{{ 'Drama, Soup y Romance' if session.get('formato') == 'serie' else 'Drama, Romance e Historia' }}</small>
                 </label>
 
                 <label class="encuesta-opcion-logo d-flex align-items-center justify-content-center">
@@ -215,7 +215,7 @@
                             class="icono-encuesta">
                     </div>
                     <p class="encuesta-opcion-txt">Quiero reírme</p>
-                    <small class="encuesta-opcion-desc">Comedia y Animación</small>
+                    <small class="encuesta-opcion-desc">{{ 'Comedia, Animación y Reality' if session.get('formato') == 'serie' else 'Comedia y Animación' }}</small>
                 </label>
 
                 <label class="encuesta-opcion-logo d-flex align-items-center justify-content-center">
@@ -226,7 +226,7 @@
                             class="icono-encuesta">
                     </div>
                     <p class="encuesta-opcion-txt">Quiero sorprenderme</p>
-                    <small class="encuesta-opcion-desc">Misterio, Fantasía y Ciencia ficción</small>
+                    <small class="encuesta-opcion-desc">{{ 'Scify & Fantasía, Misterio y Animación' if session.get('formato') == 'serie' else 'Misterio, Fantasía y Ciencia ficción' }}</small>
                 </label>
 
                 <label class="encuesta-opcion-logo d-flex align-items-center justify-content-center">
@@ -237,7 +237,7 @@
                             class="icono-encuesta">
                     </div>
                     <p class="encuesta-opcion-txt">Quiero adrenalina</p>
-                    <small class="encuesta-opcion-desc">Acción, Aventura y Bélica</small>
+                    <small class="encuesta-opcion-desc">{{ 'Acción, Aventura, Guerra y Western' if session.get('formato') == 'serie' else 'Acción, Aventura y Bélica' }}</small>
                 </label>
 
                 <label class="encuesta-opcion-logo d-flex align-items-center justify-content-center">
@@ -248,7 +248,7 @@
                             class="icono-encuesta">
                     </div>
                     <p class="encuesta-opcion-txt">Quiero ver algo en familia</p>
-                    <small class="encuesta-opcion-desc">Familia y Animación</small>
+                    <small class="encuesta-opcion-desc">{{ 'Familia, Kids y Comedia' if session.get('formato') == 'serie' else 'Familia y Animación' }}</small>
                 </label>
 
                 <label class="encuesta-opcion-logo d-flex align-items-center justify-content-center">
@@ -259,7 +259,7 @@
                             class="icono-encuesta">
                     </div>
                     <p class="encuesta-opcion-txt">Quiero aprender algo nuevo</p>
-                    <small class="encuesta-opcion-desc">Documental e Historia</small>
+                    <small class="encuesta-opcion-desc">{{ 'Documental y Noticias' if session.get('formato') == 'serie' else 'Documental e Historia' }}</small>
                 </label>
 
                 <label class="encuesta-opcion-logo d-flex align-items-center justify-content-center">
@@ -269,8 +269,8 @@
                         <img src="{{ url_for('static', filename='img/iconos/nostalgia.svg') }}" alt="Emoji nostalgia"
                             class="icono-encuesta">
                     </div>
-                    <p class="encuesta-opcion-txt">Quiero sentir nostalgia</p>
-                    <small class="encuesta-opcion-desc">Clásicos, Western e Historia</small>
+                    <p class="encuesta-opcion-txt">{{ 'Quiero algo distinto' if session.get('formato') == 'serie' else 'Quiero sentir nostalgia' }}</p>
+                    <small class="encuesta-opcion-desc">{{ 'Reality, Talk y Soup' if session.get('formato') == 'serie' else 'Clásicos, Western e Historia' }}</small>
                 </label>
 
                 <label class="encuesta-opcion-logo d-flex align-items-center justify-content-center">
@@ -281,7 +281,7 @@
                             alt="Emoji inspiración" class="icono-encuesta">
                     </div>
                     <p class="encuesta-opcion-txt">Quiero inspiración</p>
-                    <small class="encuesta-opcion-desc">Música, Historia y Drama</small>
+                    <small class="encuesta-opcion-desc">{{ 'Talk, Documental y Drama' if session.get('formato') == 'serie' else 'Música, Historia y Drama' }}</small>
                 </label>
             </div>
             <div class="encuesta-btn-container">
