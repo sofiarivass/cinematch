@@ -16,6 +16,7 @@ from app.views.vista import View
 from app.model.modelo_usuarios import UsuarioModel
 from app.model.modelo_peliculas import PeliculaModel
 
+
 # Blueprint principal — todas las rutas quedan agrupadas aquí
 cinematch_bp = Blueprint("cinematch", __name__)
 
@@ -24,6 +25,7 @@ modelo = Model()
 vista = View()
 modelo_usuario = UsuarioModel()
 modelo_peliculas = PeliculaModel()
+
 
 
 # RUTA INICIO
@@ -154,11 +156,31 @@ def explorar():
         datos = {"resultados": [], "total_paginas": 1, "pagina_actual": 1, "total": 0}
         error = str(e)
 
+    # ── NORMALIZAR EL TIPO ESPECÍFICO DE CADA ELEMENTO ──
+    for item in datos.get("resultados", []):
+        # 1. Si el modelo ya trae el media_type explícito (desde la API de TMDB ej: 'movie' o 'tv')
+        if "media_type" in item and item["media_type"]:
+            item["tipo_render"] = "movie" if item["media_type"] == "movie" else "tv"
+        
+        # 2. Si el usuario filtró específicamente en la barra lateral por película o serie
+        elif filtros["tipo"] == "pelicula":
+            item["tipo_render"] = "movie"
+        elif filtros["tipo"] == "serie":
+            item["tipo_render"] = "tv"
+        
+        # 3. Caso "Todo" (mismatch preventivo): Deducción por propiedades nativas de TMDB
+        else:
+            # Las series usan 'name' o 'first_air_date'. Las películas usan 'title' o 'release_date'
+            if "name" in item or "first_air_date" in item:
+                item["tipo_render"] = "tv"
+            else:
+                item["tipo_render"] = "movie"
+
     generos = modelo.obtener_generos()
     anios = modelo.obtener_anios()
     plataformas = modelo_peliculas.obtener_providers_ar()
 
-    # Construir URLs de paginación en el controlador (Jinja2 no soporta dict.update)
+    # Construir URLs de paginación en el controlador
     total_paginas = datos["total_paginas"]
     pagina_actual = datos["pagina_actual"]
 
@@ -187,7 +209,7 @@ def explorar():
             paginas_info.append({"num": "…", "url": None, "tipo": "ellipsis"})
 
     return vista.render_explorar(
-        peliculas=datos["resultados"],
+        peliculas=datos["resultados"],  # Van con el atributo 'tipo_render' inyectado
         pagina_actual=pagina_actual,
         total_paginas=total_paginas,
         total=datos["total"],
@@ -205,6 +227,39 @@ def explorar():
         url_tipo_serie=url_tipo_serie,
         error=error,
     )
+
+
+# RUTA MODAL DETALLE (Controlador General)
+@cinematch_bp.route("/explorar/modal/<int:id_contenido>")
+def enrutador_modal(id_contenido):
+    """
+    Enrutador intermedio calibrado para el esquema unificado.
+    Recibe los tipos normalizados: 'pelicula' o 'serie'.
+    """
+    tipo = request.args.get("tipo", "pelicula")
+
+    try:
+        # Evaluamos con los strings en español del modelo
+        if tipo == "pelicula":
+            try:
+                from app.controller.controlador_peliculas import modal_pelicula
+            except ImportError:
+                from controller.controlador_peliculas import modal_pelicula
+            return modal_pelicula(pelicula_id=id_contenido)
+            
+        else: # Si es 'serie'
+            try:
+                from app.controller.controlador_series import modal_serie
+            except ImportError:
+                from controller.controlador_series import modal_serie
+            return modal_serie(serie_id=id_contenido)
+            
+    except Exception as e:
+        print("\n====== ERROR EN EL ENRUTADOR INTERMEDIO ======")
+        import traceback
+        traceback.print_exc()
+        print("==============================================\n")
+        return f"Error interno en el servidor: {str(e)}", 500
 
 
 # SESIÓN DE USUARIO Y RUTA DE ENCUESTA

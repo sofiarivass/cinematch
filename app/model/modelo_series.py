@@ -1,12 +1,7 @@
 """
 app/model/modelo_series.py
-──────────────────────────
-Capa de Modelo (M en MVC) para Series.
-
-Responsabilidades:
-  - Conectarse a la API de TMDB.
-  - Realizar las peticiones HTTP para series.
-  - Devolver los datos limpios al controlador.
+───────────────────
+Capa de Modelo (M en MVC).
 """
 
 import requests
@@ -18,6 +13,19 @@ class SerieModel:
     Modelo que representa y obtiene datos de series desde TMDB.
     """
 
+    # Constantes de la clase declaradas al inicio
+    PROVIDERS_PRINCIPALES_AR = {8, 1899, 119, 337, 350, 531}
+    # Netflix, HBO Max, Amazon Prime, Disney+, Apple TV+, Paramount+
+
+    PROVIDERS_LOGOS_LOCALES = {
+        8: "img/servicios/netflix.svg",
+        1899: "img/servicios/hbo-max.svg",
+        119: "img/servicios/prime-video.svg",
+        337: "img/servicios/disney.svg",
+        350: "img/servicios/apple-tv.svg",
+        531: "img/servicios/paramount.svg",
+    }
+
     def __init__(self):
         self.api_key = Config.TMDB_API_KEY
         self.base_url = Config.TMDB_BASE_URL
@@ -27,19 +35,6 @@ class SerieModel:
     # ── Método privado: petición genérica ──────────────────────────────────
 
     def _get(self, endpoint: str, params: dict = {}) -> dict:
-        """
-        Realiza una petición GET a TMDB.
-
-        Args:
-            endpoint : Ruta relativa, ej: '/tv/popular'
-            params   : Parámetros extra de query string
-
-        Returns:
-            dict con la respuesta JSON de TMDB
-
-        Raises:
-            Exception si la petición falla
-        """
         url = f"{self.base_url}{endpoint}"
         params_completos = {
             "api_key": self.api_key,
@@ -63,7 +58,6 @@ class SerieModel:
     # ── Método auxiliar: construir URL de imagen ───────────────────────────
 
     def construir_url_imagen(self, path: str) -> str | None:
-        """Devuelve la URL completa de un póster o backdrop."""
         if not path:
             return None
         return f"{self.img_url}{path}"
@@ -71,25 +65,16 @@ class SerieModel:
     # ── Métodos públicos (usados por el controlador) ───────────────────────
 
     def obtener_populares(self, pagina: int = 1) -> dict:
-        """
-        Obtiene el listado de series populares.
-
-        Args:
-            pagina: Número de página (default 1)
-
-        Returns:
-            dict con 'series' (lista) y 'total_paginas'
-        """
         data = self._get("/tv/popular", {"page": pagina})
 
         series = [
             {
                 "id": s["id"],
-                "titulo": s.get("name", "Sin título"),
+                "titulo": s.get("name", "Sin título"),  # En series se usa 'name'
                 "descripcion": s.get("overview", "Sin descripción disponible."),
                 "puntuacion": s.get("vote_average", 0),
                 "poster": self.construir_url_imagen(s.get("poster_path")),
-                "fecha": s.get("first_air_date", ""),
+                "fecha": s.get("first_air_date", ""),  # En series es 'first_air_date'
             }
             for s in data.get("results", [])
         ]
@@ -100,32 +85,94 @@ class SerieModel:
             "pagina_actual": pagina,
         }
 
-    def obtener_credits(self, serie_id: int) -> dict:
+    def obtener_providers(self, serie_id: int) -> dict:
         """
-        Obtiene los creadores y elenco principal de una serie.
-
-        Args:
-            serie_id: ID numérico de la serie en TMDB
-
-        Returns:
-            dict con 'creadores' (lista de dicts) y 'cast' (lista de dicts)
+        Obtiene los proveedores de streaming específicos para una serie en Argentina.
         """
-        data = self._get(f"/tv/{serie_id}/aggregate_credits")
+        data = self._get(f"/tv/{serie_id}/watch/providers")
+        ar_data = data.get("results", {}).get("AR", {})
 
-        # Creadores: toma los primeros 3 creadores
-        creadores = [
+        def parsear(lista: list) -> list:
+            return [
+                {
+                    "nombre": p.get("provider_name", ""),
+                    "logo": self.construir_url_imagen(p.get("logo_path")),
+                }
+                for p in lista
+            ]
+
+        return {
+            "flatrate": parsear(ar_data.get("flatrate", [])),  # Streaming
+            "rent": parsear(ar_data.get("rent", [])),          # Alquiler
+            "buy": parsear(ar_data.get("buy", [])),            # Compra
+        }
+
+    def obtener_todos_providers_ar(self) -> list:
+        data = self._get(
+            "/watch/providers/tv",  # Provider de series
             {
-                "nombre": p.get("name", ""),
-                "foto": (
-                    self.construir_url_imagen(p.get("profile_path"))
-                    if p.get("profile_path")
-                    else None
-                ),
+                "watch_region": "AR",
+                "language": "es-AR",
+            },
+        )
+        principales_ids = set(self.PROVIDERS_PRINCIPALES_AR)
+        return [
+            {
+                "id": p.get("provider_id"),
+                "nombre": p.get("provider_name", ""),
             }
-            for p in data.get("crew", [])[:3]
+            for p in data.get("results", [])
+            if p.get("provider_id") not in principales_ids
         ]
 
-        # Cast: toma los primeros 10 actores ordenados por order
+    def obtener_providers_ar(self) -> list:
+        data = self._get(
+            "/watch/providers/tv",  # Provider de series
+            {
+                "watch_region": "AR",
+                "language": "es-AR",
+            },
+        )
+
+        principales = [
+            {
+                "id": p.get("provider_id"),
+                "nombre": p.get("provider_name", ""),
+                "logo": self.PROVIDERS_LOGOS_LOCALES.get(p.get("provider_id")),
+            }
+            for p in data.get("results", [])
+            if p.get("provider_id") in self.PROVIDERS_PRINCIPALES_AR
+        ]
+
+        orden = [8, 1899, 119, 337, 350, 531]
+        principales.sort(key=lambda x: orden.index(x["id"]) if x["id"] in orden else 99)
+
+        return principales
+
+    def obtener_todos_idiomas(self) -> list:
+        """Obtiene la lista completa de idiomas soportados por TMDB en español."""
+        try:
+            data = self._get("/configuration/languages")
+            idiomas = [
+                {
+                    "iso": i.get("iso_639_1"),
+                    "nombre": (
+                        i.get("english_name") if i.get("name") == "" else i.get("name")
+                    ),
+                }
+                for i in data
+            ]
+            idiomas.sort(key=lambda x: x["nombre"])
+            return idiomas
+        except Exception:
+            return []
+
+    def obtener_credits(self, serie_id: int) -> dict:
+        data = self._get(f"/tv/{serie_id}/credits")
+
+        # Nota: En series, los creadores de la serie vienen en el detalle principal de la serie,
+        # pero mantenemos la estructura mapeando los creadores que buscaremos desde obtener_detalle.
+        # En esta función resolvemos el elenco (cast).
         cast = [
             {
                 "nombre": p.get("name", ""),
@@ -139,82 +186,56 @@ class SerieModel:
             for p in sorted(data.get("cast", []), key=lambda x: x.get("order", 99))[:10]
         ]
 
-        return {"creadores": creadores, "cast": cast}
+        # Dejamos 'creadores' vacío aquí ya que se inyectan dinámicamente desde el detalle de la serie.
+        return {"creadores": [], "cast": cast}
 
     def obtener_keywords(self, serie_id: int) -> list:
-        """
-        Obtiene las keywords de una serie.
-
-        Args:
-            serie_id: ID numérico de la serie en TMDB
-
-        Returns:
-            Lista de strings con las keywords (máximo 15)
-        """
         data = self._get(f"/tv/{serie_id}/keywords")
-
-        return [k["name"] for k in data.get("results", [])]
-
-    def obtener_providers(self, serie_id: int) -> dict:
-        """
-        Obtiene los proveedores de streaming para Argentina.
-
-        Returns:
-            dict con 'flatrate', 'rent' y 'buy' (listas de dicts con nombre y logo)
-            Cualquiera de las listas puede ser vacía si no hay datos.
-        """
-        data = self._get(f"/tv/{serie_id}/watch/providers")
-
-        ar_data = data.get("results", {}).get("AR", {})
-
-        def parsear(lista: list) -> list:
-            return [
-                {
-                    "nombre": p.get("provider_name", ""),
-                    "logo": self.construir_url_imagen(p.get("logo_path")),
-                }
-                for p in lista
-            ]
-
-        return {
-            "flatrate": parsear(ar_data.get("flatrate", [])),  # Streaming incluido
-            "rent": parsear(ar_data.get("rent", [])),  # Alquiler
-            "buy": parsear(ar_data.get("buy", [])),  # Compra
-        }
+        return [k["name"] for k in data.get("results", [])]  # El array de keywords de series viene en 'results'
 
     def _obtener_nombres_paises(self) -> dict:
-        """Devuelve un dict {codigo: nombre_en_español} desde la API de TMDB."""
         data = self._get("/configuration/countries", {"language": "es-AR"})
         return {p["iso_3166_1"]: p["native_name"] for p in data}
 
     def obtener_clasificacion(self, serie_id: int) -> str:
-        """
-        Obtiene la clasificación de edad para Argentina (AR).
-
-        Returns:
-            String con la clasificación (ej: '13+') o vacío si no hay datos.
-        """
         data = self._get(f"/tv/{serie_id}/content_ratings")
         resultados = data.get("results", [])
 
+        # Extrae la clasificación por edades de series (ej: TV-MA, TV-14)
         def extraer_cert(iso: str) -> str:
-            region = next((r for r in resultados if r["iso_3166_1"] == iso), None)
-            if not region:
-                return ""
-            return region.get("rating", "")
+            rating = next((r for r in resultados if r["iso_3166_1"] == iso), None)
+            return rating.get("rating", "") if rating else ""
 
         return extraer_cert("AR") or extraer_cert("US") or ""
 
+    def obtener_trailer(self, serie_id: int) -> str | None:
+        """
+        Obtiene el link de YouTube del trailer oficial de la serie.
+        """
+        data = self._get(f"/tv/{serie_id}/videos", {"language": "es-AR"})
+        videos = data.get("results", [])
+
+        if not videos:
+            data_en = self._get(f"/tv/{serie_id}/videos", {"language": "en-US"})
+            videos = data_en.get("results", [])
+
+        trailer = next(
+            (
+                v
+                for v in videos
+                if v.get("type") == "Trailer" and v.get("site") == "YouTube"
+            ),
+            None,
+        )
+
+        if not trailer:
+            trailer = next((v for v in videos if v.get("site") == "YouTube"), None)
+
+        if trailer:
+            return f"https://www.youtube.com/watch?v={trailer['key']}"
+        return None
+
     def obtener_detalle(self, serie_id: int) -> dict:
-        """
-        Obtiene el detalle completo de una serie.
-
-        Args:
-            serie_id: ID numérico de la serie en TMDB
-
-        Returns:
-            dict con los datos de la serie
-        """
         data = self._get(f"/tv/{serie_id}")
         paises = self._obtener_nombres_paises()
         idioma_code = data.get("original_language", "")
@@ -226,10 +247,11 @@ class SerieModel:
             ),
             idioma_code,
         )
-
-        # Temporadas y episodios
-        num_temporadas = data.get("number_of_seasons", 0)
-        num_episodios = data.get("number_of_episodes", 0)
+        
+        web = data.get("homepage", "")
+        if not web:
+            data_en = self._get(f"/tv/{serie_id}", {"language": "en-US"})
+            web = data_en.get("homepage", "")
 
         return {
             "id": data["id"],
@@ -241,30 +263,30 @@ class SerieModel:
             "puntuacion": round(data.get("vote_average", 0), 2),
             "votos": (
                 f"{data.get('vote_count', 0) / 1000:.1f}k"
-                if data.get("vote_count", 0) >= 1000
-                else str(data.get("vote_count", 0))
+                if data.get('vote_count', 0) >= 1000
+                else str(data.get('vote_count', 0))
             ),
             "poster": self.construir_url_imagen(data.get("poster_path")),
             "backdrop": self.construir_url_imagen(data.get("backdrop_path")),
             "fecha": data.get("first_air_date", "-"),
-            "duracion": f"{num_temporadas} Temporada{'s' if num_temporadas != 1 else ''} - {num_episodios} Episodios",
+            # Campos nuevos específicos de series mapeados para el modal:
+            "temporadas": data.get("number_of_seasons", 0),
+            "episodios": data.get("number_of_episodes", 0),
             "generos": [g["name"] for g in data.get("genres", [])],
             "productora": [p["name"] for p in data.get("production_companies", [])],
             "tagline": data.get("tagline", ""),
-            "web": data.get("homepage", ""),
+            "web": web,
+            # Guardamos los creadores aquí para que el controlador pueda unificarlos fácilmente en credits
+            "creadores_raw": [
+                {
+                    "nombre": c.get("name", "").split(" ", 1),
+                    "foto": self.construir_url_imagen(c.get("profile_path")) if c.get("profile_path") else None
+                }
+                for c in data.get("created_by", [])
+            ]
         }
 
     def buscar(self, query: str, pagina: int = 1) -> dict:
-        """
-        Busca series por título.
-
-        Args:
-            query : Texto a buscar
-            pagina: Número de página (default 1)
-
-        Returns:
-            dict con 'series' (lista) y 'total_paginas'
-        """
         data = self._get("/search/tv", {"query": query, "page": pagina})
 
         series = [
@@ -285,3 +307,99 @@ class SerieModel:
             "pagina_actual": pagina,
             "query": query,
         }
+
+    def obtener_por_preferencias(self, preferencias: dict, pagina: int = 1) -> list:
+        """
+        Consulta las series recomendadas cruzando las plataformas e idiomas del usuario.
+        """
+        plataformas = preferencias.get("plataformas", [])
+        idiomas = preferencias.get("idiomas", [])
+
+        providers_str = "|".join(map(str, plataformas))
+        idiomas_str = "|".join(idiomas)
+
+        params = {
+            "sort_by": "popularity.desc",
+            "page": pagina,
+            "watch_region": "AR"
+        }
+
+        if providers_str:
+            params["with_watch_providers"] = providers_str
+        if idiomas_str:
+            params["with_original_language"] = idiomas_str
+
+        data = self._get("/discover/tv", params)
+
+        return [
+            {
+                "id": s["id"],
+                "titulo": s.get("name", "Sin título"),
+                "descripcion": s.get("overview", "Sin descripción disponible."),
+                "puntuacion": s.get("vote_average", 0),
+                "poster": self.construir_url_imagen(s.get("poster_path")),
+                "fecha": s.get("first_air_date", ""),
+            }
+            for s in data.get("results", [])
+        ]
+
+    def obtener_por_plataforma_individual(self, plataforma_id: int, idiomas: list) -> list:
+        """
+        Trae series populares exclusivamente de una plataforma respetando los filtros de idioma.
+        """
+        idiomas_str = "|".join(idiomas)
+
+        params = {
+            "sort_by": "popularity.desc",
+            "page": 1,
+            "watch_region": "AR",
+            "with_watch_providers": plataforma_id
+        }
+        
+        if idiomas_str:
+            params["with_original_language"] = idiomas_str
+
+        data = self._get("/discover/tv", params)
+
+        return [
+            {
+                "id": s["id"],
+                "titulo": s.get("name", "Sin título"),
+                "poster": self.construir_url_imagen(s.get("poster_path")),
+                "puntuacion": s.get("vote_average", 0),
+            }
+            for s in data.get("results", [])
+        ]
+
+    def obtener_nombre_plataforma(self, plataforma_id: int) -> str:
+        """
+        Devuelve el nombre real de una plataforma a partir de su ID.
+        """
+        nombres_locales = {
+            8: "Netflix",
+            1899: "HBO Max",
+            119: "Amazon Prime Video",
+            337: "Disney+",
+            350: "Apple TV+",
+            531: "Paramount+"
+        }
+        
+        id_int = int(plataforma_id)
+        if id_int in nombres_locales:
+            return nombres_locales[id_int]
+            
+        try:
+            data = self._get(
+                "/watch/providers/tv",
+                {
+                    "watch_region": "AR",
+                    "language": "es-AR",
+                },
+            )
+            for p in data.get("results", []):
+                if p.get("provider_id") == id_int:
+                    return p.get("provider_name", f"Servicio {id_int}")
+        except Exception:
+            pass
+            
+        return f"Servicio {id_int}"

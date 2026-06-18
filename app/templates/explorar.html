@@ -263,8 +263,12 @@
             {% if peliculas %}
             <div class="ex-movies-grid">
                 {% for pelicula in peliculas %}
-                <a data-pelicula-id="{{ pelicula.id }}" data-bs-toggle="modal" data-bs-target="#modal-info-pelicula"
-                    class="ex-movie-card text-decoration-none" title="{{ pelicula.titulo }}">
+                <a data-id="{{ pelicula.id }}" 
+                    data-tipo="{{ pelicula.tipo }}" 
+                    data-bs-toggle="modal" 
+                    data-bs-target="#modal-info-pelicula"
+                    class="ex-movie-card text-decoration-none" 
+                    title="{{ pelicula.titulo }}">
                     <div class="ex-movie-card__poster">
                         {% if pelicula.poster %}
                         <img src="https://image.tmdb.org/t/p/w300{{ pelicula.poster }}" alt="{{ pelicula.titulo }}"
@@ -353,5 +357,64 @@
         </div>
     </div>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const modalElement = document.getElementById('modal-info-pelicula');
+        const modalContenido = document.getElementById('modal-contenido');
+
+        if (modalElement && modalContenido) {
+            
+            // Usamos delegación de eventos para capturar el click exacto antes de que el modal se mueva
+            document.addEventListener('click', function (event) {
+                // Buscamos si el click fue en la tarjeta o dentro de ella
+                const tarjeta = event.target.closest('.ex-movie-card');
+                
+                if (tarjeta) {
+                    const id = tarjeta.getAttribute('data-id');
+                    const tipo = tarjeta.getAttribute('data-tipo'); // 'pelicula' o 'serie'
+
+                    // 1. LIMPIEZA FULMINANTE: Forzamos el spinner antes del fetch
+                    modalContenido.innerHTML = `
+                        <div class="d-flex flex-column justify-content-center align-items-center p-5" style="min-height: 250px;">
+                            <div class="spinner-border text-light" role="status"></div>
+                            <span class="mt-3 text-light opacity-50">Cargando...</span>
+                        </div>
+                    `;
+
+                    // 2. Construimos la URL unificada hacia el enrutador
+                    const urlEnrutador = `/explorar/modal/${id}?tipo=${tipo}`;
+
+                    // 3. Ejecutamos la petición
+                    fetch(urlEnrutador)
+                        .then(response => {
+                            if (!response.ok) throw new Error("Error en el servidor");
+                            return response.text();
+                        })
+                        .then(html => {
+                            modalContenido.innerHTML = html;
+                        })
+                        .catch(error => {
+                            console.error("Error:", error);
+                            modalContenido.innerHTML = `
+                                <div class="p-5 text-center text-danger">
+                                    <p>No se pudo cargar la información.</p>
+                                </div>
+                            `;
+                        });
+                }
+            });
+
+            // Limpieza de seguridad al cerrar para dejarlo listo
+            modalElement.addEventListener('hidden.bs.modal', function () {
+                modalContenido.innerHTML = `
+                    <div class="d-flex justify-content-center p-5">
+                        <div class="spinner-border text-light" role="status"></div>
+                    </div>
+                `;
+            });
+        }
+    });
+</script>
 
 {% endblock %}
