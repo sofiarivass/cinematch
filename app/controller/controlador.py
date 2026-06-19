@@ -52,8 +52,7 @@ def index():
             series_mix = modelo_series.obtener_por_preferencias(preferencias)
 
             # Armamos las filas independientes por cada plataforma que el usuario posee
-            secciones_por_plataforma_movie = []
-            secciones_por_plataforma_serie = []
+            secciones_por_plataforma = []
 
             # Obtenemos los nombres reales mapeando los providers disponibles en tu modelo
             principales = modelo_peliculas.obtener_providers_ar()
@@ -62,56 +61,86 @@ def index():
 
             mapa_nombres = {p["id"]: p["nombre"] for p in catálogo_completo}
 
-            # peliculas
+            # # peliculas
+            # for p_id in preferencias.get("plataformas", []):
+            #     nombre_stream = mapa_nombres.get(p_id, f"Servicio {p_id}")
+            #     try:
+            #         # Aquí llamas a la función que tiene el @cache.memoize
+            #         movies = modelo_peliculas.obtener_por_plataforma_individual(
+            #             plataforma_id=p_id, 
+            #             idiomas=preferencias.get("idiomas", [])
+            #         )
+                    
+            #         if movies:
+            #             secciones_por_plataforma_movie.append({
+            #                 "nombre_plataforma": nombre_stream,
+            #                 "peliculas": movies[:6]
+            #             })
+            #         else:
+            #             print(f"DEBUG: La API no devolvió peliculas para la plataforma {p_id}")
+                        
+            #     except Exception as e:
+            #         print(f"DEBUG: Error real al llamar a la API para {p_id}: {e}")
+
+
+            # # series
+            # for p_id in preferencias.get("plataformas", []):
+            #     nombre_stream = mapa_nombres.get(p_id, f"Servicio {p_id}")
+            #     try:
+            #         # Llamada al modelo de series (asegúrate de que apunte al endpoint de TV de TMDB)
+            #         series_data = modelo_series.obtener_por_plataforma_individual(
+            #             plataforma_id=p_id, 
+            #             idiomas=preferencias.get("idiomas", [])
+            #         )
+                    
+            #         if series_data:
+            #             secciones_por_plataforma_serie.append({
+            #                 "nombre_plataforma": nombre_stream,
+            #                 "series": series_data[:6]
+            #             })
+            #         else:
+            #             print(f"DEBUG: La API de TMDB no devolvió series para la plataforma {p_id}")
+                        
+            #     except Exception as e:
+            #         print(f"DEBUG: Error real al llamar a la API de TMDB para la plataforma {p_id}: {e}")
+
             for p_id in preferencias.get("plataformas", []):
                 nombre_stream = mapa_nombres.get(p_id, f"Servicio {p_id}")
+                movies = []
+                series_data = []
+
+                # 1. Intentar buscar películas
                 try:
-                    # Aquí llamas a la función que tiene el @cache.memoize
                     movies = modelo_peliculas.obtener_por_plataforma_individual(
                         plataforma_id=p_id, 
                         idiomas=preferencias.get("idiomas", [])
-                    )
-                    
-                    if movies:
-                        secciones_por_plataforma_movie.append({
-                            "nombre_plataforma": nombre_stream,
-                            "peliculas": movies[:6]
-                        })
-                    else:
-                        print(f"DEBUG: La API no devolvió peliculas para la plataforma {p_id}")
-                        
+                    ) or []
                 except Exception as e:
-                    print(f"DEBUG: Error real al llamar a la API para {p_id}: {e}")
+                    print(f"DEBUG: Error al llamar películas para {p_id}: {e}")
 
-
-            # series
-            for p_id in preferencias.get("plataformas", []):
-                nombre_stream = mapa_nombres.get(p_id, f"Servicio {p_id}")
+                # 2. Intentar buscar series
                 try:
-                    # Llamada al modelo de series (asegúrate de que apunte al endpoint de TV de TMDB)
                     series_data = modelo_series.obtener_por_plataforma_individual(
                         plataforma_id=p_id, 
                         idiomas=preferencias.get("idiomas", [])
-                    )
-                    
-                    if series_data:
-                        secciones_por_plataforma_serie.append({
-                            "nombre_plataforma": nombre_stream,
-                            "series": series_data[:6]
-                        })
-                    else:
-                        print(f"DEBUG: La API de TMDB no devolvió series para la plataforma {p_id}")
-                        
+                    ) or []
                 except Exception as e:
-                    print(f"DEBUG: Error real al llamar a la API de TMDB para la plataforma {p_id}: {e}")
+                    print(f"DEBUG: Error al llamar series para {p_id}: {e}")
+
+                # 3. Solo agregamos la sección si la plataforma devolvió AL MENOS películas o series
+                if movies or series_data:
+                    secciones_por_plataforma.append({
+                        "nombre_plataforma": nombre_stream,
+                        "peliculas": movies[:6],      # Limitamos a 6 o la cantidad que uses
+                        "series": series_data[:6]      # Limitamos a 6
+                    })
 
 
             # Renderizamos usando tu vista adaptada
             return vista.render_index(
                 peliculas=peliculas_mix,
                 series=series_mix,
-                secciones=secciones_por_plataforma_movie,
-                seccionSeries=secciones_por_plataforma_serie,
+                secciones=secciones_por_plataforma,
                 usuario=usuario,
             )
 

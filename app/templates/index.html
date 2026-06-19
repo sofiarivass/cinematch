@@ -34,8 +34,8 @@
 
       <div class="ex-results-head m-3">
         <div class="ex-tipo-bar">
-          <a href=""
-            class="ex-tipo-btn">
+          <a href="#"
+            class="ex-tipo-btn" data-filter="todo">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                 stroke-width="2">
                 <rect x="2" y="2" width="9" height="9" rx="1" />
@@ -45,8 +45,8 @@
             </svg>
             Todo
           </a>
-          <a href=""
-            class="ex-tipo-btn">
+          <a href="#"
+            class="ex-tipo-btn" data-filter="peliculas">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                 stroke-width="2">
                 <rect x="2" y="2" width="20" height="20" rx="3" />
@@ -54,8 +54,8 @@
             </svg>
             Películas
           </a>
-          <a href=""
-            class="ex-tipo-btn">
+          <a href="#"
+            class="ex-tipo-btn" data-filter="series">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                 stroke-width="2">
                 <rect x="2" y="7" width="20" height="15" rx="2" />
@@ -70,11 +70,11 @@
     </div>
   </section>
 
-  <section class="cm-section" data="contenedor-pelicula">
+  <section class="cm-section" id="contenedor-pelicula">
     <!-- Recomendaciones especiales version pc -->
-    <h2 class="text-center">Peliculas Recomendadas</h2>
+    <h2 class="text-center mb-2">Peliculas Recomendadas</h2>
     {% if peliculas %}
-    <div id="peliculasCarousel" class="carousel slide d-none d-md-block bloque-contenido" data-bs-ride="true">
+    <div id="peliculasCarousel" class="carousel slide d-none d-md-block" data-bs-ride="true">
       <div class="carousel-inner">
         {% for i in range(0, peliculas|length, 6) %}
         <div class="carousel-item {% if i == 0 %}active{% endif %}">
@@ -117,7 +117,7 @@
     </div>
 
     <!-- Recomendaciones especiales version mobile -->
-    <div class="d-flex d-md-none flex-nowrap overflow-auto g-3 px-1 pb-2 cm-mobile-scroll bloque-contenido">
+    <div class="d-flex d-md-none flex-nowrap overflow-auto g-3 px-1 pb-2 cm-mobile-scroll">
       {% for pelicula in peliculas %}
       <div class="flex-shrink-0" style="width: 140px; margin-right: 1rem;">
         <a data-id="{{ pelicula.id }}" data-bs-toggle="modal" data-bs-target="#modal-info-pelicula"
@@ -149,10 +149,10 @@
 
   <!-- SERIES -->
   <!-- Recomendaciones especiales version pc -->
-  <section class="cm-section" data="contenedor-serie">
-    <h2 class="text-center">Series Recomendadas</h2>
+  <section class="cm-section" id="contenedor-serie">
+    <h2 class="text-center mb-2">Series Recomendadas</h2>
     {% if series %}
-    <div id="seriesCarousel" class="carousel slide d-none d-md-block bloque-contenido" data-bs-ride="true">
+    <div id="seriesCarousel" class="carousel slide d-none d-md-block" data-bs-ride="true">
       <div class="carousel-inner">
         {% for i in range(0, series|length, 6) %}
         <div class="carousel-item {% if i == 0 %}active{% endif %}">
@@ -195,7 +195,7 @@
     </div>
 
     <!-- Recomendaciones especiales version mobile -->
-    <div class="d-flex d-md-none flex-nowrap overflow-auto g-3 px-1 pb-2 cm-mobile-scroll bloque-contenido">
+    <div class="d-flex d-md-none flex-nowrap overflow-auto g-3 px-1 pb-2 cm-mobile-scroll">
       {% for serie in series %}
       <div class="flex-shrink-0" style="width: 140px; margin-right: 1rem;">
         <a data-id="{{ serie.id }}" data-bs-toggle="modal" data-bs-target="#modal-info-pelicula" data-tipo="serie"
@@ -250,88 +250,95 @@
   <!-- seccion plataformas que tiene el usuario -->
   <section class="cm-section">
     {% for seccion in secciones %}
-    <h4 class="m-3 mx-auto text-white-50">Populares en {{ seccion.nombre_plataforma }}</h4>
-
-    <!-- VERSIÓN PC: Carousel clásico con flechas (Solo se ve de MD para arriba) -->
-    <!-- <div id="PlataformasCarousel" class="carousel slide d-none d-md-block mb-4" data-bs-ride="true"> -->
-    <div id="PlataformasCarousel_{{ loop.index }}" class="carousel slide d-none d-md-block mb-4" data-bs-ride="true">
-      <div class="carousel-inner">
-        {% if seccion.peliculas %}
-        {% for i in range(0, seccion.peliculas|length, 6) %}
-        <div class="carousel-item {% if i == 0 %}active{% endif %}">
-          <div class="row g-3">
-            {% for pelicula in seccion.peliculas[i:i+6] %}
-            <div class="col-2">
-              <a data-id="{{ pelicula.id }}" data-bs-toggle="modal" data-bs-target="#modal-info-pelicula"
-                class="cm-movie-card text-decoration-none" title="{{ pelicula.titulo }}">
-                <div class="cm-movie-card__poster">
-                  {% if pelicula.poster %}
-                  <img src="{{ pelicula.poster }}" alt="{{ pelicula.titulo }}" class="img-fluid rounded"
-                    loading="lazy" />
-                  {% else %}
-                  <img src="https://placehold.co/200x300?text=Sin+imagen" alt="Sin imagen" class="img-fluid rounded">
-                  {% endif %}
-                </div>
-                <div class="cm-movie-card__info mt-2">
-                  <div class="cm-movie-card__title text-white text-truncate fw-bold" style="font-size: 0.9rem;">{{
-                    pelicula.titulo }}</div>
-                  <div class="cm-movie-card__meta d-flex align-items-center justify-content-between text-secondary"
-                    style="font-size: 0.8rem;">
-                    <span style="color: #f5c518;">★ {{ pelicula.puntuacion | round(1) }}</span>
+      <h4 class="m-3 mx-auto text-white-50">Populares en {{ seccion.nombre_plataforma }}</h4>
+      <!-- VERSIÓN PC: Carousel clásico con flechas (Solo se ve de MD para arriba) -->
+      <!-- <div id="PlataformasCarousel" class="carousel slide d-none d-md-block mb-4" data-bs-ride="true"> -->
+      <div id="PlataformasCarousel_{{ loop.index }}" class="carousel slide d-none d-md-block mb-4" data-bs-ride="true">
+        <div class="carousel-inner">
+          {% if seccion.peliculas %}
+          {% for i in range(0, seccion.peliculas|length, 6) %}
+          <div class="carousel-item {% if i == 0 %}active{% endif %}">
+            <div class="row g-3">
+              {% for pelicula in seccion.peliculas[i:i+6] %}
+              <div class="col-2">
+                <a data-id="{{ pelicula.id }}" data-bs-toggle="modal" data-bs-target="#modal-info-pelicula"
+                  class="cm-movie-card text-decoration-none" title="{{ pelicula.titulo }}">
+                  <div class="cm-movie-card__poster">
+                    {% if pelicula.poster %}
+                    <img src="{{ pelicula.poster }}" alt="{{ pelicula.titulo }}" class="img-fluid rounded"
+                      loading="lazy" />
+                    {% else %}
+                    <img src="https://placehold.co/200x300?text=Sin+imagen" alt="Sin imagen" class="img-fluid rounded">
+                    {% endif %}
                   </div>
-                </div>
-              </a>
+                  <div class="cm-movie-card__info mt-2">
+                    <div class="cm-movie-card__title text-white text-truncate fw-bold" style="font-size: 0.9rem;">{{
+                      pelicula.titulo }}</div>
+                    <div class="cm-movie-card__meta d-flex align-items-center justify-content-between text-secondary"
+                      style="font-size: 0.8rem;">
+                      <span style="color: #f5c518;">★ {{ pelicula.puntuacion | round(1) }}</span>
+                    </div>
+                  </div>
+                </a>
+              </div>
+              {% endfor %}
             </div>
-            {% endfor %}
           </div>
+          {% endfor %}
+          {% else %}
+          <p class="text-secondary px-5">No hay películas disponibles.</p>
+          {% endif %}
+        </div>
+
+        <button class="carousel-control-prev" type="button" data-bs-target="#PlataformasCarousel_{{ loop.index }}"
+          data-bs-slide="prev" style="width: 3%;">
+          <!-- <button class="carousel-control-prev" type="button" data-bs-target="#PlataformasCarousel" data-bs-slide="prev" style="width: 3%;"> -->
+          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        </button>
+        <!-- <button class="carousel-control-next" type="button" data-bs-target="#PlataformasCarousel" data-bs-slide="next" style="width: 3%;"> -->
+        <button class="carousel-control-next" type="button" data-bs-target="#PlataformasCarousel_{{ loop.index }}"
+          data-bs-slide="next" style="width: 3%;">
+          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        </button>
+      </div>
+
+      <!-- VERSIÓN MOBILE: Scroll horizontal continuo (Solo se ve abajo de MD) -->
+      <div class="d-flex d-md-none flex-nowrap overflow-auto g-3 px-1 pb-3 cm-mobile-scroll mb-4">
+        {% for pelicula in seccion.peliculas %}
+        <div class="flex-shrink-0" style="width: 140px; margin-right: 1rem;">
+          <a data-id="{{ pelicula.id }}" data-bs-toggle="modal" data-bs-target="#modal-info-pelicula"
+            class="cm-movie-card text-decoration-none" title="{{ pelicula.titulo }}">
+            <div class="cm-movie-card__poster">
+              {% if pelicula.poster %}
+              <img src="{{ pelicula.poster }}" alt="{{ pelicula.titulo }}" class="img-fluid rounded shadow-sm"
+                loading="lazy" />
+              {% else %}
+              <img src="https://placehold.co/200x300?text=Sin+imagen" alt="Sin imagen"
+                class="img-fluid rounded shadow-sm">
+              {% endif %}
+            </div>
+            <div class="cm-movie-card__info pt-2">
+              <div class="cm-movie-card__title text-white text-truncate" style="font-size: 0.85rem;">{{ pelicula.titulo }}
+              </div>
+              <div class="cm-movie-card__meta d-flex align-items-center justify-content-between text-secondary"
+                style="font-size: 0.75rem;">
+                <span style="color: #f5c518;">★ {{ pelicula.puntuacion | round(1) }}</span>
+              </div>
+            </div>
+          </a>
         </div>
         {% endfor %}
-        {% else %}
-        <p class="text-secondary px-5">No hay películas disponibles.</p>
-        {% endif %}
       </div>
-
-      <button class="carousel-control-prev" type="button" data-bs-target="#PlataformasCarousel_{{ loop.index }}"
-        data-bs-slide="prev" style="width: 3%;">
-        <!-- <button class="carousel-control-prev" type="button" data-bs-target="#PlataformasCarousel" data-bs-slide="prev" style="width: 3%;"> -->
-        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-      </button>
-      <!-- <button class="carousel-control-next" type="button" data-bs-target="#PlataformasCarousel" data-bs-slide="next" style="width: 3%;"> -->
-      <button class="carousel-control-next" type="button" data-bs-target="#PlataformasCarousel_{{ loop.index }}"
-        data-bs-slide="next" style="width: 3%;">
-        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-      </button>
-    </div>
-
-    <!-- VERSIÓN MOBILE: Scroll horizontal continuo (Solo se ve abajo de MD) -->
-    <div class="d-flex d-md-none flex-nowrap overflow-auto g-3 px-1 pb-3 cm-mobile-scroll mb-4">
-      {% for pelicula in seccion.peliculas %}
-      <div class="flex-shrink-0" style="width: 140px; margin-right: 1rem;">
-        <a data-id="{{ pelicula.id }}" data-bs-toggle="modal" data-bs-target="#modal-info-pelicula"
-          class="cm-movie-card text-decoration-none" title="{{ pelicula.titulo }}">
-          <div class="cm-movie-card__poster">
-            {% if pelicula.poster %}
-            <img src="{{ pelicula.poster }}" alt="{{ pelicula.titulo }}" class="img-fluid rounded shadow-sm"
-              loading="lazy" />
-            {% else %}
-            <img src="https://placehold.co/200x300?text=Sin+imagen" alt="Sin imagen"
-              class="img-fluid rounded shadow-sm">
-            {% endif %}
-          </div>
-          <div class="cm-movie-card__info pt-2">
-            <div class="cm-movie-card__title text-white text-truncate" style="font-size: 0.85rem;">{{ pelicula.titulo }}
-            </div>
-            <div class="cm-movie-card__meta d-flex align-items-center justify-content-between text-secondary"
-              style="font-size: 0.75rem;">
-              <span style="color: #f5c518;">★ {{ pelicula.puntuacion | round(1) }}</span>
-            </div>
-          </div>
-        </a>
-      </div>
-      {% endfor %}
-    </div>
     {% endfor %}
   </section>
+
+
+
+
+
+
+
+
 
   <section class="scf mt-5">
     <div class="d-flex flex-column" style="margin:0 auto; padding:0 2rem 32px;" id="scf">
@@ -887,30 +894,35 @@
   });
 
   document.addEventListener("DOMContentLoaded", () => {
-      // Seleccionamos todos los botones de filtro y todos los bloques de contenido
-      const botones = document.querySelectorAll(".ex-tipo-btn");
-      const bloques = document.querySelectorAll(".bloque-contenido");
+    // Seleccionamos los botones y las secciones
+    const botonesFiltro = document.querySelectorAll(".ex-tipo-btn");
+    const seccionPeliculas = document.getElementById("contenedor-pelicula");
+    const seccionSeries = document.getElementById("contenedor-serie");
 
-      botones.forEach(boton => {
-          boton.addEventListener("click", (e) => {
-              e.preventDefault(); // Evita que la página salte al hacer click en el enlace
-              
-              const filtro = boton.getAttribute("data-filter");
+    botonesFiltro.forEach(boton => {
+      boton.addEventListener("click", (e) => {
+        e.preventDefault(); // Evita que la página se recargue o salte
 
-              bloques.forEach(bloque => {
-                  const tipoBloque = bloque.getAttribute("data");
+        // 1. Manejo del estado visual del botón activo (opcional)
+        botonesFiltro.forEach(btn => btn.classList.remove("active"));
+        boton.classList.add("active");
 
-                  // Lógica de filtrado
-                  if (filtro === "todo") {
-                      bloque.style.display = "block"; // O "flex", según tu diseño CSS
-                  } else if (filtro === tipoBloque) {
-                      bloque.style.display = "block";
-                  } else {
-                      bloque.style.display = "none";  // Oculta lo que no coincide
-                  }
-              });
-          });
+        // 2. Obtener el filtro seleccionado (todo, peliculas o series)
+        const filtro = boton.getAttribute("data-filter");
+
+        // 3. Lógica para ocultar/mostrar usando las clases nativas de Bootstrap
+        if (filtro === "todo") {
+          seccionPeliculas.classList.remove("d-none");
+          seccionSeries.classList.remove("d-none");
+        } else if (filtro === "peliculas") {
+          seccionPeliculas.classList.remove("d-none");
+          seccionSeries.classList.add("d-none"); // Oculta series
+        } else if (filtro === "series") {
+          seccionPeliculas.classList.add("d-none"); // Oculta películas
+          seccionSeries.classList.remove("d-none");
+        }
       });
+    });
   });
 </script>
 
