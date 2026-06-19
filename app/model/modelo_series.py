@@ -432,3 +432,29 @@ class SerieModel:
             pass
 
         return f"Servicio {id_int}"
+
+
+    def obtener_series_populares(self, pagina: int = 1) -> dict:
+        """
+        Obtiene las series populares de TMDB.
+        """
+        data = self._get("/tv/popular", {"page": pagina})
+
+        series = [
+            {
+                "id": s["id"],
+                "titulo": s.get("name", "Sin título"),
+                "descripcion": s.get("overview", "Sin descripción disponible."),
+                "puntuacion": s.get("vote_average", 0),
+                "poster": self.construir_url_imagen(s.get("poster_path")),
+                "fecha": s.get("first_air_date", ""),
+                "tipo": "serie",
+            }
+            for s in data.get("results", [])
+        ]
+
+        return {
+            "series": series,
+            "total_paginas": data.get("total_pages", 1),
+            "pagina_actual": pagina,
+        }

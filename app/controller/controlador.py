@@ -15,6 +15,7 @@ from app.model.modelo import Model
 from app.views.vista import View
 from app.model.modelo_usuarios import UsuarioModel
 from app.model.modelo_peliculas import PeliculaModel
+from app.model.modelo_series import SerieModel
 
 
 # Blueprint principal — todas las rutas quedan agrupadas aquí
@@ -25,7 +26,7 @@ modelo = Model()
 vista = View()
 modelo_usuario = UsuarioModel()
 modelo_peliculas = PeliculaModel()
-
+modelo_series = SerieModel()
 
 
 # RUTA INICIO
@@ -48,6 +49,7 @@ def index():
 
             # Traemos el mix de películas que cumplen con sus gustos combinados
             peliculas_mix = modelo_peliculas.obtener_por_preferencias(preferencias)
+            series_mix = modelo_series.obtener_por_preferencias(preferencias)
 
             # Armamos las filas independientes por cada plataforma que el usuario posee
             secciones_por_plataforma = []
@@ -59,45 +61,44 @@ def index():
 
             mapa_nombres = {p["id"]: p["nombre"] for p in catálogo_completo}
 
-
+           
+            # Iteramos solo por las plataformas que el usuario seleccionó en su encuesta (peliculas y series)
             for p_id in preferencias.get("plataformas", []):
                 nombre_stream = mapa_nombres.get(p_id, f"Servicio {p_id}")
+                movies = []
+                series_data = []
+
+                # 1. Intentar buscar películas
                 try:
-                    # Aquí llamas a la función que tiene el @cache.memoize
                     movies = modelo_peliculas.obtener_por_plataforma_individual(
                         plataforma_id=p_id, 
                         idiomas=preferencias.get("idiomas", [])
-                    )
-                    
-                    if movies:
-                        secciones_por_plataforma.append({
-                            "nombre_plataforma": nombre_stream,
-                            "peliculas": movies[:6]
-                        })
-                    else:
-                        print(f"DEBUG: La API no devolvió peliculas para la plataforma {p_id}")
-                        
+                    ) or []
                 except Exception as e:
-                    print(f"DEBUG: Error real al llamar a la API para {p_id}: {e}")
+                    print(f"DEBUG: Error al llamar películas para {p_id}: {e}")
 
+                # 2. Intentar buscar series
+                try:
+                    series_data = modelo_series.obtener_por_plataforma_individual(
+                        plataforma_id=p_id, 
+                        idiomas=preferencias.get("idiomas", [])
+                    ) or []
+                except Exception as e:
+                    print(f"DEBUG: Error al llamar series para {p_id}: {e}")
 
-            # for p_id in preferencias.get("plataformas", []):
-            #     nombre_stream = mapa_nombres.get(p_id, f"Servicio {p_id}")
-            #     movies_plataforma = modelo_peliculas.obtener_por_plataforma_individual(
-            #         plataforma_id=p_id, idiomas=preferencias.get("idiomas", [])
-            #     )
+                # 3. Solo agregamos la sección si la plataforma devolvió AL MENOS películas o series
+                if movies or series_data:
+                    secciones_por_plataforma.append({
+                        "nombre_plataforma": nombre_stream,
+                        "peliculas": movies[:6],      # Limitamos a 6 o la cantidad que uses
+                        "series": series_data[:6]      # Limitamos a 6
+                    })
 
-            #     if movies_plataforma:
-            #         secciones_por_plataforma.append(
-            #             {
-            #                 "nombre_plataforma": nombre_stream,
-            #                 "peliculas": movies_plataforma[:6],  # Mandamos las 6 primeras para el feed
-            #             }
-            #         )
 
             # Renderizamos usando tu vista adaptada
             return vista.render_index(
                 peliculas=peliculas_mix,
+                series=series_mix,
                 secciones=secciones_por_plataforma,
                 usuario=usuario,
             )
@@ -106,8 +107,10 @@ def index():
     # Si no inició sesión, corre tu lógica base original limpia
     data_populares = modelo_peliculas.obtener_populares(1)
     peliculas_anonimas = data_populares.get("peliculas", [])[:18]
+    series_anonimas = modelo_series.obtener_series_populares(1).get("series", [])[:18]
+    peliculas_tendencia = modelo_peliculas.obtener_tendencias(1).get("peliculas", [])[:8]
 
-    return vista.render_index(peliculas=peliculas_anonimas, secciones=[], usuario=None)
+    return vista.render_index(peliculas=peliculas_anonimas, series=series_anonimas, secciones=[{"nombre": "Tendencias", "peliculas": peliculas_tendencia}], usuario=None)
 
 
 # ── BUSCAR (redirige a explorar con q=) ───────────────────────────────────────

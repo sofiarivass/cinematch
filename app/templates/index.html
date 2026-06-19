@@ -28,10 +28,51 @@
   </section>
 
   <!-- Recomendaciones especiales -->
-  <section class="cm-section">
-    <h4 class="m-3 mx-auto text-white-50">Especialmente para vos</h4>
+  <section class="cm-section pb-0">
+    <div class="d-flex align-items-center justify-content-between flex-wrap">
+      <h4 class="m-3 text-white-50">Especialmente para vos</h4>
 
+      <div class="ex-results-head m-3">
+        <div class="ex-tipo-bar">
+          <a href="#"
+            class="ex-tipo-btn" data-filter="todo">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                stroke-width="2">
+                <rect x="2" y="2" width="9" height="9" rx="1" />
+                <rect x="13" y="2" width="9" height="9" rx="1" />
+                <rect x="2" y="13" width="9" height="9" rx="1" />
+                <rect x="13" y="13" width="9" height="9" rx="1" />
+            </svg>
+            Todo
+          </a>
+          <a href="#"
+            class="ex-tipo-btn" data-filter="peliculas">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                stroke-width="2">
+                <rect x="2" y="2" width="20" height="20" rx="3" />
+                <path d="M7 2v20M17 2v20M2 12h20M2 7h5M2 17h5M17 7h5M17 17h5" />
+            </svg>
+            Películas
+          </a>
+          <a href="#"
+            class="ex-tipo-btn" data-filter="series">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                stroke-width="2">
+                <rect x="2" y="7" width="20" height="15" rx="2" />
+                <path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+                <line x1="12" y1="12" x2="12" y2="16" />
+                <line x1="10" y1="14" x2="14" y2="14" />
+            </svg>
+            Series
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="cm-section" id="contenedor-pelicula">
     <!-- Recomendaciones especiales version pc -->
+    <h2 class="text-center mb-2">Peliculas Recomendadas</h2>
     {% if peliculas %}
     <div id="peliculasCarousel" class="carousel slide d-none d-md-block" data-bs-ride="true">
       <div class="carousel-inner">
@@ -106,39 +147,33 @@
     {% endif %}
   </section>
 
-
-
-  <!-- seccion plataformas que tiene el usuario -->
-  <section class="cm-section">
-    {% for seccion in secciones %}
-    <h4 class="m-3 mx-auto text-white-50">Populares en {{ seccion.nombre_plataforma }}</h4>
-
-    <!-- VERSIÓN PC: Carousel clásico con flechas (Solo se ve de MD para arriba) -->
-    <!-- <div id="PlataformasCarousel" class="carousel slide d-none d-md-block mb-4" data-bs-ride="true"> -->
-    <div id="PlataformasCarousel_{{ loop.index }}" class="carousel slide d-none d-md-block mb-4" data-bs-ride="true">
+  <!-- SERIES -->
+  <!-- Recomendaciones especiales version pc -->
+  <section class="cm-section" id="contenedor-serie">
+    <h2 class="text-center mb-2">Series Recomendadas</h2>
+    {% if series %}
+    <div id="seriesCarousel" class="carousel slide d-none d-md-block" data-bs-ride="true">
       <div class="carousel-inner">
-        {% if seccion.peliculas %}
-        {% for i in range(0, seccion.peliculas|length, 6) %}
+        {% for i in range(0, series|length, 6) %}
         <div class="carousel-item {% if i == 0 %}active{% endif %}">
           <div class="row g-3">
-            {% for pelicula in seccion.peliculas[i:i+6] %}
+            {% for serie in series[i:i+6] %}
             <div class="col-2">
-              <a data-id="{{ pelicula.id }}" data-bs-toggle="modal" data-bs-target="#modal-info-pelicula"
-                class="cm-movie-card text-decoration-none" title="{{ pelicula.titulo }}">
+              <a data-id="{{ serie.id }}" data-bs-toggle="modal" data-bs-target="#modal-info-pelicula" data-tipo="serie"
+                class="cm-movie-card text-decoration-none" title="{{ serie.titulo}}">
                 <div class="cm-movie-card__poster">
-                  {% if pelicula.poster %}
-                  <img src="{{ pelicula.poster }}" alt="{{ pelicula.titulo }}" class="img-fluid rounded"
-                    loading="lazy" />
+                  {% if serie.poster %}
+                  <img src="https://image.tmdb.org/t/p/w300{{ serie.poster }}" alt="{{ serie.titulo }}"
+                    class="img-fluid rounded" loading="lazy" />
                   {% else %}
                   <img src="https://placehold.co/200x300?text=Sin+imagen" alt="Sin imagen" class="img-fluid rounded">
                   {% endif %}
                 </div>
-                <div class="cm-movie-card__info mt-2">
-                  <div class="cm-movie-card__title text-white text-truncate fw-bold" style="font-size: 0.9rem;">{{
-                    pelicula.titulo }}</div>
-                  <div class="cm-movie-card__meta d-flex align-items-center justify-content-between text-secondary"
-                    style="font-size: 0.8rem;">
-                    <span style="color: #f5c518;">★ {{ pelicula.puntuacion | round(1) }}</span>
+                <div class="cm-movie-card__info">
+                  <div class="cm-movie-card__title">{{ serie.titulo }}</div>
+                  <div class="cm-movie-card__meta d-flex align-items-center justify-content-between">
+                    <span style="color: #f5c518;">★ {{ serie.puntuacion | round(1) }}</span>
+                    <span>{{ serie.fecha[:4] if serie.fecha else "----" }}</span>
                   </div>
                 </div>
               </a>
@@ -147,84 +182,379 @@
           </div>
         </div>
         {% endfor %}
-        {% else %}
-        <p class="text-secondary px-5">No hay películas disponibles.</p>
-        {% endif %}
       </div>
 
-      <button class="carousel-control-prev" type="button" data-bs-target="#PlataformasCarousel_{{ loop.index }}"
-        data-bs-slide="prev" style="width: 3%;">
-        <!-- <button class="carousel-control-prev" type="button" data-bs-target="#PlataformasCarousel" data-bs-slide="prev" style="width: 3%;"> -->
-        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      <button class="carousel-control-prev" type="button" data-bs-target="#seriesCarousel" data-bs-slide="prev"
+        style="width: 3%;">
+        <span class="carousel-control-prev-icon"></span>
       </button>
-      <!-- <button class="carousel-control-next" type="button" data-bs-target="#PlataformasCarousel" data-bs-slide="next" style="width: 3%;"> -->
-      <button class="carousel-control-next" type="button" data-bs-target="#PlataformasCarousel_{{ loop.index }}"
-        data-bs-slide="next" style="width: 3%;">
-        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      <button class="carousel-control-next" type="button" data-bs-target="#seriesCarousel" data-bs-slide="next"
+        style="width: 3%;">
+        <span class="carousel-control-next-icon"></span>
       </button>
     </div>
 
-    <!-- VERSIÓN MOBILE: Scroll horizontal continuo (Solo se ve abajo de MD) -->
-    <div class="d-flex d-md-none flex-nowrap overflow-auto g-3 px-1 pb-3 cm-mobile-scroll mb-4">
-      {% for pelicula in seccion.peliculas %}
+    <!-- Recomendaciones especiales version mobile -->
+    <div class="d-flex d-md-none flex-nowrap overflow-auto g-3 px-1 pb-2 cm-mobile-scroll">
+      {% for serie in series %}
       <div class="flex-shrink-0" style="width: 140px; margin-right: 1rem;">
-        <a data-id="{{ pelicula.id }}" data-bs-toggle="modal" data-bs-target="#modal-info-pelicula"
-          class="cm-movie-card text-decoration-none" title="{{ pelicula.titulo }}">
+        <a data-id="{{ serie.id }}" data-bs-toggle="modal" data-bs-target="#modal-info-pelicula" data-tipo="serie"
+          class="cm-movie-card text-decoration-none" title="{{ serie.titulo }}">
           <div class="cm-movie-card__poster">
-            {% if pelicula.poster %}
-            <img src="{{ pelicula.poster }}" alt="{{ pelicula.titulo }}" class="img-fluid rounded shadow-sm"
-              loading="lazy" />
+            {% if serie.poster %}
+            <img src="https://image.tmdb.org/t/p/w300{{ serie.poster }}" alt="{{ serie.titulo }}"
+              class="img-fluid rounded" loading="lazy" />
             {% else %}
-            <img src="https://placehold.co/200x300?text=Sin+imagen" alt="Sin imagen"
-              class="img-fluid rounded shadow-sm">
+            <img src="https://placehold.co/200x300?text=Sin+imagen" alt="Sin imagen" class="img-fluid rounded">
             {% endif %}
           </div>
-          <div class="cm-movie-card__info pt-2">
-            <div class="cm-movie-card__title text-white text-truncate" style="font-size: 0.85rem;">{{ pelicula.titulo }}
-            </div>
-            <div class="cm-movie-card__meta d-flex align-items-center justify-content-between text-secondary"
+          <div class="cm-movie-card__info p-1">
+            <div class="cm-movie-card__title text-truncate" style="font-size: 0.85rem;">{{ serie.titulo }}</div>
+            <div class="cm-movie-card__meta d-flex align-items-center justify-content-between"
               style="font-size: 0.75rem;">
-              <span style="color: #f5c518;">★ {{ pelicula.puntuacion | round(1) }}</span>
+              <span style="color: #f5c518;">★ {{ serie.puntuacion | round(1) }}</span>
+              <span>{{ serie.fecha[:4] if serie.fecha else "" }}</span>
             </div>
           </div>
         </a>
       </div>
       {% endfor %}
     </div>
+    {% else %}
+    <p class="text-white">No hay recomendaciones disponibles.</p>
+    {% endif %}
+  </section>
+
+
+  <!-- seccion plataformas que tiene el usuario -->
+  <section class="cm-section">
+    {% for seccion in secciones %}
+      <h4 class="m-3 mx-auto text-white-50">Populares en {{ seccion.nombre_plataforma }}</h4>
+      <!-- VERSIÓN PC: Carousel clásico con flechas (Solo se ve de MD para arriba) -->
+      <!-- <div id="PlataformasCarousel" class="carousel slide d-none d-md-block mb-4" data-bs-ride="true"> -->
+
+      <div class="plataforma-pelicula-preferencia">
+        <div id="PlataformasCarousel_{{ loop.index }}" class="carousel slide d-none d-md-block mb-4" data-bs-ride="true">
+          <div class="carousel-inner">
+            {% if seccion.peliculas %}
+            {% for i in range(0, seccion.peliculas|length, 6) %}
+            <div class="carousel-item {% if i == 0 %}active{% endif %}">
+              <div class="row g-3">
+                {% for pelicula in seccion.peliculas[i:i+6] %}
+                <div class="col-2">
+                  <a data-id="{{ pelicula.id }}" data-bs-toggle="modal" data-bs-target="#modal-info-pelicula"
+                    class="cm-movie-card text-decoration-none" title="{{ pelicula.titulo }}">
+                    <div class="cm-movie-card__poster">
+                      {% if pelicula.poster %}
+                      <img src="{{ pelicula.poster }}" alt="{{ pelicula.titulo }}" class="img-fluid rounded"
+                        loading="lazy" />
+                      {% else %}
+                      <img src="https://placehold.co/200x300?text=Sin+imagen" alt="Sin imagen" class="img-fluid rounded">
+                      {% endif %}
+                    </div>
+                    <div class="cm-movie-card__info mt-2">
+                      <div class="cm-movie-card__title text-white text-truncate fw-bold" style="font-size: 0.9rem;">{{
+                        pelicula.titulo }}</div>
+                      <div class="cm-movie-card__meta d-flex align-items-center justify-content-between text-secondary"
+                        style="font-size: 0.8rem;">
+                        <span style="color: #f5c518;">★ {{ pelicula.puntuacion | round(1) }}</span>
+                      </div>
+                    </div>
+                  </a>
+                </div>
+                {% endfor %}
+              </div>
+            </div>
+            {% endfor %}
+            {% else %}
+            <p class="text-secondary px-5">No hay películas disponibles.</p>
+            {% endif %}
+          </div>
+  
+          <button class="carousel-control-prev" type="button" data-bs-target="#PlataformasCarousel_{{ loop.index }}"
+            data-bs-slide="prev" style="width: 3%;">
+            <!-- <button class="carousel-control-prev" type="button" data-bs-target="#PlataformasCarousel" data-bs-slide="prev" style="width: 3%;"> -->
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+          </button>
+          <!-- <button class="carousel-control-next" type="button" data-bs-target="#PlataformasCarousel" data-bs-slide="next" style="width: 3%;"> -->
+          <button class="carousel-control-next" type="button" data-bs-target="#PlataformasCarousel_{{ loop.index }}"
+            data-bs-slide="next" style="width: 3%;">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+          </button>
+        </div>
+  
+        <!-- VERSIÓN MOBILE: Scroll horizontal continuo (Solo se ve abajo de MD) -->
+        <div class="d-flex d-md-none flex-nowrap overflow-auto g-3 px-1 pb-3 cm-mobile-scroll mb-4">
+          {% for pelicula in seccion.peliculas %}
+          <div class="flex-shrink-0" style="width: 140px; margin-right: 1rem;">
+            <a data-id="{{ pelicula.id }}" data-bs-toggle="modal" data-bs-target="#modal-info-pelicula"
+              class="cm-movie-card text-decoration-none" title="{{ pelicula.titulo }}">
+              <div class="cm-movie-card__poster">
+                {% if pelicula.poster %}
+                <img src="{{ pelicula.poster }}" alt="{{ pelicula.titulo }}" class="img-fluid rounded shadow-sm"
+                  loading="lazy" />
+                {% else %}
+                <img src="https://placehold.co/200x300?text=Sin+imagen" alt="Sin imagen"
+                  class="img-fluid rounded shadow-sm">
+                {% endif %}
+              </div>
+              <div class="cm-movie-card__info pt-2">
+                <div class="cm-movie-card__title text-white text-truncate" style="font-size: 0.85rem;">{{ pelicula.titulo }}
+                </div>
+                <div class="cm-movie-card__meta d-flex align-items-center justify-content-between text-secondary"
+                  style="font-size: 0.75rem;">
+                  <span style="color: #f5c518;">★ {{ pelicula.puntuacion | round(1) }}</span>
+                </div>
+              </div>
+            </a>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+      
+
+      <!-- plataformas por series -->
+      <div class="plataforma-serie-preferencia">
+        <div id="PlataformasCarousel" class="carousel slide d-none d-md-block mb-4" data-bs-ride="true">
+          <div class="carousel-inner">
+            {% if seccion.series %}
+            {% for i in range(0, seccion.series|length, 6) %}
+            <div class="carousel-item {% if i == 0 %}active{% endif %}">
+              <div class="row g-3">
+                {% for serie in seccion.series[i:i+6] %}
+                <div class="col-2">
+                  <a data-id="{{ serie.id }}" data-bs-toggle="modal" data-bs-target="#modal-info-pelicula" data-tipo="serie"
+                    class="cm-movie-card text-decoration-none" title="{{ serie.titulo }}">
+                    <div class="cm-movie-card__poster">
+                      {% if serie.poster %}
+                      <img src="{{ serie.poster }}" alt="{{ serie.titulo }}" class="img-fluid rounded"
+                        loading="lazy" />
+                      {% else %}
+                      <img src="https://placehold.co/200x300?text=Sin+imagen" alt="Sin imagen" class="img-fluid rounded">
+                      {% endif %}
+                    </div>
+                    <div class="cm-movie-card__info mt-2">
+                      <div class="cm-movie-card__title text-white text-truncate fw-bold" style="font-size: 0.9rem;">{{
+                        serie.titulo }}</div>
+                      <div class="cm-movie-card__meta d-flex align-items-center justify-content-between text-secondary"
+                        style="font-size: 0.8rem;">
+                        <span style="color: #f5c518;">★ {{ serie.puntuacion | round(1) }}</span>
+                      </div>
+                    </div>
+                  </a>
+                </div>
+                {% endfor %}
+              </div>
+            </div>
+            {% endfor %}
+            {% else %}
+            <p class="text-secondary px-5">No hay películas disponibles.</p>
+            {% endif %}
+          </div>
+
+          <button class="carousel-control-prev" type="button" data-bs-target="#PlataformasCarousel"
+            data-bs-slide="prev" style="width: 3%;">
+            <!-- <button class="carousel-control-prev" type="button" data-bs-target="#PlataformasCarousel" data-bs-slide="prev" style="width: 3%;"> -->
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+          </button>
+          <!-- <button class="carousel-control-next" type="button" data-bs-target="#PlataformasCarousel" data-bs-slide="next" style="width: 3%;"> -->
+          <button class="carousel-control-next" type="button" data-bs-target="#PlataformasCarousel"
+            data-bs-slide="next" style="width: 3%;">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+          </button>
+        </div>
+
+        <!-- VERSIÓN MOBILE: Scroll horizontal continuo (Solo se ve abajo de MD) -->
+        <div class="d-flex d-md-none flex-nowrap overflow-auto g-3 px-1 pb-3 cm-mobile-scroll mb-4">
+          {% for serie in seccion.series %}
+          <div class="flex-shrink-0" style="width: 140px; margin-right: 1rem;">
+            <a data-id="{{ serie.id }}" data-bs-toggle="modal" data-bs-target="#modal-info-pelicula" data-tipo="serie"
+              class="cm-movie-card text-decoration-none" title="{{ serie.titulo }}">
+              <div class="cm-movie-card__poster">
+                {% if serie.poster %}
+                <img src="{{ serie.poster }}" alt="{{ serie.titulo }}" class="img-fluid rounded shadow-sm"
+                  loading="lazy" />
+                {% else %}
+                <img src="https://placehold.co/200x300?text=Sin+imagen" alt="Sin imagen"
+                  class="img-fluid rounded shadow-sm">
+                {% endif %}
+              </div>
+              <div class="cm-movie-card__info pt-2">
+                <div class="cm-movie-card__title text-white text-truncate" style="font-size: 0.85rem;">{{ serie.titulo }}
+                </div>
+                <div class="cm-movie-card__meta d-flex align-items-center justify-content-between text-secondary"
+                  style="font-size: 0.75rem;">
+                  <span style="color: #f5c518;">★ {{ serie.puntuacion | round(1) }}</span>
+                </div>
+              </div>
+            </a>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
     {% endfor %}
   </section>
 
-<!-- CÓMO FUNCIONA (mini strip) -->
-  <section class="scf">
-    <div style="max-width:1100px; margin:0 auto; padding:0 2rem 32px;" id="scf">
+
+
+
+
+
+
+
+
+  <section class="scf mt-5">
+    <div class="d-flex flex-column" style="margin:0 auto; padding:0 2rem 32px;" id="scf">
       <div class="cm-how-strip">
-        <div class="cm-how-strip__head">¿Cómo funciona CineMatch?</div>
-        <div class="cm-how-strip__steps">
+        <h2 class="cm-features-title text-center">¿CÓMO FUNCIONA <span>CINEMATCH?</span></h2>
+
+        <div class="cm-how-strip__steps mt-2 mb-4">
           <div class="cm-how-step">
-            <div class="cm-how-step__num">1</div>
-            <div class="cm-how-step__label">Elegís tus gustos</div>
-            <div class="cm-how-step__desc">Seleccionás géneros, directores y películas que ya viste</div>
+            <div class="cm-how-step__icon-wrap">
+              <img src="{{ url_for('static', filename='img/iconos/checklist.svg') }}" alt="icono checklist">
+            </div>
+            <div class="cm-how-step__header-inline">
+              <span class="cm-how-step__num">1</span>
+              <h3 class="cm-how-step__label">Elegí tus gustos</h3>
+            </div>
+            <p class="cm-how-step__desc">Contanos qué tipo de experiencia querés vivir hoy</p>
           </div>
-          <div class="cm-how-arrow">→</div>
+
           <div class="cm-how-step">
-            <div class="cm-how-step__num">2</div>
-            <div class="cm-how-step__label">El algoritmo analiza</div>
-            <div class="cm-how-step__desc">Comparamos patrones con miles de espectadores similares</div>
+            <div class="cm-how-step__icon-wrap">
+              <img src="{{ url_for('static', filename='img/iconos/brain.svg') }}" alt="icono brain">
+            </div>
+            <div class="cm-how-step__header-inline">
+              <span class="cm-how-step__num">2</span>
+              <h3 class="cm-how-step__label">El algoritmo analiza</h3>
+            </div>
+            <p class="cm-how-step__desc">Comparamos patrones con miles de espectadores similares</p>
           </div>
-          <div class="cm-how-arrow">→</div>
+
           <div class="cm-how-step">
-            <div class="cm-how-step__num">3</div>
-            <div class="cm-how-step__label">Recibís recomendaciones</div>
-            <div class="cm-how-step__desc">Películas que realmente van con vos, no con todo el mundo</div>
+            <div class="cm-how-step__icon-wrap">
+              <img src="{{ url_for('static', filename='img/iconos/recofilm.svg') }}" alt="icono recofilm">
+            </div>
+            <div class="cm-how-step__header-inline">
+              <span class="cm-how-step__num">3</span>
+              <h3 class="cm-how-step__label">Recibís recomendaciones</h3>
+            </div>
+            <p class="cm-how-step__desc">Películas que realmente van con vos, no con todo el mundo</p>
           </div>
+
         </div>
-        <div style="text-align:center; margin-top:20px;">
-          <a href="#" style="font-size:13px; color:var(--accent); text-decoration:none;">Ver cómo funciona en detalle
-            →</a>
+
+
+
+        <div class="d-flex align-items-center justify-content-center flex-wrap gap-4">
+
+          <div class="custom-card d-flex align-items-center p-4 rounded-4 gap-4 justify-content-between">
+            <img src="{{ url_for('static', filename='img/iconos/algoritmo.svg') }}" alt="icono algoritmo" style="width:80px;">
+  
+            <div class="d-flex flex-column gap-2 justify-content-between flex-grow-1">
+              <div class="d-flex justify-content-between align-items-end">
+                <span class="status-text fs-5 m-0">Analizando...</span>
+                <span class="percentage-text fs-4 fw-bold m-0">92%</span>
+              </div>
+              <div class="progress progress-custom-bg rounded-0">
+                <div class="progress-bar progress-custom-fill" role="progressbar" style="width: 92%;" aria-valuenow="92" aria-valuemin="0" aria-valuemax="100"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="custom-card d-flex align-items-center p-4 rounded-4 justify-content-between">
+    
+            <div class="ring-container position-relative d-flex justify-content-center align-items-center flex-shrink-0">
+              <svg class="w-100 h-100" viewBox="0 0 100 100">
+                  <circle class="ring-track" cx="50" cy="50" r="44"></circle>
+                  <circle class="ring-fill" cx="50" cy="50" r="44"></circle>
+              </svg>
+              <span class="percentage-overlay position-absolute text-white fw-bold">92%</span>
+            </div>
+
+            <div class="flex-grow-1 px-4 d-flex flex-column justify-content-center">
+              <span class="text-gray fs-6">Coincidencia</span>
+              <h1 class="text-white fw-bold my-1 display-5 style-title" style="font-size: 2rem;">Interstellar</h1>
+              <p class="text-gray m-0 small lh-sm">Porque te gustó The Martian y Arrival</p>
+            </div>
+
+            <div class="flex-shrink-0">
+              <img src="{{ url_for('static', filename='img/fondos/foto-pelicula.jpg') }}" alt="Póster Interstellar" class="poster-img rounded-3">
+            </div>
+
+          </div>
+
         </div>
+
       </div>
     </div>
   </section>
+
+  <!-- Porque elegir Cinematch -->
+  <section class="cm-section">
+    <div class="cm-features-container">
+      
+      <h2 class="cm-features-title">¿POR QUÉ ELEGIR <span>CINEMATCH?</span></h2>
+
+      <div class="cm-features-grid">
+        
+        <div class="cm-feature-card">
+          <div class="cm-feature-card__icon">
+            <img src="{{ url_for('static', filename='img/iconos/tiro.svg') }}" alt="Personalizado">
+          </div>
+          <div class="cm-feature-card__content">
+            <h3>Personalizado para vos</h3>
+            <p>Recomendaciones únicas basadas en tus gustos y elecciones.</p>
+          </div>
+        </div>
+
+        <div class="cm-feature-card">
+          <div class="cm-feature-card__icon">
+            <img src="{{ url_for('static', filename='img/iconos/rayo.svg') }}" alt="Rápido y fácil">
+          </div>
+          <div class="cm-feature-card__content">
+            <h3>Rápido y fácil</h3>
+            <p>En minutos encontrás algo increíble para ver.</p>
+          </div>
+        </div>
+
+        <div class="cm-feature-card">
+          <div class="cm-feature-card__icon">
+            <img src="{{ url_for('static', filename='img/iconos/corazon.svg') }}" alt="Guardá tus favoritas">
+          </div>
+          <div class="cm-feature-card__content">
+            <h3>Guardá tus favoritas</h3>
+            <p>Creá tu lista, clasificá y volvé a ver cuando quieras.</p>
+          </div>
+        </div>
+
+        <div class="cm-feature-card">
+          <div class="cm-feature-card__icon">
+            <img src="{{ url_for('static', filename='img/iconos/compass.svg') }}" alt="Descubrí más">
+          </div>
+          <div class="cm-feature-card__content">
+            <h3>Descubrí más</h3>
+            <p>Encontrá joyas ocultas que no sabías que existían.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   {# === CASO DE USUARIO ANÓNIMO (no registrado)=== #}
   {% else %}
@@ -258,9 +588,11 @@
   <section class="cm-section">
     <div class="cm-section__head mt-2">
       <h4 class="text-white-50">Recomendaciones de hoy</h4>
-      <span class="cm-section__notice">Tendencias globales · <a href="{{ url_for('usuarios.registro') }}"
-          style="color:var(--accent);text-decoration:none;">Registrate para ver las tuyas</a></span>
+      <span class="cm-section__notice"><span>Tendencias globales · </span><a href="{{ url_for('usuarios.registro') }}"
+        style="color:var(--accent);text-decoration:none;">Registrate para ver las tuyas</a></span>
     </div>
+
+    <h2>Peliculas</h2>
 
     <!-- Recomendaciones especiales version pc -->
     {% if peliculas %}
@@ -338,72 +670,277 @@
 
   </section>
 
+  <!-- SERIES -->
+  <section class="cm-section">
+    <h2>Series</h2>
+
+    <!-- Recomendaciones especiales version pc -->
+    {% if series %}
+    <div id="seriesCarousel" class="carousel slide d-none d-md-block" data-bs-ride="true">
+      <div class="carousel-inner">
+        {% for i in range(0, series|length, 6) %}
+        <div class="carousel-item {% if i == 0 %}active{% endif %}">
+          <div class="row g-3">
+            {% for serie in series[i:i+6] %}
+            <div class="col-2">
+              <a data-id="{{ serie.id }}" data-bs-toggle="modal" data-bs-target="#modal-info-pelicula" data-tipo="serie"
+                class="cm-movie-card text-decoration-none" title="{{ serie.titulo}}">
+                <div class="cm-movie-card__poster">
+                  {% if serie.poster %}
+                  <img src="https://image.tmdb.org/t/p/w300{{ serie.poster }}" alt="{{ serie.titulo }}"
+                    class="img-fluid rounded" loading="lazy" />
+                  {% else %}
+                  <img src="https://placehold.co/200x300?text=Sin+imagen" alt="Sin imagen" class="img-fluid rounded">
+                  {% endif %}
+                </div>
+                <div class="cm-movie-card__info">
+                  <div class="cm-movie-card__title">{{ serie.titulo }}</div>
+                  <div class="cm-movie-card__meta d-flex align-items-center justify-content-between">
+                    <span style="color: #f5c518;">★ {{ serie.puntuacion | round(1) }}</span>
+                    <span>{{ serie.fecha[:4] if serie.fecha else "----" }}</span>
+                  </div>
+                </div>
+              </a>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+
+      <button class="carousel-control-prev" type="button" data-bs-target="#seriesCarousel" data-bs-slide="prev"
+        style="width: 3%;">
+        <span class="carousel-control-prev-icon"></span>
+      </button>
+      <button class="carousel-control-next" type="button" data-bs-target="#seriesCarousel" data-bs-slide="next"
+        style="width: 3%;">
+        <span class="carousel-control-next-icon"></span>
+      </button>
+    </div>
+
+    <!-- Recomendaciones especiales version mobile -->
+    <div class="d-flex d-md-none flex-nowrap overflow-auto g-3 px-1 pb-2 cm-mobile-scroll">
+      {% for serie in series %}
+      <div class="flex-shrink-0" style="width: 140px; margin-right: 1rem;">
+        <a data-id="{{ serie.id }}" data-bs-toggle="modal" data-bs-target="#modal-info-pelicula" data-tipo="serie"
+          class="cm-movie-card text-decoration-none" title="{{ serie.titulo }}">
+          <div class="cm-movie-card__poster">
+            {% if serie.poster %}
+            <img src="https://image.tmdb.org/t/p/w300{{ serie.poster }}" alt="{{ serie.titulo }}"
+              class="img-fluid rounded" loading="lazy" />
+            {% else %}
+            <img src="https://placehold.co/200x300?text=Sin+imagen" alt="Sin imagen" class="img-fluid rounded">
+            {% endif %}
+          </div>
+          <div class="cm-movie-card__info p-1">
+            <div class="cm-movie-card__title text-truncate" style="font-size: 0.85rem;">{{ serie.titulo }}</div>
+            <div class="cm-movie-card__meta d-flex align-items-center justify-content-between"
+              style="font-size: 0.75rem;">
+              <span style="color: #f5c518;">★ {{ serie.puntuacion | round(1) }}</span>
+              <span>{{ serie.fecha[:4] if serie.fecha else "" }}</span>
+            </div>
+          </div>
+        </a>
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <p class="text-white">No hay recomendaciones disponibles.</p>
+    {% endif %}
+
+  </section>
+
   <!-- CÓMO FUNCIONA (mini strip) -->
-  <section class="scf">
-    <div style="max-width:1100px; margin:0 auto; padding:0 2rem 32px;" id="scf">
+  <section class="scf mt-5">
+    <div class="d-flex flex-column" style="margin:0 auto; padding:0 2rem 32px;" id="scf">
       <div class="cm-how-strip">
-        <div class="cm-how-strip__head">¿Cómo funciona CineMatch?</div>
-        <div class="cm-how-strip__steps">
+        <h2 class="cm-features-title text-center">¿CÓMO FUNCIONA <span>CINEMATCH?</span></h2>
+
+        <div class="cm-how-strip__steps mt-2 mb-4">
           <div class="cm-how-step">
-            <div class="cm-how-step__num">1</div>
-            <div class="cm-how-step__label">Elegís tus gustos</div>
-            <div class="cm-how-step__desc">Seleccionás géneros, directores y películas que ya viste</div>
+            <div class="cm-how-step__icon-wrap">
+              <img src="{{ url_for('static', filename='img/iconos/checklist.svg') }}" alt="icono checklist">
+            </div>
+            <div class="cm-how-step__header-inline">
+              <span class="cm-how-step__num">1</span>
+              <h3 class="cm-how-step__label">Elegí tus gustos</h3>
+            </div>
+            <p class="cm-how-step__desc">Contanos qué tipo de experiencia querés vivir hoy</p>
           </div>
-          <div class="cm-how-arrow">→</div>
+
           <div class="cm-how-step">
-            <div class="cm-how-step__num">2</div>
-            <div class="cm-how-step__label">El algoritmo analiza</div>
-            <div class="cm-how-step__desc">Comparamos patrones con miles de espectadores similares</div>
+            <div class="cm-how-step__icon-wrap">
+              <img src="{{ url_for('static', filename='img/iconos/brain.svg') }}" alt="icono brain">
+            </div>
+            <div class="cm-how-step__header-inline">
+              <span class="cm-how-step__num">2</span>
+              <h3 class="cm-how-step__label">El algoritmo analiza</h3>
+            </div>
+            <p class="cm-how-step__desc">Comparamos patrones con miles de espectadores similares</p>
           </div>
-          <div class="cm-how-arrow">→</div>
+
           <div class="cm-how-step">
-            <div class="cm-how-step__num">3</div>
-            <div class="cm-how-step__label">Recibís recomendaciones</div>
-            <div class="cm-how-step__desc">Películas que realmente van con vos, no con todo el mundo</div>
+            <div class="cm-how-step__icon-wrap">
+              <img src="{{ url_for('static', filename='img/iconos/recofilm.svg') }}" alt="icono recofilm">
+            </div>
+            <div class="cm-how-step__header-inline">
+              <span class="cm-how-step__num">3</span>
+              <h3 class="cm-how-step__label">Recibís recomendaciones</h3>
+            </div>
+            <p class="cm-how-step__desc">Películas que realmente van con vos, no con todo el mundo</p>
           </div>
+
         </div>
-        <div style="text-align:center; margin-top:20px;">
-          <a href="#" style="font-size:13px; color:var(--accent); text-decoration:none;">Ver cómo funciona en detalle
-            →</a>
+
+
+
+        <div class="d-flex align-items-center justify-content-center flex-wrap gap-4">
+
+          <div class="custom-card d-flex align-items-center p-4 rounded-4 gap-4 justify-content-between">
+            <img src="{{ url_for('static', filename='img/iconos/algoritmo.svg') }}" alt="icono algoritmo" style="width:80px;">
+  
+            <div class="d-flex flex-column gap-2 justify-content-between flex-grow-1">
+              <div class="d-flex justify-content-between align-items-end">
+                <span class="status-text fs-5 m-0">Analizando...</span>
+                <span class="percentage-text fs-4 fw-bold m-0">92%</span>
+              </div>
+              <div class="progress progress-custom-bg rounded-0">
+                <div class="progress-bar progress-custom-fill" role="progressbar" style="width: 92%;" aria-valuenow="92" aria-valuemin="0" aria-valuemax="100"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="custom-card d-flex align-items-center p-4 rounded-4 justify-content-between">
+    
+            <div class="ring-container position-relative d-flex justify-content-center align-items-center flex-shrink-0">
+              <svg class="w-100 h-100" viewBox="0 0 100 100">
+                  <circle class="ring-track" cx="50" cy="50" r="44"></circle>
+                  <circle class="ring-fill" cx="50" cy="50" r="44"></circle>
+              </svg>
+              <span class="percentage-overlay position-absolute text-white fw-bold">92%</span>
+            </div>
+
+            <div class="flex-grow-1 px-4 d-flex flex-column justify-content-center">
+              <span class="text-gray fs-6">Coincidencia</span>
+              <h1 class="text-white fw-bold my-1 display-5 style-title" style="font-size: 2rem;">Interstellar</h1>
+              <p class="text-gray m-0 small lh-sm">Porque te gustó The Martian y Arrival</p>
+            </div>
+
+            <div class="flex-shrink-0">
+              <img src="{{ url_for('static', filename='img/fondos/foto-pelicula.jpg') }}" alt="Póster Interstellar" class="poster-img rounded-3">
+            </div>
+
+          </div>
+
         </div>
+
       </div>
     </div>
   </section>
 
-  <!-- AHORA EN TENDENCIA -->
+  <!-- Porque elegir Cinematch -->
   <section class="cm-section">
-    <div class="cm-section__head">
-      <h4 class="text-white-50">Ahora en tendencia</h4>
-      <a href="{{ url_for('cinematch.explorar') }}" class="cm-section__link">Ver todas →</a>
-    </div>
-    <div class="cm-trend-row">
-      {% set trending = [
-      {"title": "Dune: Parte 2", "genre": "Ciencia ficción"},
-      {"title": "Godzilla x Kong", "genre": "Acción"},
-      {"title": "Kung Fu Panda 4", "genre": "Animación"},
-      {"title": "Civil War", "genre": "Thriller"},
-      {"title": "Ghostbusters: Imperio", "genre": "Comedia"},
-      {"title": "La zona de interés", "genre": "Drama"},
-      {"title": "Pobres criaturas", "genre": "Comedia"},
-      {"title": "Past Lives", "genre": "Romance"}
-      ] %}
-      {% for film in trending %}
-      <div class="cm-trend-card">
-        <div class="cm-trend-card__poster">#{{ loop.index }}</div>
-        <div class="cm-trend-card__body">
-          <div class="cm-trend-card__title">{{ film.title }}</div>
-          <div class="cm-trend-card__genre">{{ film.genre }}</div>
+    <div class="cm-features-container">
+      
+      <h2 class="cm-features-title">¿POR QUÉ ELEGIR <span>CINEMATCH?</span></h2>
+
+      <div class="cm-features-grid">
+        
+        <div class="cm-feature-card">
+          <div class="cm-feature-card__icon">
+            <img src="{{ url_for('static', filename='img/iconos/tiro.svg') }}" alt="Personalizado">
+          </div>
+          <div class="cm-feature-card__content">
+            <h3>Personalizado para vos</h3>
+            <p>Recomendaciones únicas basadas en tus gustos y elecciones.</p>
+          </div>
         </div>
+
+        <div class="cm-feature-card">
+          <div class="cm-feature-card__icon">
+            <img src="{{ url_for('static', filename='img/iconos/rayo.svg') }}" alt="Rápido y fácil">
+          </div>
+          <div class="cm-feature-card__content">
+            <h3>Rápido y fácil</h3>
+            <p>En minutos encontrás algo increíble para ver.</p>
+          </div>
+        </div>
+
+        <div class="cm-feature-card">
+          <div class="cm-feature-card__icon">
+            <img src="{{ url_for('static', filename='img/iconos/corazon.svg') }}" alt="Guardá tus favoritas">
+          </div>
+          <div class="cm-feature-card__content">
+            <h3>Guardá tus favoritas</h3>
+            <p>Creá tu lista, clasificá y volvé a ver cuando quieras.</p>
+          </div>
+        </div>
+
+        <div class="cm-feature-card">
+          <div class="cm-feature-card__icon">
+            <img src="{{ url_for('static', filename='img/iconos/compass.svg') }}" alt="Descubrí más">
+          </div>
+          <div class="cm-feature-card__content">
+            <h3>Descubrí más</h3>
+            <p>Encontrá joyas ocultas que no sabías que existían.</p>
+          </div>
+        </div>
+
       </div>
-      {% endfor %}
     </div>
+  </section>
+
+  <!-- Ahora en tendencia -->
+  <section class="cm-section">
+    {% if secciones %}
+      {% for seccion in secciones %}
+        <div class="cm-section__head">
+          <h4 class="text-white-50">{{ seccion.nombre }}</h4>
+          <a href="{{ url_for('cinematch.explorar') }}" class="cm-section__link">Ver todas →</a>
+        </div>
+
+        <div class="cm-trend-row">
+          {% for pelicula in seccion.peliculas %}
+            <div class="cm-trend-card" data-id="{{ pelicula.id }}">
+              
+              <div class="cm-trend-card__poster position-relative overflow-hidden" style="background-color: var(--bg-card2); aspect-ratio: 16/9;">
+                {% if pelicula.poster %}
+                  <img src="{{ pelicula.poster }}" alt="Póster de {{ pelicula.titulo }}" class="img-fluid" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s ease;">
+                {% else %}
+                  <div class="d-flex align-items-center justify-content-center h-100 text-muted">🎬</div>
+                {% endif %}
+
+                <span class="position-absolute top-0 end-0 m-2 badge bg-dark bg-opacity-75 d-flex align-items-center gap-1 text-warning border border-secondary" style="font-size: 0.75rem; backdrop-filter: blur(4px);">
+                  ⭐ {{ "%.1f"|format(pelicula.puntuacion) }}
+                </span>
+              </div>
+
+              <div class="cm-trend-card__body d-flex flex-column gap-1" style="padding: 12px;">
+                
+                <div class="d-flex justify-content-between align-items-start gap-2">
+                  <h5 class="cm-trend-card__title text-white fw-bold m-0 text-truncate" style="font-size: 0.95rem; max-width: 75%;" title="{{ pelicula.titulo }}">
+                    {{ pelicula.titulo }}
+                  </h5>
+                  {% if pelicula.fecha %}
+                    <span class="text-white-50" style="font-size: 0.75rem; white-space: nowrap;">
+                      {{ pelicula.fecha.split('-')[0] }} </span>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      {% endfor %}
+    {% else %}
+      <p class="text-white-50">No hay películas en tendencia en este momento.</p>
+    {% endif %}
   </section>
 
   <!-- QUIZ BANNER -->
   <div style="padding: 0 2rem;">
     <div class="cm-quiz-banner">
       <div class="cm-quiz-banner__left">
-        <div class="cm-quiz-banner__title">🎯 ¿No sabés qué ver?</div>
+        <div class="cm-quiz-banner__title"><img src="{{ url_for('static', filename='img/iconos/quiz.svg') }}" alt="Icono de quiz" style="width: 24px; height: 24px; margin-right: 8px;"> ¿No sabés qué ver?</div>
         <div class="cm-quiz-banner__sub">Respondé 5 preguntas rápidas y te recomendamos algo para esta noche</div>
       </div>
       <a href="{{ url_for('usuarios.registro') }}" class="btn-primary"
@@ -412,6 +949,8 @@
   </div>
   {% endif %}
 </div>
+
+<!-- modal info película y serie -->
 <div class="modal modal-xl fade" id="modal-info-pelicula" data-footer="true" data-bs-keyboard="true" tabindex="-1"
   aria-labelledby="modal-info-pelicula-label" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
@@ -422,6 +961,7 @@
     </div>
   </div>
 </div>
+
 <script>
   const carousel = document.getElementById('explorar-carousel');
   document.querySelectorAll('[data-scroll-dir]').forEach((button) => {
@@ -429,5 +969,63 @@
       carousel.scrollBy({ left: Number(button.dataset.scrollDir) * 340, behavior: 'smooth' });
     });
   });
+
+  document.addEventListener("DOMContentLoaded", () => {
+    // Seleccionamos los botones y las secciones
+    const botonesFiltro = document.querySelectorAll(".ex-tipo-btn");
+    const seccionPeliculas = document.getElementById("contenedor-pelicula");
+    const plataformaPeliculas = document.querySelectorAll(".plataforma-pelicula-preferencia");
+    const plataformaSeries = document.querySelectorAll(".plataforma-serie-preferencia");
+    const seccionSeries = document.getElementById("contenedor-serie");
+
+    botonesFiltro.forEach(boton => {
+      boton.addEventListener("click", (e) => {
+        e.preventDefault(); // Evita que la página se recargue o salte
+
+        // 1. Manejo del estado visual del botón activo (opcional)
+        botonesFiltro.forEach(btn => btn.classList.remove("active"));
+        boton.classList.add("active");
+
+        // 2. Obtener el filtro seleccionado (todo, peliculas o series)
+        const filtro = boton.getAttribute("data-filter");
+
+        // 3. Lógica para ocultar/mostrar usando las clases nativas de Bootstrap
+        if (filtro === "todo") {
+          seccionPeliculas.classList.remove("d-none");
+          seccionSeries.classList.remove("d-none");
+
+          plataformaPeliculas.forEach(p => {
+            p.classList.remove("d-none");
+          });
+
+          plataformaSeries.forEach(s => {
+            s.classList.remove("d-none");
+          });
+        } else if (filtro === "peliculas") {
+          seccionPeliculas.classList.remove("d-none");
+
+          plataformaPeliculas.forEach(p => {
+            p.classList.remove("d-none");
+          });
+
+          seccionSeries.classList.add("d-none"); // Oculta series
+          plataformaSeries.forEach(s => {
+            s.classList.add("d-none");
+          });
+        } else if (filtro === "series") {
+          seccionPeliculas.classList.add("d-none"); // Oculta películas
+          plataformaPeliculas.forEach(p => {
+            p.classList.add("d-none");
+          });
+
+          seccionSeries.classList.remove("d-none");
+          plataformaSeries.forEach(s => {
+            s.classList.remove("d-none");
+          });
+        }
+      });
+    });
+  });
 </script>
+
 {% endblock %}
