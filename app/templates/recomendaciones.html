@@ -1,121 +1,140 @@
 {% extends "base.html" %} {% block title %}Recomendaciones — CineMatch{% endblock %} {% block content %}
 
 <div class="container margen-nav margen-footer">
-    <div class="card card-recomendacion d-flex flex-column">
-        <div class="card-body">
-            <div class="row">
-                <div class="backdrop-recomendacion-container">
-                    {% if pelicula.backdrop %}
-                    <img src="{{ pelicula.backdrop }}" alt="{{ pelicula.titulo }}"
-                        class="backdrop-recomendacion d-block" /> {%
-                    else %}
-                    <div class="backdrop-recomendacion d-block backdrop-placeholder"></div>
-                    {% endif %}
+    {% if recomendaciones %}
+    <form id="form-matches" action="{{ url_for('recomendaciones.mis_matches') }}"
+        data-url-yalavi="{{ url_for('recomendaciones.ya_la_vi') }}" method="POST">
+    </form>
 
-                    <!-- Clasificación arriba a la izquierda -->
-                    {% if clasificacion %}
-                    <span class="badge clasificacion-recomendacion">{{ clasificacion }}</span> {% endif %}
-
-                    <!-- Logos de streaming arriba a la derecha -->
-                    {% if providers.flatrate %}
-                    <div class="providers-recomendacion d-flex">
-                        {% for p in providers.flatrate %}
-                        <img src="{{ p.logo }}" alt="{{ p.nombre }}" title="{{ p.nombre }}"
-                            class="provider-logo-recomendacion"> {% endfor %}
-                    </div>
-                    {% endif %}
-
-                    <!-- Botón trailer abajo a la derecha -->
-                    <a href="#" class="btn-trailer-recomendacion align-items-center" target="_blank">
-                        <i class="bi bi-play-fill"></i> Ver trailer
-                    </a>
-                </div>
-            </div>
-            <div class="contenido-recomendacion-container">
-
+    <div class="tinder-stack"
+        style="position: relative; width: 100%; min-height: 700px; display: flex; justify-content: center;">
+        {% for item in recomendaciones %}
+        <div class="card card-recomendacion d-flex flex-column tinder-card" data-id="{{ item.id }}"
+            data-tipo="{{ item.tipo }}" data-titulo="{{ item.titulo }}" data-poster="{{ item.poster }}"
+            data-puntuacion="{{ item.puntuacion }}" data-fecha="{{ item.fecha }}"
+            style="position: absolute; top: 0; max-width: 500px; opacity: 0; pointer-events: none; transition: transform 0.4s ease, opacity 0.4s ease; z-index: {{ 10 - loop.index0 }};">
+            <div class="card-body">
                 <div class="row">
-                    <div class="col-12">
-                        <h1 class="titulo-recomendacion d-block">
-                            {{ pelicula.titulo }}
-                        </h1>
-                    </div>
-                    <div class="col-12">
-                        <p class="meta-recomendacion d-flex flex-nowrap align-items-center">
-                            <span class="anio-recomendacion"><i class="bi bi-calendar-event"></i> {{ pelicula.fecha[:4]
-                                }}</span>
-                            <span class="duracion-recomendacion"><i class="bi bi-clock"></i> {{ pelicula.duracion
-                                }}</span> {% if credits.directores %}
-                            <span class="director-recomendacion"><i class="bi bi-camera-reels"></i>
-                                {% for director in credits.directores %}
-                                {{ director.nombre[0] }} {{ director.nombre[1] if director.nombre|length > 1 else ''
-                                }}{% if not loop.last %}, {% endif %} {% endfor %}
-                            </span> {% endif %}
-                        </p>
-                    </div>
-                    <div class="col-12">
-                        <p class="sinopsis-recomendacion">{{ pelicula.descripcion }}</p>
-                    </div>
-                </div>
-                <hr class="separador-recomendacion">
-                <div class="row info-recomendacion text-center">
-                    <div class="col-6">
-                        <h3 class="h3-recomendaciones">Géneros</h3>
-                        <p>
-                            {% for genero in pelicula.generos %}
-                            <span class="generos-recomendacion badge bg-primary">{{ genero }}</span> {% endfor %}
-                        </p>
-                    </div>
-                    <div class="col-6">
-                        <h3 class="h3-recomendaciones">Elenco</h3>
-                        <p class="elenco-recomendacion {% if pelicula.generos|length >= 3 %}elenco-clamp-2{% endif %}">
-                            {% for actor in credits.cast %}{{ actor.nombre }}{% if not loop.last %}, {% endif %}{%
-                            endfor %}
-                        </p>
-                    </div>
-                </div>
-            </div>
+                    <div class="backdrop-recomendacion-container">
+                        {% if item.backdrop %}
+                        <img src="{{ item.backdrop }}" alt="{{ item.titulo }}" class="backdrop-recomendacion d-block" />
+                        {%
+                        else %}
+                        <div class="backdrop-recomendacion d-block backdrop-placeholder"></div>
+                        {% endif %}
 
-            <hr class="separador-botones-recomendacion">
-            <div class="row">
-                <div class="col-5 boton-no d-flex align-items-center justify-content-center">
-                    <div>
-                        <button type="button"
-                            class="btn-redondo btn-redondo-no d-flex align-items-center justify-content-center">
-                            <i class="bi bi-hand-thumbs-down-fill icono-btn-redondo"></i>
-                        </button>
-                        <p class="txt-no">← No me interesa</p>
-                    </div>
-                </div>
-                <div class="col-2 boton-info d-flex flex-column align-items-center justify-content-center">
-                    <div>
-                        <a role="button" data-bs-toggle="modal" data-bs-target="#modal-info-pelicula"
-                            data-id="{{ pelicula.id }}"
-                            class="btn-redondo btn-redondo-info d-flex align-items-center justify-content-center">
-                            <i class="bi bi-info-circle icono-btn-redondo icono-btn-info"></i>
+                        <!-- Clasificación arriba a la izquierda -->
+                        {% if clasificacion %}
+                        <span class="badge clasificacion-recomendacion">{{ clasificacion }}</span> {% endif %}
+
+                        <!-- Logos de streaming arriba a la derecha -->
+                        {% if item.providers.flatrate %}
+                        <div class="providers-recomendacion d-flex">
+                            {% for p in item.providers.flatrate %}
+                            <img src="{{ p.logo }}" alt="{{ p.nombre }}" title="{{ p.nombre }}"
+                                class="provider-logo-recomendacion"> {% endfor %}
+                        </div>
+                        {% endif %}
+
+                        <!-- Botón trailer abajo a la derecha -->
+                        <a href="#" class="btn-trailer-recomendacion align-items-center" target="_blank">
+                            <i class="bi bi-play-fill"></i> Ver trailer
                         </a>
-                        <p class="txt-info">Más info</p>
                     </div>
                 </div>
-                <div class="col-5 boton-si d-flex align-items-center justify-content-center">
-                    <div>
-                        <button type="button"
-                            class="btn-redondo btn-redondo-si d-flex align-items-center justify-content-center">
-                            <i class="bi bi-hand-thumbs-up-fill icono-btn-redondo"></i>
-                        </button>
-                        <p class="txt-si">Me interesa →</p>
+                <div class="contenido-recomendacion-container">
+
+                    <div class="row">
+                        <div class="col-12">
+                            <h1 class="titulo-recomendacion d-block">
+                                {{ item.titulo }}
+                            </h1>
+                        </div>
+                        <div class="col-12">
+                            <p class="meta-recomendacion d-flex flex-nowrap align-items-center">
+                                <span class="anio-recomendacion"><i class="bi bi-calendar-event"></i> {{ item.fecha[:4]
+                                    }}
+                                </span>
+                                <span class="duracion-recomendacion"><i class="bi bi-clock"></i> {{ item.duracion
+                                    }}</span> {% if item.credits.directores %}
+                                <span class="director-recomendacion"><i class="bi bi-camera-reels"></i>
+                                    {% for director in item.credits.directores %}
+                                    {{ director.nombre[0] }} {{ director.nombre[1] if director.nombre|length > 1 else ''
+                                    }}{% if not loop.last %}, {% endif %} {% endfor %}
+                                </span> {% endif %}
+                            </p>
+                        </div>
+                        <div class="col-12">
+                            <p class="sinopsis-recomendacion">{{ item.descripcion }}</p>
+                        </div>
+                    </div>
+                    <hr class="separador-recomendacion">
+                    <div class="row info-recomendacion text-center">
+                        <div class="col-6">
+                            <h3 class="h3-recomendaciones">Géneros</h3>
+                            <p>
+                                {% for genero in item.generos %}
+                                <span class="generos-recomendacion badge bg-primary">{{ genero }}</span> {% endfor %}
+                            </p>
+                        </div>
+                        <div class="col-6">
+                            <h3 class="h3-recomendaciones">Elenco</h3>
+                            <p class="elenco-recomendacion {% if item.generos|length >= 3 %}elenco-clamp-2{% endif %}">
+                                {% for actor in item.credits.cast %}{{ actor.nombre }}{% if not loop.last %}, {% endif
+                                %}{%
+                                endfor %}
+                            </p>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="row">
-                <div class="col-12 d-flex justify-content-center">
-                    <a href="#" class="btn-vista"><i class="bi bi-eye-fill"></i> Ya la ví</a>
+
+                <hr class="separador-botones-recomendacion">
+                <div class="row">
+                    <div class="col-5 boton-no d-flex align-items-center justify-content-center">
+                        <div>
+                            <button type="button"
+                                class="btn-redondo btn-redondo-no d-flex align-items-center justify-content-center">
+                                <i class="bi bi-hand-thumbs-down-fill icono-btn-redondo"></i>
+                            </button>
+                            <p class="txt-no">← No me interesa</p>
+                        </div>
+                    </div>
+                    <div class="col-2 boton-info d-flex flex-column align-items-center justify-content-center">
+                        <div>
+                            <a role="button" data-bs-toggle="modal" data-bs-target="#modal-info-pelicula"
+                                data-id="{{ item.id }}"
+                                data-tipo="{{ 'serie' if item.tipo == 'serie' else 'pelicula' }}"
+                                class="btn-redondo btn-redondo-info d-flex align-items-center justify-content-center">
+                                <i class="bi bi-info-circle icono-btn-redondo icono-btn-info"></i>
+                            </a>
+                            <p class="txt-info">Más info</p>
+                        </div>
+                    </div>
+                    <div class="col-5 boton-si d-flex align-items-center justify-content-center">
+                        <div>
+                            <button type="button"
+                                class="btn-redondo btn-redondo-si d-flex align-items-center justify-content-center">
+                                <i class="bi bi-hand-thumbs-up-fill icono-btn-redondo"></i>
+                            </button>
+                            <p class="txt-si">Me interesa →</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12 d-flex justify-content-center">
+                        <a href="#" class="btn-vista"><i class="bi bi-eye-fill"></i> Ya la ví</a>
+                    </div>
                 </div>
             </div>
         </div>
+
+        {% endfor %}
     </div>
-    <div class="d-flex justify-content-center">
-        <a href="#" class="btn-no-recomendar"><i class="bi bi-eye-slash-fill"></i> No volver a recomendar</a>
-    </div>
+    {% else %}
+    <p class="texto-error">No encontramos recomendaciones que coincidan exactamente con tus filtros.<br>Intentá
+        variar las
+        respuestas.</p>
+    {% endif %}
 </div>
 
 <!-- Modal -->
@@ -129,4 +148,6 @@
         </div>
     </div>
 </div>
+
+<script src="{{ url_for('static', filename='js/recomendaciones.js') }}"></script>
 {% endblock %}

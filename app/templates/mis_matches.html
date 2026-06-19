@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+{% block title %}Tus Matches — CineMatch{% endblock %}
+{% block content %}
+
+<div class="container matches-container margen-nav margen-footer">
+    <div class="card matches-card">
+
+        <h1 class="matches-titulo text-center">
+            Tus <span class="texto-color">Matches</span>
+        </h1>
+        <p class="matches-desc text-center">
+            Guardamos las películas que más te interesaron.<br>
+            Podrás encontrar esta lista en tu perfil.
+        </p>
+
+        <div class="matches-grid" id="matches-grid">
+            {% for peli in matches %}
+            <div class="match-item" id="match-{{ peli.id }}">
+                <div class="match-item__poster-wrap">
+                    <img src="https://image.tmdb.org/t/p/w300{{ peli.poster }}" alt="{{ peli.titulo }}"
+                        class="match-item__poster">
+                    <div class="match-item__overlay">
+                        <a data-id="{{ peli.id }}" data-tipo="{{ peli.tipo }}" data-bs-toggle="modal"
+                            data-bs-target="#modal-info-pelicula" class="match-overlay-btn match-overlay-btn--info">
+                            <i class="bi bi-info-circle-fill"></i>
+                        </a>
+                        <button type="button" class="match-overlay-btn match-overlay-btn--remove"
+                            onclick="quitarMatch('{{ peli.id }}')">
+                            <i class="bi bi-x-lg"></i>
+                        </button>
+                    </div>
+                    <div class="match-item__badges">
+                        <span class="tinder-badge tinder-badge--rating">★ {{ peli.puntuacion }}</span>
+                    </div>
+                </div>
+                <h3 class="match-item__title">{{ peli.titulo }}</h3>
+                <p class="match-item__meta">
+                    <i class="bi bi-calendar3"></i> {{ peli.fecha[:4] if peli.fecha else '—' }}
+                </p>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Guardar en matchlist -->
+        <form method="POST" action="{{ url_for('recomendaciones.guardar_matches') }}" id="form-guardar"
+            style="display:none;">
+            {% for peli in matches %}
+            <input type="hidden" name="ids" value="{{ peli.id }}" class="input-match" id="input-{{ peli.id }}">
+            <input type="hidden" name="tipos" value="{{ peli.tipo }}">
+            <input type="hidden" name="titulos" value="{{ peli.titulo }}">
+            <input type="hidden" name="posters" value="{{ peli.poster }}">
+            <input type="hidden" name="puntuaciones" value="{{ peli.puntuacion }}">
+            <input type="hidden" name="fechas" value="{{ peli.fecha }}">
+            {% endfor %}
+        </form>
+
+        <div class="matches-actions">
+            <a href="{{ url_for('recomendaciones.ver_recomendaciones', pagina=pagina_siguiente) }}"
+                onclick="guardarSinRedirigir()" class="btn-encuesta btn-matches-primary w-100 text-center">
+                <i class="bi bi-stars"></i> Seguir descubriendo →
+            </a>
+        </div>
+
+        <div class="matches-actions mt-3">
+            <button type="button" onclick="guardarYRedirigir('perfil')"
+                class="btn-matches-accion btn-matches-accion--secondary">
+                <i class="bi bi-person"></i> Ver en mi perfil
+            </button>
+            <button type="button" onclick="guardarYRedirigir('index')"
+                class="btn-matches-accion btn-matches-accion--secondary">
+                <i class="bi bi-house"></i> Volver al inicio
+            </button>
+        </div>
+
+    </div>
+</div>
+
+<!-- Modal reutilizado -->
+<div class="modal modal-xl fade" id="modal-info-pelicula" data-footer="false" data-bs-keyboard="true" tabindex="-1"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content" id="modal-contenido">
+            <div class="d-flex justify-content-center p-5">
+                <div class="spinner-border text-light" role="status"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function quitarMatch(id) {
+        const item = document.getElementById('match-' + id);
+        const input = document.getElementById('input-' + id);
+        item.classList.add('tinder-card--removida');
+        setTimeout(() => item.remove(), 300);
+        if (input) input.remove();
+    }
+
+    function guardarYRedirigir(destino) {
+        const form = document.getElementById('form-guardar');
+        const inputDestino = document.createElement('input');
+        inputDestino.type = 'hidden';
+        inputDestino.name = 'destino';
+        inputDestino.value = destino;
+        form.appendChild(inputDestino);
+        form.submit();
+    }
+
+    function guardarSinRedirigir() {
+        // Guardamos via fetch sin bloquear la navegación
+        const form = document.getElementById('form-guardar');
+        const data = new FormData(form);
+        fetch("{{ url_for('recomendaciones.guardar_matches') }}", {
+            method: 'POST',
+            body: data,
+        });
+    }
+</script>
+
+{% endblock %}

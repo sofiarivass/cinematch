@@ -83,7 +83,9 @@ main {
     transition: all 0.2s;
 }
 
-.btn-iniciar-sesion:hover, .btn-iniciar-sesion:active, .btn-iniciar-sesion:focus {
+.btn-iniciar-sesion:hover,
+.btn-iniciar-sesion:active,
+.btn-iniciar-sesion:focus {
     background-color: #192fa3 !important;
     border-color: #192fa3 !important;
     transition: all 0.2s;
@@ -101,7 +103,9 @@ main {
     transition: all 0.2s;
 }
 
-.btn-crear-cuenta:hover, .btn-crear-cuenta:active, .btn-crear-cuenta:focus {
+.btn-crear-cuenta:hover,
+.btn-crear-cuenta:active,
+.btn-crear-cuenta:focus {
     background-color: #192fa3 !important;
     color: #FFFFFF !important;
     border-color: #192fa3 !important;
@@ -1322,6 +1326,7 @@ footer .nav-link:hover {
     padding: 0.65em 2.5em;
     cursor: pointer;
     transition: opacity 0.2s;
+    text-decoration: none;
 }
 
 .btn-encuesta:hover {
@@ -1729,6 +1734,17 @@ footer .nav-link:hover {
 .encuesta-grid-tiempo .encuesta-opcion-txt {
     font-size: 0.88rem;
 }
+
+/* Paso 4: epoca */
+.encuesta-grid-epoca {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    max-width: 440px;
+    width: 100%;
+    margin: 2em auto;
+    gap: 1em;
+}
+
 
 /* Paso 5: clasificación — 2x2 */
 .encuesta-grid-clasificacion {
@@ -2570,7 +2586,7 @@ footer .nav-link:hover {
     font-size: 1.5rem;
 }
 
-.bi.bi-person {
+.avatar-circle .bi.bi-person {
     font-size: 4.5rem;
     line-height: 1;
     color: #FFFFFF;
@@ -2844,4 +2860,161 @@ footer .nav-link:hover {
     .perfil-container .tab-btn {
         white-space: nowrap;
     }
+}
+
+
+
+/* ── MIS MATCHES ── */
+.matches-container {
+    max-width: 800px;
+}
+
+.matches-card {
+    background: #030E21;
+    border: 1px solid #232D3E;
+    border-radius: 30px;
+    padding: 2.5rem;
+}
+
+.matches-titulo {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 800;
+    font-size: 2rem;
+    color: #fff;
+    margin-bottom: 0.5rem;
+}
+
+.matches-desc {
+    font-size: 0.95rem;
+    color: #cccccc80;
+    margin-bottom: 2rem;
+}
+
+.matches-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.match-item {
+    position: relative;
+    transition: opacity 0.3s, transform 0.3s;
+}
+
+.match-item__poster-wrap {
+    position: relative;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.match-item__poster {
+    width: 100%;
+    aspect-ratio: 2/3;
+    object-fit: cover;
+    display: block;
+}
+
+.match-item__overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    opacity: 0;
+    transition: opacity 0.2s;
+}
+
+.match-item__poster-wrap:hover .match-item__overlay {
+    opacity: 1;
+}
+
+.match-overlay-btn {
+    background: rgba(255, 255, 255, 0.15);
+    border: 2px solid rgba(255, 255, 255, 0.4);
+    border-radius: 50%;
+    width: 42px;
+    height: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 1rem;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background 0.2s;
+}
+
+.match-overlay-btn--remove {
+    border-color: #CC0000;
+    color: #CC0000;
+}
+
+.match-overlay-btn--remove:hover {
+    background: #CC0000;
+    color: #fff;
+}
+
+.match-item__badges {
+    position: absolute;
+    top: 0.4rem;
+    right: 0.4rem;
+}
+
+.match-item__title {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #fff;
+    margin: 0.5rem 0 0.1rem;
+}
+
+.match-item__meta {
+    font-size: 0.75rem;
+    color: #cccccc80;
+    margin: 0;
+}
+
+.matches-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+}
+
+.btn-matches-accion {
+    flex: 1;
+    line-height: 1;
+    padding: 1rem 1rem;
+    border-radius: 50px;
+    border: 1px solid #232D3E;
+    background: #000A1C;
+    color: #CCCCCC;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 500;
+    font-size: 0.95rem;
+    cursor: pointer;
+    text-align: center;
+    transition: background 0.2s;
+    margin-bottom: 0.5em;
+}
+
+.btn-matches-accion:hover {
+    background: #232D3E;
+}
+
+.btn-matches-primary {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.texto-error {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
+    font-style: italic;
+    text-align: center;
+    color: #3A52D6;
+    font-size: 1rem;
 }

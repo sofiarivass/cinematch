@@ -24,32 +24,20 @@ class RecomendacionesView:
             paso=paso,
         )
 
-    def render_recomendaciones(
-        self,
-        pelicula: dict,
-        credits: dict,
-        keywords: list,
-        providers: dict,
-        clasificacion: str,
-    ) -> str:
-        """
-        Renderiza la vista de recomendaciones de películas.
-
-        Args:
-            pelicula: Dict con todos los datos de la película
-
-        Returns:
-            HTML renderizado como string
-        """
+    def render_recomendaciones(self, recomendaciones: list, pagina: int) -> str:
         return render_template(
             "recomendaciones.html",
-            pelicula=pelicula,
-            credits=credits,
-            keywords=keywords,
-            providers=providers,
-            clasificacion=clasificacion,
+            recomendaciones=recomendaciones,
+            pagina=pagina,
         )
-    
+
+    def render_mis_matches(self, matches: list, pagina_siguiente: int = 2) -> str:
+        return render_template(
+            "mis_matches.html",
+            matches=matches,
+            pagina_siguiente=pagina_siguiente,
+        )
+
     def render_error(self, mensaje: str) -> tuple[str, int]:
         """
         Renderiza la vista de error.
