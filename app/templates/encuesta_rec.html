@@ -302,7 +302,7 @@
                 ¿De qué época disfrutás más las {{ 'series' if session.get('formato') == 'serie' else 'producciones' }}?
             </h1>
             <p class="encuesta-desc">Desde clásicos inolvidables hasta los últimos estrenos.</p>
-            <div class="encuesta-grid-plataformas justify-content-center">
+            <div class="d-flex flex-column encuesta-grid-plataformas justify-content-center">
                 <label class="encuesta-opcion-logo d-flex align-items-center justify-content-center">
                     <input type="radio" name="epoca" value="estrenos" class="encuesta-check-hidden" {% if
                         session.get('epoca')=='estrenos' %}checked{% endif %}>
