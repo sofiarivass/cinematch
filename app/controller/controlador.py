@@ -61,49 +61,8 @@ def index():
 
             mapa_nombres = {p["id"]: p["nombre"] for p in catálogo_completo}
 
-            # # peliculas
-            # for p_id in preferencias.get("plataformas", []):
-            #     nombre_stream = mapa_nombres.get(p_id, f"Servicio {p_id}")
-            #     try:
-            #         # Aquí llamas a la función que tiene el @cache.memoize
-            #         movies = modelo_peliculas.obtener_por_plataforma_individual(
-            #             plataforma_id=p_id, 
-            #             idiomas=preferencias.get("idiomas", [])
-            #         )
-                    
-            #         if movies:
-            #             secciones_por_plataforma_movie.append({
-            #                 "nombre_plataforma": nombre_stream,
-            #                 "peliculas": movies[:6]
-            #             })
-            #         else:
-            #             print(f"DEBUG: La API no devolvió peliculas para la plataforma {p_id}")
-                        
-            #     except Exception as e:
-            #         print(f"DEBUG: Error real al llamar a la API para {p_id}: {e}")
-
-
-            # # series
-            # for p_id in preferencias.get("plataformas", []):
-            #     nombre_stream = mapa_nombres.get(p_id, f"Servicio {p_id}")
-            #     try:
-            #         # Llamada al modelo de series (asegúrate de que apunte al endpoint de TV de TMDB)
-            #         series_data = modelo_series.obtener_por_plataforma_individual(
-            #             plataforma_id=p_id, 
-            #             idiomas=preferencias.get("idiomas", [])
-            #         )
-                    
-            #         if series_data:
-            #             secciones_por_plataforma_serie.append({
-            #                 "nombre_plataforma": nombre_stream,
-            #                 "series": series_data[:6]
-            #             })
-            #         else:
-            #             print(f"DEBUG: La API de TMDB no devolvió series para la plataforma {p_id}")
-                        
-            #     except Exception as e:
-            #         print(f"DEBUG: Error real al llamar a la API de TMDB para la plataforma {p_id}: {e}")
-
+           
+            # Iteramos solo por las plataformas que el usuario seleccionó en su encuesta (peliculas y series)
             for p_id in preferencias.get("plataformas", []):
                 nombre_stream = mapa_nombres.get(p_id, f"Servicio {p_id}")
                 movies = []
