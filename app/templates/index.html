@@ -68,10 +68,13 @@
         </div>
       </div>
     </div>
+  </section>
 
+  <section class="cm-section" data="contenedor-pelicula">
     <!-- Recomendaciones especiales version pc -->
+    <h2 class="text-center">Peliculas Recomendadas</h2>
     {% if peliculas %}
-    <div id="peliculasCarousel" class="carousel slide d-none d-md-block" data-bs-ride="true">
+    <div id="peliculasCarousel" class="carousel slide d-none d-md-block bloque-contenido" data-bs-ride="true">
       <div class="carousel-inner">
         {% for i in range(0, peliculas|length, 6) %}
         <div class="carousel-item {% if i == 0 %}active{% endif %}">
@@ -114,7 +117,7 @@
     </div>
 
     <!-- Recomendaciones especiales version mobile -->
-    <div class="d-flex d-md-none flex-nowrap overflow-auto g-3 px-1 pb-2 cm-mobile-scroll">
+    <div class="d-flex d-md-none flex-nowrap overflow-auto g-3 px-1 pb-2 cm-mobile-scroll bloque-contenido">
       {% for pelicula in peliculas %}
       <div class="flex-shrink-0" style="width: 140px; margin-right: 1rem;">
         <a data-id="{{ pelicula.id }}" data-bs-toggle="modal" data-bs-target="#modal-info-pelicula"
@@ -143,6 +146,104 @@
     <p class="text-white">No hay recomendaciones disponibles.</p>
     {% endif %}
   </section>
+
+  <!-- SERIES -->
+  <!-- Recomendaciones especiales version pc -->
+  <section class="cm-section" data="contenedor-serie">
+    <h2 class="text-center">Series Recomendadas</h2>
+    {% if series %}
+    <div id="seriesCarousel" class="carousel slide d-none d-md-block bloque-contenido" data-bs-ride="true">
+      <div class="carousel-inner">
+        {% for i in range(0, series|length, 6) %}
+        <div class="carousel-item {% if i == 0 %}active{% endif %}">
+          <div class="row g-3">
+            {% for serie in series[i:i+6] %}
+            <div class="col-2">
+              <a data-id="{{ serie.id }}" data-bs-toggle="modal" data-bs-target="#modal-info-pelicula" data-tipo="serie"
+                class="cm-movie-card text-decoration-none" title="{{ serie.titulo}}">
+                <div class="cm-movie-card__poster">
+                  {% if serie.poster %}
+                  <img src="https://image.tmdb.org/t/p/w300{{ serie.poster }}" alt="{{ serie.titulo }}"
+                    class="img-fluid rounded" loading="lazy" />
+                  {% else %}
+                  <img src="https://placehold.co/200x300?text=Sin+imagen" alt="Sin imagen" class="img-fluid rounded">
+                  {% endif %}
+                </div>
+                <div class="cm-movie-card__info">
+                  <div class="cm-movie-card__title">{{ serie.titulo }}</div>
+                  <div class="cm-movie-card__meta d-flex align-items-center justify-content-between">
+                    <span style="color: #f5c518;">★ {{ serie.puntuacion | round(1) }}</span>
+                    <span>{{ serie.fecha[:4] if serie.fecha else "----" }}</span>
+                  </div>
+                </div>
+              </a>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+
+      <button class="carousel-control-prev" type="button" data-bs-target="#seriesCarousel" data-bs-slide="prev"
+        style="width: 3%;">
+        <span class="carousel-control-prev-icon"></span>
+      </button>
+      <button class="carousel-control-next" type="button" data-bs-target="#seriesCarousel" data-bs-slide="next"
+        style="width: 3%;">
+        <span class="carousel-control-next-icon"></span>
+      </button>
+    </div>
+
+    <!-- Recomendaciones especiales version mobile -->
+    <div class="d-flex d-md-none flex-nowrap overflow-auto g-3 px-1 pb-2 cm-mobile-scroll bloque-contenido">
+      {% for serie in series %}
+      <div class="flex-shrink-0" style="width: 140px; margin-right: 1rem;">
+        <a data-id="{{ serie.id }}" data-bs-toggle="modal" data-bs-target="#modal-info-pelicula" data-tipo="serie"
+          class="cm-movie-card text-decoration-none" title="{{ serie.titulo }}">
+          <div class="cm-movie-card__poster">
+            {% if serie.poster %}
+            <img src="https://image.tmdb.org/t/p/w300{{ serie.poster }}" alt="{{ serie.titulo }}"
+              class="img-fluid rounded" loading="lazy" />
+            {% else %}
+            <img src="https://placehold.co/200x300?text=Sin+imagen" alt="Sin imagen" class="img-fluid rounded">
+            {% endif %}
+          </div>
+          <div class="cm-movie-card__info p-1">
+            <div class="cm-movie-card__title text-truncate" style="font-size: 0.85rem;">{{ serie.titulo }}</div>
+            <div class="cm-movie-card__meta d-flex align-items-center justify-content-between"
+              style="font-size: 0.75rem;">
+              <span style="color: #f5c518;">★ {{ serie.puntuacion | round(1) }}</span>
+              <span>{{ serie.fecha[:4] if serie.fecha else "" }}</span>
+            </div>
+          </div>
+        </a>
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <p class="text-white">No hay recomendaciones disponibles.</p>
+    {% endif %}
+  </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -784,5 +885,33 @@
       carousel.scrollBy({ left: Number(button.dataset.scrollDir) * 340, behavior: 'smooth' });
     });
   });
+
+  document.addEventListener("DOMContentLoaded", () => {
+      // Seleccionamos todos los botones de filtro y todos los bloques de contenido
+      const botones = document.querySelectorAll(".ex-tipo-btn");
+      const bloques = document.querySelectorAll(".bloque-contenido");
+
+      botones.forEach(boton => {
+          boton.addEventListener("click", (e) => {
+              e.preventDefault(); // Evita que la página salte al hacer click en el enlace
+              
+              const filtro = boton.getAttribute("data-filter");
+
+              bloques.forEach(bloque => {
+                  const tipoBloque = bloque.getAttribute("data");
+
+                  // Lógica de filtrado
+                  if (filtro === "todo") {
+                      bloque.style.display = "block"; // O "flex", según tu diseño CSS
+                  } else if (filtro === tipoBloque) {
+                      bloque.style.display = "block";
+                  } else {
+                      bloque.style.display = "none";  // Oculta lo que no coincide
+                  }
+              });
+          });
+      });
+  });
 </script>
+
 {% endblock %}

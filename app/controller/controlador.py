@@ -49,9 +49,11 @@ def index():
 
             # Traemos el mix de películas que cumplen con sus gustos combinados
             peliculas_mix = modelo_peliculas.obtener_por_preferencias(preferencias)
+            series_mix = modelo_series.obtener_por_preferencias(preferencias)
 
             # Armamos las filas independientes por cada plataforma que el usuario posee
-            secciones_por_plataforma = []
+            secciones_por_plataforma_movie = []
+            secciones_por_plataforma_serie = []
 
             # Obtenemos los nombres reales mapeando los providers disponibles en tu modelo
             principales = modelo_peliculas.obtener_providers_ar()
@@ -60,7 +62,7 @@ def index():
 
             mapa_nombres = {p["id"]: p["nombre"] for p in catálogo_completo}
 
-
+            # peliculas
             for p_id in preferencias.get("plataformas", []):
                 nombre_stream = mapa_nombres.get(p_id, f"Servicio {p_id}")
                 try:
@@ -71,7 +73,7 @@ def index():
                     )
                     
                     if movies:
-                        secciones_por_plataforma.append({
+                        secciones_por_plataforma_movie.append({
                             "nombre_plataforma": nombre_stream,
                             "peliculas": movies[:6]
                         })
@@ -82,24 +84,34 @@ def index():
                     print(f"DEBUG: Error real al llamar a la API para {p_id}: {e}")
 
 
-            # for p_id in preferencias.get("plataformas", []):
-            #     nombre_stream = mapa_nombres.get(p_id, f"Servicio {p_id}")
-            #     movies_plataforma = modelo_peliculas.obtener_por_plataforma_individual(
-            #         plataforma_id=p_id, idiomas=preferencias.get("idiomas", [])
-            #     )
+            # series
+            for p_id in preferencias.get("plataformas", []):
+                nombre_stream = mapa_nombres.get(p_id, f"Servicio {p_id}")
+                try:
+                    # Llamada al modelo de series (asegúrate de que apunte al endpoint de TV de TMDB)
+                    series_data = modelo_series.obtener_por_plataforma_individual(
+                        plataforma_id=p_id, 
+                        idiomas=preferencias.get("idiomas", [])
+                    )
+                    
+                    if series_data:
+                        secciones_por_plataforma_serie.append({
+                            "nombre_plataforma": nombre_stream,
+                            "series": series_data[:6]
+                        })
+                    else:
+                        print(f"DEBUG: La API de TMDB no devolvió series para la plataforma {p_id}")
+                        
+                except Exception as e:
+                    print(f"DEBUG: Error real al llamar a la API de TMDB para la plataforma {p_id}: {e}")
 
-            #     if movies_plataforma:
-            #         secciones_por_plataforma.append(
-            #             {
-            #                 "nombre_plataforma": nombre_stream,
-            #                 "peliculas": movies_plataforma[:6],  # Mandamos las 6 primeras para el feed
-            #             }
-            #         )
 
             # Renderizamos usando tu vista adaptada
             return vista.render_index(
                 peliculas=peliculas_mix,
-                secciones=secciones_por_plataforma,
+                series=series_mix,
+                secciones=secciones_por_plataforma_movie,
+                seccionSeries=secciones_por_plataforma_serie,
                 usuario=usuario,
             )
 

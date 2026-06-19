@@ -16,10 +16,10 @@ class View:
     """Encapsula el renderizado de todas las vistas de películas."""
 
     def render_index(
-        self, peliculas: list = [], series: list = [], secciones: list = [], usuario: dict = None
+        self, peliculas: list = [], series: list = [], secciones: list = [], seccionSeries: list = [], usuario: dict = None
     ) -> str:
         return render_template(
-            "index.html", peliculas=peliculas, series=series, secciones=secciones, usuario=usuario
+            "index.html", peliculas=peliculas, series=series, secciones=secciones, seccionSeries=seccionSeries, usuario=usuario
         )
 
     def render_explorar(
