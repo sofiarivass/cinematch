@@ -691,8 +691,8 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 /* ── TENDENCIAS ── */
 .cm-trend-row {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-  gap: 10px;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
 }
 
 .cm-trend-card {
@@ -704,7 +704,9 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   transition: border-color 0.15s;
 }
 
-.cm-trend-card:hover { border-color: var(--border); }
+.cm-trend-card:hover img {
+  transform: scale(1.05);
+}
 
 .cm-trend-card__poster {
   aspect-ratio: 16/9;
@@ -743,7 +745,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   border: 0.5px solid var(--border);
   border-radius: 14px;
   padding: 28px 32px;
-  margin: 0 auto 60px;
+  margin: 0 auto;
 }
 
 .cm-how-strip__head {
@@ -832,6 +834,100 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   padding: 0 4px;
 }
 
+/* ────────────────────────────────────────────────────────────────
+   Estilos para Sección Beneficios / Características
+   ──────────────────────────────────────────────────────────────── */
+
+.cm-features-container {
+  width: 100%;
+  padding: 40px 0;
+  text-align: center;
+}
+
+.cm-features-title {
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  color: var(--text-primary);
+  margin-bottom: 32px;
+  text-transform: uppercase;
+}
+
+.cm-features-title span {
+  color: #3A52D6; /* El azul brillante exacto de tu diseño corporativo */
+}
+
+/* Grilla fluida: 4 columnas en desktop, se adapta sola en tablets y móviles */
+.cm-features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px;
+}
+
+.cm-feature-card {
+  background-color: var(--bg-card); /* Usa el fondo azul/oscuro de tus tarjetas */
+  border: 1px solid var(--border-soft);
+  border-radius: 14px;
+  padding: 24px 20px;
+  display: flex;
+  align-items: center; /* Alinea ícono y textos al centro verticalmente */
+  gap: 16px;
+  text-align: left; /* El texto en la imagen va alineado a la izquierda */
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.cm-feature-card:hover {
+  border-color: rgba(58, 82, 214, 0.4);
+  transform: translateY(-2px);
+}
+
+.cm-feature-card__icon {
+  flex-shrink: 0;
+  width: 54px;
+  height: 54px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cm-feature-card__icon img {
+  width: 100%;
+  height: auto;
+  /* Si tus SVG son blancos o grises, este filtro los tiñe sutilmente del azul de tu marca */
+  filter: drop-shadow(0px 0px 8px rgba(58, 82, 214, 0.3)); 
+}
+
+.cm-feature-card__content h3 {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0 0 4px 0;
+}
+
+.cm-feature-card__content p {
+  font-size: 12px;
+  color: var(--text-muted);
+  line-height: 1.4;
+  margin: 0;
+}
+
+/* Ajuste responsive fino para celulares muy pequeños */
+@media (max-width: 480px) {
+  .cm-features-title {
+    font-size: 19px;
+  }
+  
+  .cm-feature-card {
+    padding: 16px;
+    gap: 12px;
+  }
+  
+  .cm-feature-card__content h3 {
+    font-size: 15px;
+  }
+}
+
+
 
 /* ── QUIZ BANNER ── */
 .cm-quiz-banner {
@@ -843,7 +939,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   align-items: center;
   justify-content: space-between;
   gap: 20px;
-  max-width: 1100px;
+  max-width: 80%;
   margin: 0 auto 60px;
 }
 
@@ -869,10 +965,10 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 .custom-card {
   background-color: #07091c; /* Color de fondo unificado (el de Interstellar) */
   border: 1px solid #234f9e;     /* Borde unificado */
-  max-width: 540px;             /* Ancho intermedio perfecto para ambas */
+  max-width: 500px;             /* Ancho intermedio perfecto para ambas */
   width: 100%;
   flex: 1;                      /* Fuerza a que ambas ocupen el mismo ancho si están en horizontal */
-  min-height: 230px;            /* Altura mínima idéntica para que se alineen perfectamente */
+  min-height: 190px;            /* Altura mínima idéntica para que se alineen perfectamente */
 }
 
 .status-text {
@@ -926,13 +1022,13 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 }
 
 .percentage-overlay {
-  font-size: 32px;
+  font-size: 25px;
 }
 
 /* Ajustes para el póster */
 .poster-img {
-  width: 130px;
-  height: 180px;
+  width: 100px;
+  height: 140px;
   object-fit: cover;
   border: 1px solid rgba(161, 176, 205, 0.2);
 }
@@ -975,12 +1071,23 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   .cm-hero__inner { grid-template-columns: 1fr; padding: 0 1rem; }
   .cm-section { padding: 0 1rem 20px; }
   .cm-hero__visual { display: none; }
-  .cm-how-strip__steps { grid-template-columns: 1fr; gap: 16px; }
+  .cm-how-strip__steps { grid-template-columns: 1fr; gap: 24px; }
   .cm-how-arrow { display: none; }
-  .cm-quiz-banner { flex-direction: column; text-align: center; }
+  .cm-quiz-banner { flex-direction: column; text-align: center; max-width: 100%; align-items: space-between; }
+  .cm-quiz-banner__left { flex-direction: column; gap: 12px; }
+  .cm-how-step__icon-wrap {
+    margin-bottom: 12px; /* Reducimos espacio abajo del círculo del ícono */
+  }
   .cm-movie-card {
     border: none;
   }
+
+  .cm-how-strip {
+    width: 100%;       /* Cambiado de 80% a 100% */
+    padding: 24px 16px; /* Menos padding interno para dar aire al contenido */
+    /* margin-bottom: 40px; */
+  }
+
   .cm-hero { 
     width: 100%; padding: 10px 0px 15px; background-image: 
       linear-gradient(to bottom, rgba(10, 14, 35, 0) 50%, rgba(10, 14, 35, 1) 100%),
@@ -992,16 +1099,29 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   }
 }
 
+@media (max-width: 576px) {
+  /* La tarjeta de Interstellar cambia a diseño vertical en pantallas chicas */
+  .custom-card.d-flex.justify-content-between {
+    flex-direction: column !important; /* Forzamos cascada vertical */
+    align-items: center !important;
+    text-align: center;
+    gap: 16px;
+    padding: 20px 12px !important;
+  }
+
+  /* Reacomodamos el texto de la película al centrado */
+  .custom-card .flex-grow-1.px-4 {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+
+  /* Centramos la barra de carga fija "Analizando..." */
+  .custom-card .w-100.d-flex.flex-column {
+    text-align: left; /* Mantiene la coherencia de la barra */
+  }
+}
+
 @media (max-width: 480px) {
-  /* .cm-hero { 
-    width: 100%; padding: 10px 0px 15px; background-image: 
-      linear-gradient(to bottom, rgba(10, 14, 35, 0) 50%, rgba(10, 14, 35, 1) 100%),
-      linear-gradient(to right, rgba(10, 14, 35, 1) 0%, rgba(10, 14, 35, 0) 15%),
-      linear-gradient(to left, rgba(10, 14, 35, 1) 0%, rgba(10, 14, 35, 0) 15%), 
-      url('../img/fondos/fondo_inicio_mobil.png');
-    background-position: 50% 85%;
-    background-size: cover; 
-  } */
   .cm-hero__inner { 
     width: 100%; 
     padding: 0 0.5rem; 
@@ -1010,4 +1130,28 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     padding: 0 0.5rem 20px; 
     width: 100%;
   }   
+
+  .cm-how-strip__head {
+    font-size: 20px; /* Letra un poco más chica para que no rompa línea abruptamente */
+    margin-bottom: 16px;
+  }
+
+  .cm-how-step__label {
+    font-size: 18px;
+  }
+
+  /* El círculo del porcentaje se achica un poco para pantallas muy pequeñas */
+  .ring-container {
+    width: 100px;
+    height: 100px;
+  }
+  .percentage-overlay {
+    font-size: 26px;
+  }
+
+  /* El póster se adapta mejor al centro */
+  .poster-img {
+    width: 110px;
+    height: 155px;
+  }
 }

@@ -15,6 +15,7 @@ from app.model.modelo import Model
 from app.views.vista import View
 from app.model.modelo_usuarios import UsuarioModel
 from app.model.modelo_peliculas import PeliculaModel
+from app.model.modelo_series import SerieModel
 
 
 # Blueprint principal — todas las rutas quedan agrupadas aquí
@@ -25,7 +26,7 @@ modelo = Model()
 vista = View()
 modelo_usuario = UsuarioModel()
 modelo_peliculas = PeliculaModel()
-
+modelo_series = SerieModel()
 
 
 # RUTA INICIO
@@ -106,8 +107,10 @@ def index():
     # Si no inició sesión, corre tu lógica base original limpia
     data_populares = modelo_peliculas.obtener_populares(1)
     peliculas_anonimas = data_populares.get("peliculas", [])[:18]
+    series_anonimas = modelo_series.obtener_series_populares(1).get("series", [])[:18]
+    peliculas_tendencia = modelo_peliculas.obtener_tendencias(1).get("peliculas", [])[:8]
 
-    return vista.render_index(peliculas=peliculas_anonimas, secciones=[], usuario=None)
+    return vista.render_index(peliculas=peliculas_anonimas, series=series_anonimas, secciones=[{"nombre": "Tendencias", "peliculas": peliculas_tendencia}], usuario=None)
 
 
 # ── BUSCAR (redirige a explorar con q=) ───────────────────────────────────────

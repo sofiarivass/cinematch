@@ -86,6 +86,30 @@ class PeliculaModel:
             "pagina_actual": pagina,
         }
 
+    # Método para obtener tendencias semanales, con la misma estructura que populares para facilitar su uso en la vista
+    def obtener_tendencias(self, pagina: int = 1) -> dict:
+        data = self._get("/trending/movie/week", {"page": pagina})
+
+        peliculas = [
+            {
+                "id": p["id"],
+                "titulo": p.get("title", "Sin título"),
+                "descripcion": p.get("overview", "Sin descripción disponible."),
+                "puntuacion": p.get("vote_average", 0),
+                "poster": self.construir_url_imagen(p.get("poster_path")),
+                "fecha": p.get("release_date", ""),
+            }
+            for p in data.get("results", [])
+        ]
+
+        return {
+            "peliculas": peliculas,
+            "total_paginas": data.get("total_pages", 1),
+            "pagina_actual": pagina,
+        }
+
+
+
     def obtener_providers(self, pelicula_id: int) -> dict:
         """
         Obtiene los proveedores de streaming específicos para una película en Argentina.
