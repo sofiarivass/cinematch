@@ -668,6 +668,18 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   color: var(--text-dim);
 }
 
+.cm-movie-card__poster .badge-tipo {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    background-color: rgba(0, 0, 0, 0.7); /* Fondo oscuro semitransparente */
+    color: #fff;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    z-index: 2;
+}
+
 .cm-movie-card__info {
   padding: 8px 10px;
 }
