@@ -387,10 +387,10 @@ def perfil():
     return vista.render_perfil(
         usuario=usuario,
         conteos=conteos,
-        matchlist=listas["matchlist"][:5],
-        favoritos=listas["favoritos"][:5],
-        peliculas_vistas=listas["peliculas_vistas"][:5],
-        series_vistas=listas["series_vistas"][:5],
+        matchlist=listas["matchlist"],
+        favoritos=listas["favoritos"],
+        peliculas_vistas=listas["peliculas_vistas"],
+        series_vistas=listas["series_vistas"],
         generos=stats["generos"],
         plot_url=plot_url,
     )

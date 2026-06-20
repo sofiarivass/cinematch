@@ -75,7 +75,7 @@
 
     <!-- ── LISTAS CON TABS ── -->
     <div class="card content-card">
-        <div class="tabs-container">
+        <div class="tabs-container cm-mobile-scroll">
             <button class="tab-btn active" data-tab="matchlist">
                 <i class="bi bi-bookmark-fill"></i> Mis matches
             </button>
@@ -93,15 +93,10 @@
         <!-- Matchlist -->
         <div class="tab-content" id="tab-matchlist">
             {% if matchlist %}
-            <div class="media-grid">
+            <div class="media-grid cm-mobile-scroll">
                 {% for item in matchlist %}
                 {{ _render_media_item(item) }}
                 {% endfor %}
-            </div>
-            <div class="ver-todas-container">
-                <a href="{{ url_for('perfil.lista_completa', lista='matchlist') }}" class="link-ver-todas">
-                    Ver todas <i class="bi bi-arrow-right"></i>
-                </a>
             </div>
             {% else %}
             {{ _render_lista_vacia('Tu lista de matches está vacía.', 'Usá la encuesta para recibir recomendaciones.')
@@ -112,15 +107,10 @@
         <!-- Favoritos -->
         <div class="tab-content d-none" id="tab-favoritos">
             {% if favoritos %}
-            <div class="media-grid">
+            <div class="media-grid cm-mobile-scroll">
                 {% for item in favoritos %}
                 {{ _render_media_item(item) }}
                 {% endfor %}
-            </div>
-            <div class="ver-todas-container">
-                <a href="{{ url_for('perfil.lista_completa', lista='favoritos') }}" class="link-ver-todas">
-                    Ver todas <i class="bi bi-arrow-right"></i>
-                </a>
             </div>
             {% else %}
             {{ _render_lista_vacia('No tenés favoritos todavía.', 'Marcá películas o series con ❤️ desde su ficha.') }}
@@ -130,15 +120,10 @@
         <!-- Películas vistas -->
         <div class="tab-content d-none" id="tab-peliculas_vistas">
             {% if peliculas_vistas %}
-            <div class="media-grid">
+            <div class="media-grid cm-mobile-scroll">
                 {% for item in peliculas_vistas %}
                 {{ _render_media_item(item) }}
                 {% endfor %}
-            </div>
-            <div class="ver-todas-container">
-                <a href="{{ url_for('perfil.lista_completa', lista='peliculas_vistas') }}" class="link-ver-todas">
-                    Ver todas <i class="bi bi-arrow-right"></i>
-                </a>
             </div>
             {% else %}
             {{ _render_lista_vacia('No marcaste ninguna película como vista.', 'Podés hacerlo desde la ficha de cada
@@ -149,15 +134,10 @@
         <!-- Series vistas -->
         <div class="tab-content d-none" id="tab-series_vistas">
             {% if series_vistas %}
-            <div class="media-grid">
+            <div class="media-grid cm-mobile-scroll">
                 {% for item in series_vistas %}
                 {{ _render_media_item(item) }}
                 {% endfor %}
-            </div>
-            <div class="ver-todas-container">
-                <a href="{{ url_for('perfil.lista_completa', lista='series_vistas') }}" class="link-ver-todas">
-                    Ver todas <i class="bi bi-arrow-right"></i>
-                </a>
             </div>
             {% else %}
             {{ _render_lista_vacia('No marcaste ninguna serie como vista.', 'Podés hacerlo desde la ficha de cada
