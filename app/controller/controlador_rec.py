@@ -16,6 +16,7 @@ from app.views.vista_rec import RecomendacionesView
 from app.model.modelo_peliculas import PeliculaModel
 from app.views.vista_peliculas import PeliculaView
 from app.model.modelo_usuarios import UsuarioModel
+from app.model.modelo_usuarios import PerfilModel
 
 # Blueprint principal — todas las rutas quedan agrupadas aquí
 recomendaciones_bp = Blueprint("recomendaciones", __name__)
@@ -25,6 +26,7 @@ modelo = RecomendacionesModel()
 modelo_pelicula = PeliculaModel()
 vista_pelicula = PeliculaView()
 modelo_usuario = UsuarioModel()
+modelo_perfil = PerfilModel()
 vista = RecomendacionesView()
 
 
@@ -99,13 +101,16 @@ def encuesta_recomendaciones():
     return vista.render_encuesta_rec(paso=siguiente_paso)
 
 
+from app.model.modelo_usuarios import PerfilModel
+
+modelo_perfil = PerfilModel()
+
+
 @recomendaciones_bp.route("/recomendaciones")
 def ver_recomendaciones():
-    """Muestra 10 recomendaciones fusionando preferencias de sesión y BD."""
     pagina = request.args.get("pagina", 1, type=int)
     session["rec_pagina_actual"] = pagina
 
-    # 1. Obtenemos las preferencias de la sesión (Encuesta rápida temporal)
     prefs_sesion = {
         "formato": session.get("formato"),
         "tiempo": session.get("tiempo"),
@@ -114,19 +119,16 @@ def ver_recomendaciones():
         "clasificacion": session.get("clasificacion"),
     }
 
-    # 2. Obtenemos las preferencias de la base de datos (Perfil del usuario)
     prefs_db = {}
     nombre_usuario = session.get("nombre_usuario")
 
     if nombre_usuario:
-        # Extraemos el usuario de la BD usando UsuarioModel
         usuario_db = modelo_usuario.usuarios.find_one(
             {"nombre_usuario": nombre_usuario}
         )
         if usuario_db:
             prefs_db = usuario_db.get("preferencias", {})
 
-    # 3. Fusionamos: Prioridad a la sesión actual -> luego a la BD -> luego valores por defecto
     preferencias = {
         "formato": prefs_sesion.get("formato") or prefs_db.get("formato") or "pelicula",
         "tiempo": prefs_sesion.get("tiempo") or prefs_db.get("tiempo") or "",
@@ -138,31 +140,42 @@ def ver_recomendaciones():
         "proveedores": prefs_db.get("plataformas", []),
     }
 
-    # 4. Llamamos al modelo con las preferencias finales construidas
-    recomendaciones = modelo.obtener_recomendaciones(preferencias, pagina=pagina)
+    # ── IDs a excluir: ya vistos en esta sesión + ya guardados en cualquier lista ──
+    ids_excluir = set(session.get("rec_ids_vistos", []))
 
-    # ── Filtrar IDs ya vistos en esta sesión de descubrimiento ──
-    ids_vistos = set(session.get("rec_ids_vistos", []))
-    recomendaciones_nuevas = [r for r in recomendaciones if r["id"] not in ids_vistos]
+    if nombre_usuario:
+        listas = modelo_perfil.obtener_listas(nombre_usuario)
+        for lista in ("matchlist", "favoritos", "peliculas_vistas", "series_vistas", "no_recomendar"):
+            ids_excluir.update(item["id"] for item in listas.get(lista, []))
 
-    # Si no hay suficientes nuevas (menos de 1), consideramos que se acabó el catálogo filtrado
-    if len(recomendaciones_nuevas) < 1:
+    recomendaciones = modelo.obtener_recomendaciones(
+        preferencias, pagina=pagina, ids_excluir=ids_excluir
+    )
+
+    recomendaciones_nuevas = [r for r in recomendaciones if r["id"] not in ids_excluir]
+
+    if len(recomendaciones_nuevas) < 3:
         flash(
             "Ya viste todo el contenido disponible que coincide con tus filtros. "
             "Probá completar la encuesta de nuevo con otras preferencias.",
             "info",
         )
-        return redirect(url_for("recomendaciones.mis_matches_redirect"))
+        session.pop("rec_ids_vistos", None)
+        session.pop("rec_pagina_actual", None)
+        return redirect(url_for("recomendaciones.encuesta_recomendaciones"))
 
-    # Registrar los IDs nuevos que se están mostrando ahora
+    ids_vistos = set(session.get("rec_ids_vistos", []))
     ids_vistos.update(r["id"] for r in recomendaciones_nuevas)
     session["rec_ids_vistos"] = list(ids_vistos)
 
-    # Guardamos los objetos completos en la sesión para la ruta /mis-matches
-    session["rec_resultados"] = recomendaciones
+    # session["rec_resultados"] = recomendaciones_nuevas
+
+    session["rec_resultados_ids"] = [
+        {"id": r["id"], "tipo": r["tipo"]} for r in recomendaciones_nuevas
+    ]
 
     return vista.render_recomendaciones(
-        recomendaciones=recomendaciones,
+        recomendaciones=recomendaciones_nuevas,
         pagina=pagina,
     )
 
@@ -191,9 +204,6 @@ def mis_matches():
                 "fecha": fechas[i] if i < len(fechas) else "",
             }
         )
-
-    # Guardamos la lista en sesión
-    session["rec_matches"] = matches
 
     pagina_actual = session.get("rec_pagina_actual", 1)
     pagina_siguiente = pagina_actual + 1
@@ -277,3 +287,28 @@ def ya_la_vi():
 
     agregado = modelo_perfil.agregar_a_lista(nombre_usuario, lista_destino, item)
     return jsonify({"success": True, "agregado": agregado})
+
+
+@recomendaciones_bp.route("/no-recomendar", methods=["POST"])
+def no_recomendar():
+    nombre_usuario = session.get("nombre_usuario")
+    if not nombre_usuario:
+        return jsonify({"error": "No logueado"}), 401
+
+    from app.model.modelo_usuarios import PerfilModel
+
+    modelo_perfil = PerfilModel()
+
+    data = request.json
+    item = {
+        "id": int(data.get("id")),
+        "tipo": data.get("tipo", "movie"),
+        "titulo": data.get("titulo", ""),
+        "poster": data.get("poster", ""),
+        "puntuacion": float(data.get("puntuacion", 0)),
+        "fecha": data.get("fecha", ""),
+        "genero_ids": [],
+    }
+
+    modelo_perfil.agregar_a_lista(nombre_usuario, "no_recomendar", item)
+    return jsonify({"success": True})

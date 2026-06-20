@@ -3,7 +3,8 @@
 <div class="container margen-nav margen-footer">
     {% if recomendaciones %}
     <form id="form-matches" action="{{ url_for('recomendaciones.mis_matches') }}"
-        data-url-yalavi="{{ url_for('recomendaciones.ya_la_vi') }}" method="POST">
+        data-url-yalavi="{{ url_for('recomendaciones.ya_la_vi') }}"
+        data-url-norecomendar="{{ url_for('recomendaciones.no_recomendar') }}" method="POST">
     </form>
 
     <div class="tinder-stack"
@@ -18,15 +19,14 @@
                     <div class="backdrop-recomendacion-container">
                         {% if item.backdrop %}
                         <img src="{{ item.backdrop }}" alt="{{ item.titulo }}" class="backdrop-recomendacion d-block" />
-                        {%
-                        else %}
+                        {% else %}
                         <div class="backdrop-recomendacion d-block backdrop-placeholder"></div>
                         {% endif %}
 
                         <!-- Clasificación arriba a la izquierda -->
                         {% if clasificacion %}
-                        <span class="badge clasificacion-recomendacion">{{ clasificacion }}</span> {% endif %}
-
+                        <span class="badge clasificacion-recomendacion">{{ clasificacion }}</span>
+                        {% endif %}
                         <!-- Logos de streaming arriba a la derecha -->
                         {% if item.providers.flatrate %}
                         <div class="providers-recomendacion d-flex">
@@ -35,7 +35,6 @@
                                 class="provider-logo-recomendacion"> {% endfor %}
                         </div>
                         {% endif %}
-
                         <!-- Botón trailer abajo a la derecha -->
                         <a href="#" class="btn-trailer-recomendacion align-items-center" target="_blank">
                             <i class="bi bi-play-fill"></i> Ver trailer
@@ -43,7 +42,6 @@
                     </div>
                 </div>
                 <div class="contenido-recomendacion-container">
-
                     <div class="row">
                         <div class="col-12">
                             <h1 class="titulo-recomendacion d-block">
@@ -53,10 +51,10 @@
                         <div class="col-12">
                             <p class="meta-recomendacion d-flex flex-nowrap align-items-center">
                                 <span class="anio-recomendacion"><i class="bi bi-calendar-event"></i> {{ item.fecha[:4]
-                                    }}
-                                </span>
+                                    }} </span>
                                 <span class="duracion-recomendacion"><i class="bi bi-clock"></i> {{ item.duracion
-                                    }}</span> {% if item.credits.directores %}
+                                    }}</span>
+                                {% if item.credits.directores %}
                                 <span class="director-recomendacion"><i class="bi bi-camera-reels"></i>
                                     {% for director in item.credits.directores %}
                                     {{ director.nombre[0] }} {{ director.nombre[1] if director.nombre|length > 1 else ''
@@ -87,7 +85,6 @@
                         </div>
                     </div>
                 </div>
-
                 <hr class="separador-botones-recomendacion">
                 <div class="row">
                     <div class="col-5 boton-no d-flex align-items-center justify-content-center">
@@ -127,13 +124,20 @@
                 </div>
             </div>
         </div>
-
+        <div class="row">
+            <div class="col-12 d-flex justify-content-center">
+            </div>
+        </div>
         {% endfor %}
+    </div>
+    <div class="d-flex justify-content-center mt-3">
+        <button type="button" id="btn-no-recomendar">
+            <i class="bi bi-eye-slash-fill"></i> No volver a recomendar
+        </button>
     </div>
     {% else %}
     <p class="texto-error">No encontramos recomendaciones que coincidan exactamente con tus filtros.<br>Intentá
-        variar las
-        respuestas.</p>
+        variar las respuestas.</p>
     {% endif %}
 </div>
 
@@ -148,6 +152,5 @@
         </div>
     </div>
 </div>
-
 <script src="{{ url_for('static', filename='js/recomendaciones.js') }}"></script>
 {% endblock %}

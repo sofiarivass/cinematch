@@ -310,7 +310,7 @@ class UsuarioModel:
 
 # PERFIL USUARIO - gestión de listas y estadísticas
 
-LISTAS = ("favoritos", "matchlist", "peliculas_vistas", "series_vistas")
+LISTAS = ("favoritos", "matchlist", "peliculas_vistas", "series_vistas", "no_recomendar")
 
 
 class PerfilModel:

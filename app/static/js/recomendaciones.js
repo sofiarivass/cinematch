@@ -3,10 +3,10 @@ document.addEventListener("DOMContentLoaded", function () {
     const formMatches = document.getElementById('form-matches');
     let currentIndex = 0;
 
-    // 🔥 Cambiamos a un array de objetos para guardar TODA la info del match
     let matchesAceptados = [];
 
     const urlYaLaVi = formMatches ? formMatches.getAttribute('data-url-yalavi') : '/ya-la-vi';
+    const urlNoRecomendar = formMatches ? formMatches.getAttribute('data-url-norecomendar') : '/no-recomendar';
 
     if (cards.length > 0) {
         mostrarCard(currentIndex);
@@ -14,7 +14,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function mostrarCard(index) {
         if (index >= cards.length) {
-            // 🚨 Se terminaron: Creamos inputs ocultos para CADA campo de la peli/serie
             if (formMatches) {
                 formMatches.innerHTML = '';
 
@@ -38,7 +37,6 @@ document.addEventListener("DOMContentLoaded", function () {
         card.style.transform = 'translateX(0) translateY(0) rotate(0deg)';
     }
 
-    // Función auxiliar para no repetir código creando inputs
     function agregarInputOculto(nombre, valor) {
         const input = document.createElement('input');
         input.type = 'hidden';
@@ -56,7 +54,6 @@ document.addEventListener("DOMContentLoaded", function () {
             currentCard.style.transform = 'translateX(120%) rotate(15deg)';
             currentCard.style.opacity = '0';
 
-            // 🔥 Guardamos el objeto completo extrayéndolo de los data-attributes de la tarjeta
             matchesAceptados.push({
                 id: currentCard.getAttribute('data-id'),
                 tipo: currentCard.getAttribute('data-tipo') || 'pelicula',
@@ -80,7 +77,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }, 400);
     }
 
-    // Eventos (Se quedan igual)
+    // Eventos por card (sí, no, ya la ví)
     cards.forEach((card, index) => {
         const btnSi = card.querySelector('.btn-redondo-si');
         const btnNo = card.querySelector('.btn-redondo-no');
@@ -114,4 +111,34 @@ document.addEventListener("DOMContentLoaded", function () {
             });
         }
     });
+
+    // Botón "No volver a recomendar" — único, fuera del stack
+    const btnNoRecomendar = document.getElementById('btn-no-recomendar');
+    if (btnNoRecomendar) {
+        btnNoRecomendar.addEventListener('click', function () {
+            const cardActual = cards[currentIndex];
+            if (!cardActual) return;
+
+            const datosItem = {
+                id: cardActual.getAttribute('data-id'),
+                tipo: cardActual.getAttribute('data-tipo'),
+                titulo: cardActual.getAttribute('data-titulo'),
+                poster: cardActual.getAttribute('data-poster'),
+                puntuacion: cardActual.getAttribute('data-puntuacion'),
+                fecha: cardActual.getAttribute('data-fecha')
+            };
+
+            cardActual.style.pointerEvents = 'none';
+            cardActual.style.transform = 'translateY(120%) rotate(0deg)';
+            cardActual.style.opacity = '0';
+
+            fetch(urlNoRecomendar, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(datosItem)
+            }).catch(err => console.error(err));
+
+            siguienteCard();
+        });
+    }
 });

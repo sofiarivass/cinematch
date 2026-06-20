@@ -1185,7 +1185,7 @@ footer .nav-link:hover {
     transform: scale(1.04);
 }
 
-.btn-no-recomendar {
+#btn-no-recomendar {
     font-size: clamp(0.8rem, 2vh, 1rem);
     margin-top: 0.5em;
     color: #3F4A5C;
@@ -1194,7 +1194,7 @@ footer .nav-link:hover {
     transition: all 0.2s;
 }
 
-.btn-no-recomendar:hover {
+#btn-no-recomendar:hover {
     transition: all 0.2s;
     transform: scale(1.04);
 }
@@ -3017,4 +3017,17 @@ footer .nav-link:hover {
     text-align: center;
     color: #3A52D6;
     font-size: 1rem;
+}
+
+.overlay-cargando {
+    position: fixed;
+    inset: 0;
+    background: rgba(3, 14, 33, 0.95);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    text-align: center;
+    padding: 2rem;
 }
