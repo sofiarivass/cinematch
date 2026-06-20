@@ -24,8 +24,8 @@
                         {% endif %}
 
                         <!-- Clasificación arriba a la izquierda -->
-                        {% if clasificacion %}
-                        <span class="badge clasificacion-recomendacion">{{ clasificacion }}</span>
+                        {% if item.clasificacion %}
+                        <span class="badge clasificacion-recomendacion">{{ item.clasificacion }}</span>
                         {% endif %}
                         <!-- Logos de streaming arriba a la derecha -->
                         {% if item.providers.flatrate %}

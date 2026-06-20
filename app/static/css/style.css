@@ -2950,6 +2950,16 @@ footer .nav-link:hover {
     transition: background 0.2s;
 }
 
+.match-overlay-btn--info {
+    border-color: white;
+    color: white;
+}
+
+.match-overlay-btn--info:hover {
+    background: white;
+    color: #000A1C;
+}
+
 .match-overlay-btn--remove {
     border-color: #CC0000;
     color: #CC0000;

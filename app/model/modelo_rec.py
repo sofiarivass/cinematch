@@ -373,6 +373,7 @@ class RecomendacionesModel:
                     {
                         "id": item_id,
                         "titulo": detalles.get(campo_titulo, "Sin título"),
+                        "clasificacion": cert_item,
                         "poster": r.get("poster_path", ""),
                         "backdrop": backdrop_url,
                         "puntuacion": round(
