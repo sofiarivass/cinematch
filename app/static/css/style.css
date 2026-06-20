@@ -2871,7 +2871,7 @@ footer .nav-link:hover {
     }
 }
 
-@media (max-width: 426px) {
+@media (max-width: 490px) {
     .perfil-container {
         padding: 0 0.5rem;
         width: 95%;
