@@ -7,8 +7,7 @@
         data-url-norecomendar="{{ url_for('recomendaciones.no_recomendar') }}" method="POST">
     </form>
 
-    <div class="tinder-stack"
-        style="position: relative; width: 100%; min-height: 700px; display: flex; justify-content: center;">
+    <div class="tinder-stack" style="position: relative; width: 100%; min-height: 700px; display: flex; justify-content: center;">
         {% for item in recomendaciones %}
         <div class="card card-recomendacion d-flex flex-column tinder-card" data-id="{{ item.id }}"
             data-tipo="{{ item.tipo }}" data-titulo="{{ item.titulo }}" data-poster="{{ item.poster }}"
@@ -50,16 +49,15 @@
                         </div>
                         <div class="col-12">
                             <p class="meta-recomendacion d-flex flex-nowrap align-items-center">
-                                <span class="anio-recomendacion"><i class="bi bi-calendar-event"></i> {{ item.fecha[:4]
-                                    }} </span>
-                                <span class="duracion-recomendacion"><i class="bi bi-clock"></i> {{ item.duracion
-                                    }}</span>
+                                <span class="anio-recomendacion"><i class="bi bi-calendar-event"></i> {{ item.fecha[:4]}} </span>
+                                <span class="duracion-recomendacion"><i class="bi bi-clock"></i> {{ item.duracion}}</span>
                                 {% if item.credits.directores %}
                                 <span class="director-recomendacion"><i class="bi bi-camera-reels"></i>
                                     {% for director in item.credits.directores %}
-                                    {{ director.nombre[0] }} {{ director.nombre[1] if director.nombre|length > 1 else ''
-                                    }}{% if not loop.last %}, {% endif %} {% endfor %}
-                                </span> {% endif %}
+                                    {{ director.nombre[0] }} {{ director.nombre[1] if director.nombre|length > 1 else ''}}
+                                    {% if not loop.last %}, {% endif %} {% endfor %}
+                                </span> 
+                                {% endif %}
                             </p>
                         </div>
                         <div class="col-12">
@@ -78,9 +76,8 @@
                         <div class="col-6">
                             <h3 class="h3-recomendaciones">Elenco</h3>
                             <p class="elenco-recomendacion {% if item.generos|length >= 3 %}elenco-clamp-2{% endif %}">
-                                {% for actor in item.credits.cast %}{{ actor.nombre }}{% if not loop.last %}, {% endif
-                                %}{%
-                                endfor %}
+                                {% for actor in item.credits.cast %}{{ actor.nombre }}{% if not loop.last %}, {% endif%}
+                                {% endfor %}
                             </p>
                         </div>
                     </div>
