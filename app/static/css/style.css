@@ -1182,21 +1182,24 @@ footer .nav-link:hover {
 
 .btn-vista:hover {
     transition: all 0.2s;
-    transform: scale(1.04);
+    transform: scale(1.02);
 }
 
-#btn-no-recomendar {
-    font-size: clamp(0.8rem, 2vh, 1rem);
-    margin-top: 0.5em;
+.btn-no-recomendar {
+    background: none;
+    border: none;
+    padding: 0;
+    font-size: clamp(0.7rem, 1.8vh, 0.9rem);
     color: #3F4A5C;
-    text-decoration: none;
     font-weight: 500;
+    cursor: pointer;
+    text-decoration: none;
     transition: all 0.2s;
 }
 
-#btn-no-recomendar:hover {
+.btn-no-recomendar:hover {
     transition: all 0.2s;
-    transform: scale(1.04);
+    transform: scale(1.02);
 }
 
 

@@ -145,7 +145,17 @@ def ver_recomendaciones():
 
     if nombre_usuario:
         listas = modelo_perfil.obtener_listas(nombre_usuario)
-        for lista in ("matchlist", "favoritos", "peliculas_vistas", "series_vistas", "no_recomendar"):
+        ids_no_recomendar = [item["id"] for item in listas.get("no_recomendar", [])]
+        print(
+            f"🔥 DEBUG - IDs en 'no_recomendar' para el usuario {nombre_usuario}: {ids_no_recomendar}"
+        )
+        for lista in (
+            "matchlist",
+            "favoritos",
+            "peliculas_vistas",
+            "series_vistas",
+            "no_recomendar",
+        ):
             ids_excluir.update(item["id"] for item in listas.get(lista, []))
 
     recomendaciones = modelo.obtener_recomendaciones(

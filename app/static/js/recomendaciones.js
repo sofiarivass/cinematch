@@ -113,9 +113,9 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     // Botón "No volver a recomendar" — único, fuera del stack
-    const btnNoRecomendar = document.getElementById('btn-no-recomendar');
-    if (btnNoRecomendar) {
-        btnNoRecomendar.addEventListener('click', function () {
+    const botonesNoRecomendar = document.querySelectorAll('.btn-no-recomendar');
+    botonesNoRecomendar.forEach(boton => {
+        boton.addEventListener('click', function () {
             const cardActual = cards[currentIndex];
             if (!cardActual) return;
 
@@ -140,5 +140,5 @@ document.addEventListener("DOMContentLoaded", function () {
 
             siguienteCard();
         });
-    }
+    });
 });
