@@ -98,7 +98,7 @@ document.addEventListener("DOMContentLoaded", function () {
         if (!trigger) return;
 
         const id = trigger.dataset.id;
-        const tipo = trigger.dataset.tipo || "pelicula"; // por defecto pelicula si no viene el atributo
+        const tipo = trigger.dataset.tipo || "pelicula"; 
 
         if (!id) {
             modalContenido.innerHTML =
@@ -106,6 +106,7 @@ document.addEventListener("DOMContentLoaded", function () {
             return;
         }
 
+        // Tu spinner estilizado impecable
         modalContenido.innerHTML = `
             <div class="d-flex flex-column justify-content-center align-items-center p-5" style="min-height: 250px;">
                 <div class="spinner-border text-light" role="status"></div>
@@ -113,7 +114,7 @@ document.addEventListener("DOMContentLoaded", function () {
             </div>`;
             
 
-        // Elegimos la URL según el tipo de contenido
+        // Enrutamiento dinámico según el tipo de contenido
         const url = tipo === "serie"
             ? `/explorar/modal/${id}?tipo=serie`
             : `/pelicula/${id}/modal`;
@@ -134,8 +135,7 @@ document.addEventListener("DOMContentLoaded", function () {
             });
     });
 
-    // Delegación de eventos: como el footer se inyecta dinámicamente,
-    // escuchamos los clicks desde el modal completo
+    // Delegación de eventos para los botones internos del modal
     modalEl.addEventListener("click", function (e) {
         const btn = e.target.closest(".btn-toggle-lista");
         if (!btn) return;
@@ -145,6 +145,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const tipo = btn.dataset.tipo;
         const icono = btn.querySelector("i");
 
+        // Soporte completo para todas tus listas mapeadas
         const iconos = {
             matchlist: ["bi-bookmark", "bi-bookmark-fill"],
             favoritos: ["bi-heart", "bi-heart-fill"],
@@ -171,13 +172,16 @@ document.addEventListener("DOMContentLoaded", function () {
                 genero_ids: generoIds,
             }),
         })
-            .then(r => r.json())
-            .then(data => {
+        .then(r => r.json())
+        .then(data => {
+            // Control seguro para evitar crasheos si la lista no está en el mapa
+            if (icono && iconos[lista]) {
                 const [vacio, lleno] = iconos[lista];
                 const agregado = data.accion === "agregado";
                 icono.classList.toggle(vacio, !agregado);
                 icono.classList.toggle(lleno, agregado);
-            })
-            .catch(() => alert("Error al actualizar la lista"));
+            }
+        })
+        .catch(() => alert("Error al actualizar la lista"));
     });
 });

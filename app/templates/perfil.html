@@ -164,6 +164,14 @@
             {% else %}
             {{ _render_lista_vacia('Tu lista de matches está vacía.', 'Usá la encuesta para recibir recomendaciones.') }}
             {% endif %}
+            
+            <div class="d-flex justify-content-between align-items-center mt-2">
+                <span></span>
+                <a href="{{ url_for('matchlist.ver_matchlist_completa') }}" class="btn btn-outline-primary btn-sm rounded-pill px-3">
+                    Ver completo <i class="bi bi-arrow-right"></i>
+                </a>
+            </div>
+
         </div>
 
         <!-- Favoritos -->

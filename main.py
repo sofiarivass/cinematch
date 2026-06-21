@@ -5,6 +5,7 @@ from app.controller.controlador import cinematch_bp
 from app.controller.controlador_peliculas import peliculas_bp
 from app.controller.controlador_series import series_bp
 from app.controller.controlador_rec import recomendaciones_bp
+from app.controller.controlador_matchlist import matchlist_bp
 from app.controller.controlador_usuarios import usuarios_bp, perfil_bp
 
 from app.services.google_oauth import init_oauth
@@ -33,6 +34,7 @@ def create_app() -> Flask:
     app.register_blueprint(recomendaciones_bp)
     app.register_blueprint(usuarios_bp)
     app.register_blueprint(perfil_bp)
+    app.register_blueprint(matchlist_bp)
 
     return app
 
