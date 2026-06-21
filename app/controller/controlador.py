@@ -329,7 +329,7 @@ def encuesta_perfil():
                         usuario_actual, preferencias_finales
                     )
 
-                flash("¡Tu experiencia ha sido personalizada con éxito!", "success")
+                # flash("¡Tu experiencia ha sido personalizada con éxito!", "success")
                 return redirect(url_for("cinematch.index"))
 
         if error:

@@ -65,7 +65,7 @@
                     {{ p.nombre }} <button type="button" class="encuesta-tag-remove">×</button>
                 </span> {% endif %} {% endfor %} {% endfor %}
             </div>
-            <input type="hidden" name="plataformas_otras" id="plataformas-otras-hidden">
+            <input type="hidden" name="plataformas_otras" id="plataformas-otras-hidden" value="{{ session.get('plataformas_otras_ids', []) | join(',') }}">
             <div class="encuesta-otro d-flex">
                 <label class="encuesta-otro-label">Otra:</label>
                 <div class="encuesta-otro-wrapper">
