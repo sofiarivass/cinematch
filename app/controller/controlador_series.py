@@ -47,8 +47,9 @@ def modal_serie(serie_id: int):
         estados = {"matchlist": False, "favoritos": False, "series_vistas": False}
         if nombre_usuario:
             for lista in estados:
+                # Pasamos "serie" (tal como figura en tu JSON de MongoDB) en vez de "tv"
                 resultado = modelo_perfil.esta_en_lista(
-                    nombre_usuario, lista, serie_id, "tv"
+                    nombre_usuario, lista, serie_id, "serie"
                 )
                 estados[lista] = resultado
         print("ESTADOS FINALES:", estados)

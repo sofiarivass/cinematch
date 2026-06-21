@@ -132,30 +132,76 @@ class PeliculaModel:
             "buy": parsear(ar_data.get("buy", [])),  # Compra
         }
 
-    def obtener_todos_providers_ar(self) -> list:
-        data = self._get(
-            "/watch/providers/movie",
-            {
-                "watch_region": "AR",
-                "language": "es-AR",
-            },
-        )
-        principales_ids = set(self.PROVIDERS_PRINCIPALES_AR)
-        return [
-            {
-                "id": p.get("provider_id"),
-                "nombre": p.get("provider_name", ""),
-            }
-            for p in data.get("results", [])
-            if p.get("provider_id") not in principales_ids
-        ]
+    # def obtener_todos_providers_ar(self) -> list:
+    #     data = self._get(
+    #         "/watch/providers/movie",
+    #         {
+    #             "watch_region": "AR",
+    #             "language": "es-AR",
+    #         },
+    #     )
+    #     principales_ids = set(self.PROVIDERS_PRINCIPALES_AR)
+    #     return [
+    #         {
+    #             "id": p.get("provider_id"),
+    #             "nombre": p.get("provider_name", ""),
+    #         }
+    #         for p in data.get("results", [])
+    #         if p.get("provider_id") not in principales_ids
+    #     ]
+
+    # def obtener_providers_ar(self) -> list:
+    #     data = self._get(
+    #         "/watch/providers/movie",
+    #         {
+    #             "watch_region": "AR",
+    #             "language": "es-AR",
+    #         },
+    #     )
+
+    #     principales = [
+    #         {
+    #             "id": p.get("provider_id"),
+    #             "nombre": p.get("provider_name", ""),
+    #             "logo": self.PROVIDERS_LOGOS_LOCALES.get(p.get("provider_id")),
+    #         }
+    #         for p in data.get("results", [])
+    #         if p.get("provider_id") in self.PROVIDERS_PRINCIPALES_AR
+    #     ]
+
+    #     orden = [8, 1899, 119, 337, 350, 531]
+    #     principales.sort(key=lambda x: orden.index(x["id"]) if x["id"] in orden else 99)
+
+    #     return principales
+
+    # def obtener_todos_idiomas(self) -> list:
+    #     """Obtiene la lista completa de idiomas soportados por TMDB en español."""
+    #     try:
+    #         data = self._get("/configuration/languages")
+
+    #         # Formateamos la lista para la vista
+    #         idiomas = [
+    #             {
+    #                 "iso": i.get("iso_639_1"),
+    #                 "nombre": (
+    #                     i.get("english_name") if i.get("name") == "" else i.get("name")
+    #                 ),
+    #             }
+    #             for i in data
+    #         ]
+
+    #         # Los ordenamos alfabéticamente por nombre
+    #         idiomas.sort(key=lambda x: x["nombre"])
+    #         return idiomas
+    #     except Exception:
+    #         return []
 
     def obtener_providers_ar(self) -> list:
         data = self._get(
             "/watch/providers/movie",
             {
                 "watch_region": "AR",
-                "language": "es-AR",
+                "language": "es-AR",  # Regresamos a tu configuración original
             },
         )
 
@@ -174,23 +220,47 @@ class PeliculaModel:
 
         return principales
 
+    def obtener_todos_providers_ar(self) -> list:
+        data = self._get(
+            "/watch/providers/movie",
+            {
+                "watch_region": "AR",
+                "language": "es-AR",  # Regresamos a tu configuración original
+            },
+        )
+        principales_ids = set(self.PROVIDERS_PRINCIPALES_AR)
+        return [
+            {
+                "id": p.get("provider_id"),
+                "nombre": p.get("provider_name", ""),
+            }
+            for p in data.get("results", [])
+            if p.get("provider_id") not in principales_ids
+        ]
+
     def obtener_todos_idiomas(self) -> list:
-        """Obtiene la lista completa de idiomas soportados por TMDB en español."""
+        """Obtiene la lista en es-AR pero asegura que el JS no procese nulos."""
         try:
-            data = self._get("/configuration/languages")
+            data = self._get("/configuration/languages", {"language": "es-AR"})
 
-            # Formateamos la lista para la vista
-            idiomas = [
-                {
-                    "iso": i.get("iso_639_1"),
-                    "nombre": (
-                        i.get("english_name") if i.get("name") == "" else i.get("name")
-                    ),
-                }
-                for i in data
-            ]
+            idiomas = []
+            for i in data:
+                iso = i.get("iso_639_1")
+                nombre_nativo = i.get("name", "").strip()
+                nombre_ingles = i.get("english_name", "").strip()
 
-            # Los ordenamos alfabéticamente por nombre
+                # Si viene vacío o con signos de pregunta, usamos el inglés para que el JS .includes() funcione
+                if not nombre_nativo or "?" in nombre_nativo:
+                    nombre_final = nombre_ingles
+                else:
+                    nombre_final = nombre_nativo
+
+                idiomas.append({
+                    "iso": iso,
+                    "nombre": nombre_final
+                })
+
+            # Orden seguro: dejamos los nombres válidos arriba y evitamos romper el índice del JS
             idiomas.sort(key=lambda x: x["nombre"])
             return idiomas
         except Exception:
