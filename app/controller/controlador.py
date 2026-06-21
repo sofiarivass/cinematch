@@ -90,7 +90,7 @@ def index():
                 if movies or series_data:
                     secciones_por_plataforma.append({
                         "nombre_plataforma": nombre_stream,
-                        "peliculas": movies[:6],      # Limitamos a 6 o la cantidad que uses
+                        "peliculas": movies[:6],      # Limitamos a 6 
                         "series": series_data[:6]      # Limitamos a 6
                     })
 
@@ -329,7 +329,7 @@ def encuesta_perfil():
                         usuario_actual, preferencias_finales
                     )
 
-                flash("¡Tu experiencia ha sido personalizada con éxito!", "success")
+                # flash("¡Tu experiencia ha sido personalizada con éxito!", "success")
                 return redirect(url_for("cinematch.index"))
 
         if error:

@@ -9,14 +9,35 @@ document.addEventListener("DOMContentLoaded", function() {
     const tagsContainer = document.getElementById("tags-container");
     const hidden = document.getElementById("plataformas-otras-hidden");
 
+    // 1. INICIALIZAR LEYENDO LO QUE JINJA DEJÓ EN EL INPUT OCULTO
     let seleccionados = [];
+    if (hidden && hidden.value) {
+        const idsGuardados = hidden.value.split(",");
+        // Buscamos los objetos completos en todosProviders basándonos en los IDs guardados
+        seleccionados = todosProviders.filter(p => idsGuardados.includes(String(p.id)));
+    }
 
     // ── Actualizar el input hidden con los seleccionados ──
     function actualizarHidden() {
         hidden.value = seleccionados.map(p => p.id).join(",");
     }
 
-    // ── Crear badge ──
+    // 2. DARLE VIDA A LOS TAGS PRE-RENDERIZADOS POR JINJA
+    tagsContainer.querySelectorAll(".encuesta-tag").forEach(tag => {
+        const idTag = tag.getAttribute("data-id");
+        const botonEliminar = tag.querySelector(".encuesta-tag-remove");
+        
+        if (botonEliminar && idTag) {
+            botonEliminar.addEventListener("click", function() {
+                // Filtramos convirtiendo a String para evitar errores de tipo (int vs string)
+                seleccionados = seleccionados.filter(p => String(p.id) !== String(idTag));
+                actualizarHidden();
+                tag.remove();
+            });
+        }
+    });
+
+    // ── Crear badge (para las nuevas que agregue el usuario) ──
     function agregarTag(provider) {
         if (seleccionados.find(p => p.id === provider.id)) return;
         seleccionados.push(provider);

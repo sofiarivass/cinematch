@@ -16,10 +16,10 @@
         </p>
         <div class="cm-hero__ctas">
           <a href="{{ url_for('recomendaciones.encuesta_recomendaciones') }}" class="btn-hero-primary">
-            <i class="bi bi-stars"></i> Realizar encuesta
+            <i class="bi bi-stars"></i> Descubrir recomendaciones
           </a>
-          <a href="#" class="btn-hero-secondary">
-            <i class="bi bi-shuffle"></i> Recomendacion aleatoria
+          <a href="{{ url_for('cinematch.encuesta_perfil') }}" class="btn-hero-secondary">
+            <i class="bi bi-ui-checks-grid"></i> Repetir encuesta
           </a>
         </div>
       </div>
@@ -72,7 +72,7 @@
 
   <section class="cm-section" id="contenedor-pelicula">
     <!-- Recomendaciones especiales version pc -->
-    <h2 class="text-center mb-2">Peliculas Recomendadas</h2>
+    <h2 class="text-center mb-2 text-white-50">Peliculas Recomendadas</h2>
     {% if peliculas %}
     <div id="peliculasCarousel" class="carousel slide d-none d-md-block" data-bs-ride="true">
       <div class="carousel-inner">
@@ -150,7 +150,7 @@
   <!-- SERIES -->
   <!-- Recomendaciones especiales version pc -->
   <section class="cm-section" id="contenedor-serie">
-    <h2 class="text-center mb-2">Series Recomendadas</h2>
+    <h2 class="text-center mb-2 text-white-50">Series Recomendadas</h2>
     {% if series %}
     <div id="seriesCarousel" class="carousel slide d-none d-md-block" data-bs-ride="true">
       <div class="carousel-inner">
@@ -258,6 +258,7 @@
                       <div class="cm-movie-card__meta d-flex align-items-center justify-content-between text-secondary"
                         style="font-size: 0.8rem;">
                         <span style="color: #f5c518;">★ {{ pelicula.puntuacion | round(1) }}</span>
+                        <span>{{ pelicula.tipo }}</span>
                       </div>
                     </div>
                   </a>
@@ -395,14 +396,6 @@
     {% endfor %}
   </section>
 
-
-
-
-
-
-
-
-
   <section class="scf mt-5">
     <div class="d-flex flex-column" style="margin:0 auto; padding:0 2rem 32px;" id="scf">
       <div class="cm-how-strip">
@@ -443,8 +436,6 @@
           </div>
 
         </div>
-
-
 
         <div class="d-flex align-items-center justify-content-center flex-wrap gap-4">
 
@@ -544,18 +535,6 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
   {# === CASO DE USUARIO ANÓNIMO (no registrado)=== #}
   {% else %}
   <section class="cm-hero">
@@ -592,7 +571,7 @@
         style="color:var(--accent);text-decoration:none;">Registrate para ver las tuyas</a></span>
     </div>
 
-    <h2>Peliculas</h2>
+    <h2 class="text-white-50">Peliculas</h2>
 
     <!-- Recomendaciones especiales version pc -->
     {% if peliculas %}
@@ -672,7 +651,7 @@
 
   <!-- SERIES -->
   <section class="cm-section">
-    <h2>Series</h2>
+    <h2 class="text-white-50">Series</h2>
 
     <!-- Recomendaciones especiales version pc -->
     {% if series %}
