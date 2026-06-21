@@ -140,6 +140,17 @@ class PeliculaModel:
                 "language": "es-AR",
             },
         )
+
+        # FALLBACK: Si viene vacío, buscamos los de series
+        if not data.get("results"):
+            data = self._get(
+                "/watch/providers/tv",
+                {
+                    "watch_region": "AR",
+                    "language": "es-AR",
+                },
+            )
+        
         principales_ids = set(self.PROVIDERS_PRINCIPALES_AR)
         return [
             {
@@ -158,6 +169,16 @@ class PeliculaModel:
                 "language": "es-AR",
             },
         )
+
+        # FALLBACK: Si viene vacío, buscamos los de series
+        if not data.get("results"):
+            data = self._get(
+                "/watch/providers/tv",
+                {
+                    "watch_region": "AR",
+                    "language": "es-AR",
+                },
+            )
 
         principales = [
             {
@@ -195,6 +216,8 @@ class PeliculaModel:
             return idiomas
         except Exception:
             return []
+
+    
 
     def obtener_credits(self, pelicula_id: int) -> dict:
         data = self._get(f"/movie/{pelicula_id}/credits")
@@ -470,6 +493,17 @@ class PeliculaModel:
                     "language": "es-AR",
                 },
             )
+
+            # FALLBACK: Si viene vacío, buscamos los de series
+            if not data.get("results"):
+                data = self._get(
+                    "/watch/providers/tv",
+                    {
+                        "watch_region": "AR",
+                        "language": "es-AR",
+                    },
+                )
+
             for p in data.get("results", []):
                 if p.get("provider_id") == id_int:
                     return p.get("provider_name", f"Servicio {id_int}")

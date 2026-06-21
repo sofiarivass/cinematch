@@ -1,0 +1,314 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div>
+  <section class="cm-hero_match mb-3 py-3" style="height: 200px; min-height: 300px;">
+    <div class="cm-hero__inner py-0 my-0">
+      <div class="cm-hero__content w-100 m-0 p-0" style="max-width: 100%;">
+        
+        <div class="d-flex align-items-center gap-3">
+          <div>
+            <img src="{{ url_for('static', filename='img/iconos/bandera.svg') }}" alt="bandera" style="width: 100px; height: 100px;" class="rounded-circle">
+          </div>
+          <div>
+            <h1 class="cm-hero__title mb-0">
+              Mi <span>Matchlist</span>
+            </h1>
+            <p class="cm-hero__sub m-0 opacity-75">
+              Todo el contenido con el que hiciste match.
+            </p>
+          </div>
+        </div>
+
+      </div>
+      <div class="cm-hero__visual" style="height: 100%; max-height: 80px;"></div>
+    </div>
+  </section>
+
+  <section class="cm-section pt-0 mt-2">
+    <div class="row g-2 align-items-center justify-content-between">
+      <div class="col-12 col-md-auto">
+        <div class="d-flex flex-wrap gap-2">
+          <button id="btn-filtro-todas" class="btn btn-primary rounded-pill px-3 py-1.5 d-flex align-items-center gap-2" style="font-size: 0.85rem;">
+            <span class="badge bg-white text-primary rounded-circle d-flex align-items-center justify-content-center" style="width: 18px; height: 18px; font-size: 0.7rem;">{{ matchlist|length }}</span> Todas
+          </button>
+          <button id="btn-filtro-peliculas" class="btn btn-outline-secondary text-white rounded-pill px-3 py-1.5 d-flex align-items-center gap-2" style="font-size: 0.85rem; background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.1);">
+            <span class="badge bg-secondary text-dark rounded-circle d-flex align-items-center justify-content-center" style="width: 18px; height: 18px; font-size: 0.7rem;">{{ peliculas_match|length }}</span> Películas
+          </button>
+          <button id="btn-filtro-series" class="btn btn-outline-secondary text-white rounded-pill px-3 py-1.5 d-flex align-items-center gap-2" style="font-size: 0.85rem; background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.1);">
+            <span class="badge bg-secondary text-dark rounded-circle d-flex align-items-center justify-content-center" style="width: 18px; height: 18px; font-size: 0.7rem;">{{ series_match|length }}</span> Series
+          </button>
+        </div>
+      </div>
+
+      <div class="col-12 col-md-auto d-flex gap-3 align-items-center">
+        <div class="position-relative" style="min-width: 240px;">
+          <span class="position-absolute top-50 start-0 translate-middle-y ps-3 text-white-50">
+            <i class="bi bi-search"></i>
+          </span>
+          <input type="text" id="buscador-matchlist" class="form-control rounded-3 ps-5 text-white" placeholder="Buscar..." style="background: rgba(10, 25, 47, 0.6); border: 1px solid rgba(255,255,255,0.1); font-size: 0.85rem; height: 36px;">
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  <div class="cm-section">
+    {% if matchlist %}
+    <div class="row g-3 row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-5 row-cols-xl-6" id="contenedor-grilla">
+      {% for contenido in matchlist %}
+      <div class="col tarjeta-match position-relative" data-tipo="{% if contenido.tipo == 'movie' %}pelicula{% else %}serie{% endif %}" data-titulo="{{ contenido.titulo | lower }}">
+        
+        <div class="btn-toggle-lista position-absolute d-flex align-items-center justify-content-center" 
+             style="top: 15px; right: 15px; z-index: 10; background: rgba(11, 21, 36, 0.85); width: 34px; height: 34px; cursor: pointer; border-radius: 50%; "
+             data-lista="matchlist" data-id="{{ contenido.id }}" data-tipo="{{ contenido.tipo }}" data-titulo="{{ contenido.titulo }}" data-poster="{{ contenido.poster }}" data-puntuacion="{{ contenido.puntuacion }}" data-fecha="{{ contenido.fecha_estreno }}" data-generos="{{ contenido.genero_ids | join(',') }}">
+          <i class="bi bi-bookmark-fill icono-tarjeta" style="font-size: 1rem; color: #3A52D6;"></i>
+        </div>
+
+        <a data-id="{{ contenido.id }}" data-tipo="{{ contenido.tipo }}" data-bs-toggle="modal" data-bs-target="#modal-info-pelicula"
+           class="cm-movie-card h-100 text-decoration-none d-flex flex-column" title="{{ contenido.titulo }}">
+          
+          <div class="cm-movie-card__poster position-relative flex-grow-1">
+            {% if contenido.poster %}
+            <img src="https://image.tmdb.org/t/p/w300{{ contenido.poster }}" alt="{{ contenido.titulo }}" class="img-fluid rounded w-100 h-100 object-fit-cover" loading="lazy" />
+            {% else %}
+            <img src="https://placehold.co/200x300?text=Sin+imagen" alt="Sin imagen" class="img-fluid rounded w-100">
+            {% endif %}
+          </div>
+          
+          <div class="cm-movie-card__info p-3" style="background: #0b1524;">
+            <div class="cm-movie-card__title fw-semibold text-white mb-1 text-truncate" style="font-size: 0.95rem;">
+              {{ contenido.titulo }}
+            </div>
+
+            <div class="d-flex justify-content-between align-items-center">
+              <div class="text-white-50 text-truncate" style="font-size: 0.75rem;">
+                {% if contenido.tipo == 'movie' %}Película{% else %}Serie{% endif %}
+              </div>
+            </div>
+          </div>
+        </a>
+      </div>
+      {% endfor %}
+    </div>
+    <div id="sin-resultados-busqueda" class="text-center py-5 d-none">
+      <p class="text-white-50 m-0">No se encontraron elementos que coincidan con los filtros.</p>
+    </div>
+    {% else %}
+    <div class="text-center py-5">
+      <p class="text-white-50 m-0">Aún no agregaste contenido a tu Matchlist.</p>
+    </div>
+    {% endif %}
+  
+  </div>
+</div>
+
+<div class="modal modal-xl fade" id="modal-info-pelicula" data-footer="true" data-bs-keyboard="true" tabindex="-1"
+    aria-labelledby="modal-info-pelicula-label" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content" id="modal-contenido">
+            <div class="d-flex justify-content-center p-5">
+                <div class="spinner-border text-light" role="status"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    // === LÓGICA DE FILTROS Y BUSCADOR (MATCHLIST) ===
+    const btnTodas = document.getElementById("btn-filtro-todas");
+    const btnPeliculas = document.getElementById("btn-filtro-peliculas");
+    const btnSeries = document.getElementById("btn-filtro-series");
+    const buscador = document.getElementById("buscador-matchlist");
+    const tarjetas = document.querySelectorAll(".tarjeta-match");
+    const alertaSinResultados = document.getElementById("sin-resultados-busqueda");
+
+    let filtroTipoActual = "todas"; 
+
+    function aplicarFiltros() {
+      const textoBusqueda = buscador.value.toLowerCase().trim();
+      let visibles = 0;
+
+      tarjetas.forEach(tarjeta => {
+        const tipoTarjeta = tarjeta.getAttribute("data-tipo"); 
+        const tituloTarjeta = tarjeta.getAttribute("data-titulo");
+
+        const coincideTipo = (filtroTipoActual === "todas" || tipoTarjeta === filtroTipoActual);
+        const coincideTexto = (tituloTarjeta.includes(textoBusqueda));
+
+        if (coincideTipo && coincideTexto) {
+          tarjeta.classList.remove("d-none");
+          visibles++;
+        } else {
+          tarjeta.classList.add("d-none");
+        }
+      });
+
+      if (visibles === 0 && tarjetas.length > 0) {
+        alertaSinResultados.classList.remove("d-none");
+      } else {
+        alertaSinResultados.classList.add("d-none");
+      }
+    }
+
+    function actualizarEstiloBotones(botonActivo) {
+      [btnTodas, btnPeliculas, btnSeries].forEach(btn => {
+        btn.classList.remove("btn-primary");
+        btn.classList.add("btn-outline-secondary", "text-white");
+      });
+      botonActivo.classList.remove("btn-outline-secondary", "text-white");
+      botonActivo.classList.add("btn-primary");
+    }
+
+    btnTodas.addEventListener("click", function () {
+      filtroTipoActual = "todas";
+      actualizarEstiloBotones(btnTodas);
+      applyFiltros(); // Fallback por si lo llamas distinto internamente, pero unificado a aplicarFiltros()
+      aplicarFiltros();
+    });
+
+    btnPeliculas.addEventListener("click", function () {
+      filtroTipoActual = "pelicula";
+      actualizarEstiloBotones(btnPeliculas);
+      aplicarFiltros();
+    });
+
+    btnSeries.addEventListener("click", function () {
+      filtroTipoActual = "serie";
+      actualizarEstiloBotones(btnSeries);
+      aplicarFiltros();
+    });
+
+    buscador.addEventListener("input", aplicarFiltros);
+
+
+    // === LÓGICA DEL MODAL DINÁMICO INTEGRADA ===
+    const modalEl = document.getElementById("modal-info-pelicula");
+    const modalContenido = document.getElementById("modal-contenido");
+
+    if (!modalEl || !modalContenido) return;
+
+    modalEl.addEventListener("show.bs.modal", function (e) {
+        const trigger = e.relatedTarget;
+        if (!trigger) return;
+
+        const id = trigger.dataset.id;
+        const tipo = trigger.dataset.tipo; 
+
+        if (!id) {
+            modalContenido.innerHTML =
+                "<p class='text-center p-4 text-muted'>No se encontró el ID del contenido.</p>";
+            return;
+        }
+
+        modalContenido.innerHTML = `
+            <div class="d-flex flex-column justify-content-center align-items-center p-5" style="min-height: 250px;">
+                <div class="spinner-border text-light" role="status"></div>
+                <span class="mt-3 text-light opacity-50">Cargando...</span>
+            </div>`;
+
+        const url = (tipo === "tv" || tipo === "serie")
+            ? `/explorar/modal/${id}?tipo=serie`
+            : `/pelicula/${id}/modal`;
+
+        fetch(url, { cache: "no-store" })
+            .then(r => {
+                if (!r.ok) throw new Error("Error en el servidor");
+                return r.text();
+            })
+            .then(html => {
+                modalContenido.innerHTML = html;
+
+                if (modalEl.dataset.footer === "false") {
+                    const footerWrapper = modalContenido.querySelector(".modal-footer-wrapper");
+                    if (footerWrapper) footerWrapper.remove();
+                }
+            })
+            .catch(() => {
+                modalContenido.innerHTML =
+                    "<p class='text-center p-4 text-muted'>Error al cargar la información.</p>";
+            });
+    });
+
+
+    // INTERCEPCIÓN GLOBAL PARA EVITAR QUE CUALQUER .btn-toggle-lista EN ESTA PÁGINA LEVANTE EL MODAL
+    document.addEventListener("click", function (e) {
+        const btnTarjetas = e.target.closest(".tarjeta-match .btn-toggle-lista");
+        if (btnTarjetas) {
+            e.stopPropagation();
+            e.preventDefault();
+            ejecutarToggleLista(btnTarjetas, true);
+        } else {
+            const btnModal = e.target.closest("#modal-info-pelicula .btn-toggle-lista");
+            if (btnModal) {
+                ejecutarToggleLista(btnModal, false);
+            }
+        }
+    }, true);
+
+    // FUNCIÓN UNIFICADA DE LOGICA AJAX FETCH POST
+    function ejecutarToggleLista(btn, esTarjetaDirecta) {
+        const lista = btn.dataset.lista;
+        const peliculaId = btn.dataset.id;
+        const tipo = btn.dataset.tipo;
+        const icono = btn.querySelector("i");
+
+        const iconos = {
+            matchlist: ["bi-bookmark", "bi-bookmark-fill"],
+            favoritos: ["bi-heart", "bi-heart-fill"],
+            peliculas_vistas: ["bi-eye", "bi-eye-fill"],
+            series_vistas: ["bi-eye", "bi-eye-fill"],
+        };
+
+        const generoIds = (btn.dataset.generos || "")
+            .split(",")
+            .filter(g => g !== "")
+            .map(g => parseInt(g));
+
+        fetch("/perfil/lista/toggle", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                lista: lista,
+                id: parseInt(peliculaId),
+                tipo: tipo,
+                titulo: btn.dataset.titulo || "",
+                poster: btn.dataset.poster || "",
+                puntuacion: parseFloat(btn.dataset.puntuacion) || 0,
+                fecha: btn.dataset.fecha || "",
+                genero_ids: generoIds,
+            }),
+        })
+        .then(r => {
+            if (!r.ok) throw new Error("Error en el servidor");
+            return r.json();
+        })
+        .then(data => {
+            // Se remueve directamente al confirmar respuesta exitosa del servidor
+            if (esTarjetaDirecta && lista === "matchlist") {
+                const tarjetaContenedora = btn.closest(".tarjeta-match");
+                if (tarjetaContenedora) {
+                    tarjetaContenedora.style.transition = "all 0.3s ease";
+                    tarjetaContenedora.style.opacity = "0";
+                    tarjetaContenedora.style.transform = "scale(0.8)";
+                    setTimeout(() => {
+                        tarjetaContenedora.remove();
+                        // Si no quedan más elementos visibles, recarga la interfaz limpia
+                        const contenedor = document.getElementById("contenedor-grilla");
+                        if (contenedor && contenedor.querySelectorAll(".tarjeta-match").length === 0) {
+                            window.location.reload();
+                        }
+                    }, 300);
+                }
+            } else if (icono && iconos[lista]) {
+                const [vacio, lleno] = iconos[lista];
+                const agregado = data.accion === "agregado";
+                icono.classList.toggle(vacio, !agregado);
+                icono.classList.toggle(lleno, agregado);
+            }
+        })
+        .catch(() => alert("Error al actualizar la lista"));
+    }
+  });
+</script>
+{% endblock %}
