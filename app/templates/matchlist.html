@@ -59,7 +59,7 @@
       <div class="col tarjeta-match position-relative" data-tipo="{% if contenido.tipo == 'movie' %}pelicula{% else %}serie{% endif %}" data-titulo="{{ contenido.titulo | lower }}">
         
         <div class="btn-toggle-lista position-absolute d-flex align-items-center justify-content-center" 
-             style="top: 15px; right: 15px; z-index: 10; background: rgba(11, 21, 36, 0.85); width: 34px; height: 34px; cursor: pointer; border-radius: 50%; shadow: 0 2px 5px rgba(0,0,0,0.5);"
+             style="top: 15px; right: 15px; z-index: 10; background: rgba(11, 21, 36, 0.85); width: 34px; height: 34px; cursor: pointer; border-radius: 50%; "
              data-lista="matchlist" data-id="{{ contenido.id }}" data-tipo="{{ contenido.tipo }}" data-titulo="{{ contenido.titulo }}" data-poster="{{ contenido.poster }}" data-puntuacion="{{ contenido.puntuacion }}" data-fecha="{{ contenido.fecha_estreno }}" data-generos="{{ contenido.genero_ids | join(',') }}">
           <i class="bi bi-bookmark-fill icono-tarjeta" style="font-size: 1rem; color: #3A52D6;"></i>
         </div>
