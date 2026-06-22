@@ -241,7 +241,7 @@ class RecomendacionesModel:
             5  # cuántas páginas de TMDB exploramos como máximo por tanda
         )
         pagina_tmdb_inicio = (pagina - 1) * PAGINAS_TMDB_POR_TANDA + 1
-        LIMITE_POOL = 15  # candidatos a reunir antes de rankear y cortar a 10
+        LIMITE_POOL = 20  # candidatos a reunir antes de rankear
 
         for offset in range(PAGINAS_TMDB_POR_TANDA):
             if len(lista_enriquecida) >= LIMITE_POOL:
