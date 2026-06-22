@@ -238,7 +238,7 @@ class RecomendacionesModel:
         # ── Calculamos a partir de qué página de TMDB arrancar ──
         # Cada "página lógica" de nuestra app consume varias páginas reales de TMDB
         PAGINAS_TMDB_POR_TANDA = (
-            5  # cuántas páginas de TMDB exploramos como máximo por tanda
+            6  # cuántas páginas de TMDB exploramos como máximo por tanda
         )
         pagina_tmdb_inicio = (pagina - 1) * PAGINAS_TMDB_POR_TANDA + 1
         LIMITE_POOL = 20  # candidatos a reunir antes de rankear
