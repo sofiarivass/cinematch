@@ -367,11 +367,6 @@ class RecomendacionesModel:
                 providers_dict = {"flatrate": []}
                 wp_results = detalles.get("watch/providers", {}).get("results", {})
                 region_data = wp_results.get("AR", {})
-                if not region_data:
-                    for r_code, r_val in wp_results.items():
-                        if "flatrate" in r_val:
-                            region_data = r_val
-                            break
 
                 if region_data and "flatrate" in region_data:
                     for p in region_data["flatrate"]:
