@@ -135,13 +135,46 @@ class Model:
         })
 
         resultados = []
+        ids_vistos = set()
+
         for item in data.get("results", []):
             media = item.get("media_type")
             if media == "movie" and tipo in ("todo", "pelicula"):
                 resultados.append(self._normalizar_movie(item))
+                ids_vistos.add(("movie", item["id"]))
             elif media == "tv" and tipo in ("todo", "serie"):
                 resultados.append(self._normalizar_tv(item))
-            # media_type == "person" se descarta silenciosamente
+                ids_vistos.add(("tv", item["id"]))
+
+        try:
+            data_persona = self._get("/search/person", {"query": query, "page": 1})
+            personas = data_persona.get("results", [])
+        except Exception:
+            personas = []
+
+        if personas:
+            persona_id = personas[0]["id"]  # tomamos el match más relevante (TMDB ya ordena por popularidad)
+            try:
+                creditos = self._get(f"/person/{persona_id}/combined_credits", {})
+            except Exception:
+                creditos = {}
+
+            # Unimos cast (actuó) + crew (dirigió/escribió/etc.), filtrando por tipo
+            filmografia = creditos.get("cast", []) + creditos.get("crew", [])
+
+            for item in filmografia:
+                media = item.get("media_type")
+                clave = (media, item.get("id"))
+
+                if clave in ids_vistos:
+                    continue  # ya está en los resultados de /search/multi, no duplicar
+
+                if media == "movie" and tipo in ("todo", "pelicula"):
+                    resultados.append(self._normalizar_movie(item))
+                    ids_vistos.add(clave)
+                elif media == "tv" and tipo in ("todo", "serie"):
+                    resultados.append(self._normalizar_tv(item))
+                    ids_vistos.add(clave)
 
         return {
             "resultados":    resultados,
