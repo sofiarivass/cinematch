@@ -402,7 +402,9 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 }
 
 .cm-hero_match {
-  min-height: 520px;
+  height: 200px !important;
+  min-height: 300px !important;
+  margin-top: 2rem !important;
   display: flex;
   align-items: center;
   padding: 55px 0px 10px;
@@ -471,7 +473,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 }
 
 .cm-hero__title {
-  font-size: clamp(32px, 4vw, 52px);
+  font-size: clamp(52px, 4vw, 52px);
   font-weight: 800;
   line-height: 1.1;
   letter-spacing: -0.02em;
@@ -683,6 +685,11 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   font-size: 28px;
   color: var(--text-dim);
   border-radius: 10px 10px 0 0 !important;
+  transition: transform 0.3s ease;
+}
+
+.cm-movie-card__poster:hover {
+  transform: scale(1.02);
 }
 
 .cm-movie-card__poster .badge-tipo {
@@ -961,6 +968,15 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   
   .cm-feature-card__content h3 {
     font-size: 15px;
+  }
+
+  .cm-hero_match {
+    min-height: 200px !important;
+    margin-top: 2.2rem !important;
+  }
+
+  .cm-hero__title {
+    font-size: clamp(32px, 6vw, 42px);
   }
 }
 

@@ -1,7 +1,7 @@
 // @ts-nocheck
 
 // PLATAFORMAS
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", function () {
     const input = document.getElementById("input-otra-plataforma");
     if (!input) return;
 
@@ -26,9 +26,9 @@ document.addEventListener("DOMContentLoaded", function() {
     tagsContainer.querySelectorAll(".encuesta-tag").forEach(tag => {
         const idTag = tag.getAttribute("data-id");
         const botonEliminar = tag.querySelector(".encuesta-tag-remove");
-        
+
         if (botonEliminar && idTag) {
-            botonEliminar.addEventListener("click", function() {
+            botonEliminar.addEventListener("click", function () {
                 // Filtramos convirtiendo a String para evitar errores de tipo (int vs string)
                 seleccionados = seleccionados.filter(p => String(p.id) !== String(idTag));
                 actualizarHidden();
@@ -48,7 +48,7 @@ document.addEventListener("DOMContentLoaded", function() {
         tag.dataset.id = provider.id;
         tag.innerHTML = `${provider.nombre} <button type="button" class="encuesta-tag-remove">×</button>`;
 
-        tag.querySelector(".encuesta-tag-remove").addEventListener("click", function() {
+        tag.querySelector(".encuesta-tag-remove").addEventListener("click", function () {
             seleccionados = seleccionados.filter(p => p.id !== provider.id);
             actualizarHidden();
             tag.remove();
@@ -61,7 +61,7 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     // ── Mostrar sugerencias ──
-    input.addEventListener("input", function() {
+    input.addEventListener("input", function () {
         const query = input.value.trim().toLowerCase();
         lista.innerHTML = "";
 
@@ -80,11 +80,11 @@ document.addEventListener("DOMContentLoaded", function() {
             return;
         }
 
-        filtrados.forEach(function(provider) {
+        filtrados.forEach(function (provider) {
             const li = document.createElement("li");
             li.className = "encuesta-sugerencia-item";
             li.textContent = provider.nombre;
-            li.addEventListener("click", function() {
+            li.addEventListener("click", function () {
                 agregarTag(provider);
             });
             lista.appendChild(li);
@@ -94,7 +94,7 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 
     // ── Cerrar sugerencias al hacer click afuera ──
-    document.addEventListener("click", function(e) {
+    document.addEventListener("click", function (e) {
         if (!input.contains(e.target) && !lista.contains(e.target)) {
             lista.style.display = "none";
         }

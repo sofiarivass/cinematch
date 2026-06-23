@@ -21,7 +21,7 @@
                         </svg>
                     </span>
                     <input type="text" name="q" class="ex-search-input"
-                        placeholder="Buscá por título, actor, director, género…" value="{{ request.args.get('q', '') }}"
+                        placeholder="Buscá por título, actor, director..." value="{{ request.args.get('q', '') }}"
                         autocomplete="off" />
                     {% if request.args.get('q') %}
                     <a href="{{ url_for('cinematch.explorar') }}" class="ex-search-clear" title="Limpiar búsqueda">✕</a>
