@@ -401,6 +401,24 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   scroll-margin-top: 80px;
 }
 
+.cm-hero_match {
+  height: 200px !important;
+  min-height: 300px !important;
+  margin-top: 2rem !important;
+  display: flex;
+  align-items: center;
+  padding: 55px 0px 10px;
+  position: relative;
+  overflow: hidden;
+  background-image: 
+      linear-gradient(to bottom, rgba(10, 14, 35, 0) 50%, rgba(10, 14, 35, 1) 100%),
+      linear-gradient(to right, rgba(10, 14, 35, 1) 0%, rgba(10, 14, 35, 0) 15%),
+      linear-gradient(to left, rgba(10, 14, 35, 1) 0%, rgba(10, 14, 35, 0) 15%), 
+      url('../img/fondos/fondo_matchlist.svg');
+  background-position: 50% 50%;
+  background-size: cover;
+}
+
 /* ── HERO ── */
 .cm-hero {
   min-height: 520px;
@@ -455,7 +473,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 }
 
 .cm-hero__title {
-  font-size: clamp(32px, 4vw, 52px);
+  font-size: clamp(52px, 4vw, 52px);
   font-weight: 800;
   line-height: 1.1;
   letter-spacing: -0.02em;
@@ -666,6 +684,12 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   justify-content: center;
   font-size: 28px;
   color: var(--text-dim);
+  border-radius: 10px 10px 0 0 !important;
+  transition: transform 0.3s ease;
+}
+
+.cm-movie-card__poster:hover {
+  transform: scale(1.02);
 }
 
 .cm-movie-card__poster .badge-tipo {
@@ -944,6 +968,15 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   
   .cm-feature-card__content h3 {
     font-size: 15px;
+  }
+
+  .cm-hero_match {
+    min-height: 200px !important;
+    margin-top: 2.2rem !important;
+  }
+
+  .cm-hero__title {
+    font-size: clamp(32px, 6vw, 42px);
   }
 }
 

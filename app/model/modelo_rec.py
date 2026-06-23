@@ -6,6 +6,7 @@ Capa de Modelo (M en MVC).
 
 import requests
 from config.config import Config
+from concurrent.futures import ThreadPoolExecutor
 
 
 class RecomendacionesModel:
@@ -68,6 +69,11 @@ class RecomendacionesModel:
             "nostalgia": [10764, 10767],  # Reality, Talk
             "inspiracion": [10767, 99, 18],  # Talk, Documental, Drama
         },
+    }
+
+    GENEROS_EXCLUIR_INFANTIL = {
+    "pelicula": {16, 10751},          # Animación, Familia
+    "serie": {16, 10751, 10762},      # Animación, Familia, Kids
     }
 
     # Mapeo época → rango de fechas
@@ -196,12 +202,18 @@ class RecomendacionesModel:
             ),
         }
 
+        if "familia" not in emociones:
+            generos_excluir = self.GENEROS_EXCLUIR_INFANTIL.get(formato, set())
+            if generos_excluir:
+                params_base["without_genres"] = "|".join(str(g) for g in generos_excluir)
+
+
         # ── Filtro de tipo de serie (excluir talk shows/videos/news siempre, miniserie si aplica) ──
         if tipo_item == "serie":
             if tiempo == "miniserie":
                 params_base["with_type"] = 2
             else:
-                params_base["with_type"] = "0|3|4" # documentales + reality + scripted
+                params_base["with_type"] = "0|3|4"  # documentales + reality + scripted
 
         proveedores = preferencias.get("proveedores", [])
         if proveedores:
@@ -226,12 +238,13 @@ class RecomendacionesModel:
         # ── Calculamos a partir de qué página de TMDB arrancar ──
         # Cada "página lógica" de nuestra app consume varias páginas reales de TMDB
         PAGINAS_TMDB_POR_TANDA = (
-            4  # cuántas páginas de TMDB exploramos como máximo por tanda
+            8  # cuántas páginas de TMDB exploramos como máximo por tanda
         )
         pagina_tmdb_inicio = (pagina - 1) * PAGINAS_TMDB_POR_TANDA + 1
+        LIMITE_POOL = 20  # candidatos a reunir antes de rankear
 
         for offset in range(PAGINAS_TMDB_POR_TANDA):
-            if len(lista_enriquecida) >= 10:
+            if len(lista_enriquecida) >= LIMITE_POOL:
                 break
 
             pagina_tmdb_actual = pagina_tmdb_inicio + offset
@@ -245,16 +258,32 @@ class RecomendacionesModel:
                 print("Sin más resultados en TMDB, deteniendo búsqueda.")
                 break
 
+            # ── Filtramos por coincidencia ANTES de pedir detalle, y solo pedimos detalle para los que sobreviven ──
+            candidatos_validos = []
             for r in resultados_base:
-                if len(lista_enriquecida) >= 10:
+                if r["id"] in ids_excluir:
+                    continue
+                genero_ids_item = set(r.get("genre_ids", []))
+                coincidencia = len(genero_ids_item & ids_generos) if ids_generos else 0
+                if ids_generos and coincidencia == 0:
+                    continue
+                candidatos_validos.append((r, coincidencia))
+
+            if not candidatos_validos:
+                continue
+
+            # ── Pedimos el detalle de todos los candidatos válidos de esta página EN PARALELO ──
+            with ThreadPoolExecutor(max_workers=10) as executor:
+                detalles_lista = list(executor.map(
+                    lambda c: self._obtener_detalle_completo(c[0]["id"], tipo_item),
+                    candidatos_validos
+                ))
+
+            for (r, coincidencia_generos), detalles in zip(candidatos_validos, detalles_lista):
+                if len(lista_enriquecida) >= LIMITE_POOL:
                     break
 
                 item_id = r["id"]
-
-                if item_id in ids_excluir:
-                    continue
-
-                detalles = self._obtener_detalle_completo(item_id, tipo_item)
                 if not detalles:
                     detalles = r
 
@@ -338,11 +367,6 @@ class RecomendacionesModel:
                 providers_dict = {"flatrate": []}
                 wp_results = detalles.get("watch/providers", {}).get("results", {})
                 region_data = wp_results.get("AR", {})
-                if not region_data:
-                    for r_code, r_val in wp_results.items():
-                        if "flatrate" in r_val:
-                            region_data = r_val
-                            break
 
                 if region_data and "flatrate" in region_data:
                     for p in region_data["flatrate"]:
@@ -369,6 +393,7 @@ class RecomendacionesModel:
                     else ""
                 )
 
+                print(f"{r.get('title') or r.get('name')} → coincidencia: {coincidencia_generos}")
                 lista_enriquecida.append(
                     {
                         "id": item_id,
@@ -389,11 +414,15 @@ class RecomendacionesModel:
                         "credits": {"cast": cast_list, "directores": directores_list},
                         "providers": providers_dict,
                         "_es_clasificacion_exacta": es_clasificacion_exacta,
+                        "_coincidencia_generos": coincidencia_generos,
                     }
                 )
 
         lista_enriquecida.sort(
-            key=lambda x: not x.pop("_es_clasificacion_exacta", False)
+            key=lambda x: (
+                -x.pop("_coincidencia_generos", 0),
+                not x.pop("_es_clasificacion_exacta", False),
+            )
         )
 
-        return lista_enriquecida
+        return lista_enriquecida[:10]

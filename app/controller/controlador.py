@@ -90,7 +90,7 @@ def index():
                 if movies or series_data:
                     secciones_por_plataforma.append({
                         "nombre_plataforma": nombre_stream,
-                        "peliculas": movies[:6],      # Limitamos a 6 o la cantidad que uses
+                        "peliculas": movies[:6],      # Limitamos a 6 
                         "series": series_data[:6]      # Limitamos a 6
                     })
 
@@ -281,7 +281,7 @@ def encuesta_perfil():
             plataformas = request.form.getlist("plataformas")
             otras = request.form.get("plataformas_otras", "")
 
-            # Validamos que haya seleccionado al menos una o escrito otra
+            # Validamos que haya seleccionado al menos una plataforma fija o escrito una alternativa
             if not plataformas and not otras:
                 error = True
             else:
@@ -301,11 +301,12 @@ def encuesta_perfil():
                 session["disponibilidad"] = disponibilidad
 
         elif paso == 3:
-            idiomas = request.form.getlist("idiomas")
-            if not idiomas:
+            # Captura unificada: recoge tanto checkboxes fijos como los hidden dinámicos del JS
+            idiomas_seleccionados = request.form.getlist("idiomas")
+            if not idiomas_seleccionados:
                 error = True
             else:
-                session["idiomas"] = idiomas
+                session["idiomas"] = idiomas_seleccionados
 
         elif paso == 4:
             formato = request.form.get("formato")
@@ -328,18 +329,19 @@ def encuesta_perfil():
                         usuario_actual, preferencias_finales
                     )
 
-                flash("¡Tu experiencia ha sido personalizada con éxito!", "success")
+                # flash("¡Tu experiencia ha sido personalizada con éxito!", "success")
                 return redirect(url_for("cinematch.index"))
 
         if error:
             flash("Por favor, seleccioná al menos una opción para continuar.", "danger")
-            siguiente_paso = paso  # Se queda en el mismo paso
+            siguiente_paso = paso  # Se mantiene en el mismo paso para corregir
         else:
             siguiente_paso = paso + 1
 
     else:
         siguiente_paso = request.args.get("paso", 0, type=int)
 
+    # 🟢 BLINDAJE DE DATOS: Si ocurre un error, persistimos las listas para que el dropdown no quede blanco
     providers = modelo_peliculas.obtener_providers_ar() if siguiente_paso == 1 else []
     todos_providers = (
         modelo_peliculas.obtener_todos_providers_ar() if siguiente_paso == 1 else []

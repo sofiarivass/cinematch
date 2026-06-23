@@ -2464,7 +2464,7 @@ footer .nav-link:hover {
     display: flex;
     flex-direction: row;
     align-content: center;
-    justify-content: center;
+    justify-content: space-around;
     align-items: center;
     flex-wrap: wrap;
     gap: 2rem;
@@ -2489,7 +2489,6 @@ footer .nav-link:hover {
     display: flex;
     align-items: center;
     gap: 1.5rem;
-    margin-left: 2rem;
 }
 
 .perfil-container .avatar-circle {
@@ -2856,7 +2855,6 @@ footer .nav-link:hover {
 
     .perfil-container .header-card {
         padding-top: 3rem;
-        /* deja espacio al ícono de settings */
         flex-direction: column;
     }
 
@@ -2871,7 +2869,7 @@ footer .nav-link:hover {
     }
 }
 
-@media (max-width: 426px) {
+@media (max-width: 490px) {
     .perfil-container {
         padding: 0 0.5rem;
         width: 95%;

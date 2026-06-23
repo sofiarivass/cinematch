@@ -1,7 +1,7 @@
 // @ts-nocheck
 
 // PLATAFORMAS
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", function () {
     const input = document.getElementById("input-otra-plataforma");
     if (!input) return;
 
@@ -9,14 +9,35 @@ document.addEventListener("DOMContentLoaded", function() {
     const tagsContainer = document.getElementById("tags-container");
     const hidden = document.getElementById("plataformas-otras-hidden");
 
+    // 1. INICIALIZAR LEYENDO LO QUE JINJA DEJÓ EN EL INPUT OCULTO
     let seleccionados = [];
+    if (hidden && hidden.value) {
+        const idsGuardados = hidden.value.split(",");
+        // Buscamos los objetos completos en todosProviders basándonos en los IDs guardados
+        seleccionados = todosProviders.filter(p => idsGuardados.includes(String(p.id)));
+    }
 
     // ── Actualizar el input hidden con los seleccionados ──
     function actualizarHidden() {
         hidden.value = seleccionados.map(p => p.id).join(",");
     }
 
-    // ── Crear badge ──
+    // 2. DARLE VIDA A LOS TAGS PRE-RENDERIZADOS POR JINJA
+    tagsContainer.querySelectorAll(".encuesta-tag").forEach(tag => {
+        const idTag = tag.getAttribute("data-id");
+        const botonEliminar = tag.querySelector(".encuesta-tag-remove");
+
+        if (botonEliminar && idTag) {
+            botonEliminar.addEventListener("click", function () {
+                // Filtramos convirtiendo a String para evitar errores de tipo (int vs string)
+                seleccionados = seleccionados.filter(p => String(p.id) !== String(idTag));
+                actualizarHidden();
+                tag.remove();
+            });
+        }
+    });
+
+    // ── Crear badge (para las nuevas que agregue el usuario) ──
     function agregarTag(provider) {
         if (seleccionados.find(p => p.id === provider.id)) return;
         seleccionados.push(provider);
@@ -27,7 +48,7 @@ document.addEventListener("DOMContentLoaded", function() {
         tag.dataset.id = provider.id;
         tag.innerHTML = `${provider.nombre} <button type="button" class="encuesta-tag-remove">×</button>`;
 
-        tag.querySelector(".encuesta-tag-remove").addEventListener("click", function() {
+        tag.querySelector(".encuesta-tag-remove").addEventListener("click", function () {
             seleccionados = seleccionados.filter(p => p.id !== provider.id);
             actualizarHidden();
             tag.remove();
@@ -40,7 +61,7 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     // ── Mostrar sugerencias ──
-    input.addEventListener("input", function() {
+    input.addEventListener("input", function () {
         const query = input.value.trim().toLowerCase();
         lista.innerHTML = "";
 
@@ -59,11 +80,11 @@ document.addEventListener("DOMContentLoaded", function() {
             return;
         }
 
-        filtrados.forEach(function(provider) {
+        filtrados.forEach(function (provider) {
             const li = document.createElement("li");
             li.className = "encuesta-sugerencia-item";
             li.textContent = provider.nombre;
-            li.addEventListener("click", function() {
+            li.addEventListener("click", function () {
                 agregarTag(provider);
             });
             lista.appendChild(li);
@@ -73,7 +94,7 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 
     // ── Cerrar sugerencias al hacer click afuera ──
-    document.addEventListener("click", function(e) {
+    document.addEventListener("click", function (e) {
         if (!input.contains(e.target) && !lista.contains(e.target)) {
             lista.style.display = "none";
         }
